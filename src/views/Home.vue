@@ -1,0 +1,3 @@
+<template>
+  page home
+</template>
