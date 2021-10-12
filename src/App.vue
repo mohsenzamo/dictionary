@@ -1,22 +1,26 @@
 <template>
   <Header />
   <router-view />
-  <br />
-  <router-link to="/">صفحه نخست</router-link>
-  <br />
-  <router-link to="/list">فهرست</router-link>
+  <br>
+  <router-link to="/">
+    صفحه نخست
+  </router-link>
+  <br>
+  <router-link to="/list">
+    فهرست
+  </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from "vue";
-import Header from "./components/Header.vue";
+import { defineComponent, ref, watchEffect } from 'vue'
+import Header from './components/Header.vue'
 export default defineComponent({
-  name: "App",
+  name: 'App',
   components: {
-    Header,
+    Header
   },
-  setup() {
-    return {};
-  },
-});
+  setup () {
+    return {}
+  }
+})
 </script>
