@@ -17,18 +17,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-.font-IranNastaliq {
-  font-family: IranNastaliq;
-}
-.font-IRANSans {
-  font-family: IRANSans;
-}
-.font-Yekan {
-  font-family: Yekan;
-}
-.font-neirizi {
-  font-family: neirizi;
-}
-.header-shadow{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+@layer utilities {
+  .font-IranNastaliq {
+    font-family: IranNastaliq;
+  }
+  .font-IRANSans {
+    font-family: IRANSans;
+  }
+  .font-Yekan {
+    font-family: Yekan;
+  }
+  .font-neirizi {
+    font-family: neirizi;
+  }
+  .header-shadow{
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
 }
