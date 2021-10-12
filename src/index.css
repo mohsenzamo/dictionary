@@ -15,23 +15,19 @@
   src: url(../src/assets/fonts/neirizi/neirizi.ttf);
 }
 @tailwind base;
+@layer base{
+  body{
+    direction:rtl;
+  }
+}
 @tailwind components;
 @tailwind utilities;
 
 @layer utilities {
-  .font-IranNastaliq {
-    font-family: IranNastaliq;
-  }
-  .font-IRANSans {
-    font-family: IRANSans;
-  }
-  .font-Yekan {
-    font-family: Yekan;
-  }
-  .font-neirizi {
-    font-family: neirizi;
-  }
   .header-shadow{
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  .category-box {
+    @apply h-24 w-24 bg-gray-400 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative;
   }
 }

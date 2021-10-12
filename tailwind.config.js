@@ -7,7 +7,10 @@ const config = {
     extend: {
       fontFamily: {
         sans: 'Vazir',
-        nastaligh: 'IranNastaliq'
+        IranNastaliq: 'IranNastaliq',
+        IRANSans: 'IRANSans',
+        Yekan: 'Yekan',
+        neirizi: 'neirizi',
       },
       spacing: {
         17: '17px'
