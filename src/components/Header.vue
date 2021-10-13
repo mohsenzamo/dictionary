@@ -22,8 +22,22 @@
         <span class="px-1 bg-gray-300 rounded-lg">خلیجی</span>
       </p>
     </div>
-    <router-link to="/"><img alt="Vue logo" src="../assets/logo.png" class="h-12" /></router-link>
+    <router-link to="/"
+      ><img alt="Vue logo" src="../assets/logo.png" class="h-12"
+    /></router-link>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script lang="ts">
+import { defineComponent, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "../store/index";
+export default defineComponent({
+  name: "Header",
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    return {};
+  },
+});
+</script>

@@ -10,7 +10,7 @@ const config = {
         IranNastaliq: 'IranNastaliq',
         IRANSans: 'IRANSans',
         Yekan: 'Yekan',
-        neirizi: 'neirizi',
+        neirizi: 'neirizi'
       },
       spacing: {
         17: '17px'

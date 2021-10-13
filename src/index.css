@@ -31,4 +31,28 @@
   .category-box {
     @apply h-24 w-24 bg-gray-400 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative;
   }
+  .modalBoxClose{
+    @apply transition duration-500 opacity-0 transform scale-0
+  }
+  .modalBoxOpen{
+    @apply transition duration-500 opacity-70 transform scale-100
+  }
+  
+}
+
+@keyframes fadeOut {
+  0% {
+    transform: opacity(0.7);
+  }
+  100% {
+    transform: opacity(0);
+  }
+}
+@keyframes fadeIn {
+  0% {
+    transform: opacity(0);
+  }
+  100% {
+    transform: opacity(0.7);
+  }
 }

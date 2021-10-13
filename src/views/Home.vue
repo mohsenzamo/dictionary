@@ -1,5 +1,13 @@
 <template>
   <Header />
+  <!-- use the modal component, pass in the prop -->
+  <modal v-if="showModal" @close="showModal = false">
+    <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+    <h3 slot="header">custom header</h3>
+  </modal>
   <div class="h-full pt-16">
     <div class="h-11 flex items-center justify-center">
       <input
@@ -26,7 +34,7 @@
       </button>
     </div>
     <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
-      <div class="category-box">
+      <div class="category-box" @click="showModal = true">
         <fa icon="book-reader" class="text-green-700 text-2xl" />
         <p>نشان شده ها</p>
       </div>
@@ -132,6 +140,7 @@
       </div>
     </div>
   </div>
+
   <div
     class="
       w-screen
@@ -178,10 +187,12 @@
 import { defineComponent, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import Header from "../components/Header.vue";
+import Modal from "../components/Modal.vue";
 export default defineComponent({
   name: "Home",
   components: {
     Header,
+    Modal
   },
   setup() {
     const router = useRouter();
@@ -191,6 +202,7 @@ export default defineComponent({
         name: "List",
       });
     }
+    let showModal = ref(false)
     function change() {
       if (lockValue.value == 1) {
         lockValue.value = 0;
@@ -202,6 +214,7 @@ export default defineComponent({
       lockValue,
       pushLink,
       change,
+      showModal
     };
   },
 });
