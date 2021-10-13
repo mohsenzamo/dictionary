@@ -22,10 +22,6 @@
     <div class="bg-red-500 row-span-1 rounded-lg active:-translate-y-1">8</div>
     <div class="bg-red-500 row-span-1 rounded-lg active:-translate-y-1">9</div>
   </div>
-  <br />
-  <router-link to="/"> صفحه نخست </router-link>
-  <br />
-  <router-link to="/list"> فهرست </router-link>
 </template>
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from "vue";
