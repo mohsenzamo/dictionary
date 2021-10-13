@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="h-screen bg-gray-200 pt-16">
+  <div class="h-full pt-16">
     <div class="h-11 flex items-center justify-center">
       <input
         type="text"
@@ -25,7 +25,7 @@
         <fa icon="search" />
       </button>
     </div>
-    <div class="h-full flex flex-wrap gap-x-4 justify-center mt-2">
+    <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
       <div class="category-box">
         <fa icon="book-reader" class="text-green-700 text-2xl" />
         <p>نشان شده ها</p>
@@ -132,13 +132,51 @@
       </div>
     </div>
   </div>
-  <br />
-  <router-link to="/"> صفحه نخست </router-link>
-  <br />
-  <router-link to="/list"> فهرست </router-link>
+  <div
+    class="
+      w-screen
+      fixed
+      inset-x-0
+      bottom-0
+      h-12
+      grid grid-cols-2
+      font-IRANSans
+      gap-x-2
+    "
+  >
+    <button
+      class="
+        bg-yellow-500
+        flex
+        items-center
+        justify-center
+        rounded-t-2xl
+        gap-x-3
+      "
+      @click="pushLink"
+    >
+      <fa icon="pencil-alt" />
+      <p>تمرین لغات</p>
+    </button>
+    <button
+      class="
+        bg-yellow-500
+        flex
+        items-center
+        justify-center
+        rounded-t-2xl
+        gap-x-3
+      "
+      @click="change"
+    >
+      <fa icon="spell-check" />
+      <p>آزمون مرحله ای</p>
+    </button>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
 import Header from "../components/Header.vue";
 export default defineComponent({
   name: "Home",
@@ -146,9 +184,24 @@ export default defineComponent({
     Header,
   },
   setup() {
+    const router = useRouter();
     const lockValue = ref(1);
+    function pushLink() {
+      router.push({
+        name: "List",
+      });
+    }
+    function change() {
+      if (lockValue.value == 1) {
+        lockValue.value = 0;
+      } else {
+        lockValue.value = 1;
+      }
+    }
     return {
       lockValue,
+      pushLink,
+      change,
     };
   },
 });

@@ -17,6 +17,7 @@
 @tailwind base;
 @layer base{
   body{
+    @apply bg-gray-200;
     direction:rtl;
   }
 }
