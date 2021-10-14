@@ -15,7 +15,7 @@
       <input
         type="text"
         placeholder="جستجو کنید ...."
-        class="h-full rounded-r-full pr-2 focus:outline-none font-IRANSans"
+        class="h-full rounded-r-full pr-2 focus:outline-none font-IRANSans w-64"
         @keyup.enter="submit"
       >
       <button
