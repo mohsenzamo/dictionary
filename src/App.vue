@@ -1,14 +1,10 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const x = ref(0)
+</script>
+
 <template>
+  {{ x }}
   <router-view />
 </template>
-
-<script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
-import Header from './components/Header.vue'
-export default defineComponent({
-  name: 'App',
-  setup () {
-    return {}
-  }
-})
-</script>
