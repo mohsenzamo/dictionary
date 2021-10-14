@@ -1,4 +1,7 @@
 <template>
+  <backHeader>
+    لیست لغات
+  </backHeader>
   <div
     class="grid grid-rows-9 h-screen bg-white pt-16 gap-x-8 gap-y-2 justify-items-stretch"
   >

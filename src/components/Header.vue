@@ -22,7 +22,7 @@
         <span class="px-1 bg-gray-300 rounded-lg">خلیجی</span>
       </p>
     </div>
-    <img alt="Vue logo" src="../assets/logo.png" class="h-12" />
+    <router-link to="/"><img alt="Vue logo" src="../assets/logo.png" class="h-12" /></router-link>
   </div>
 </template>
 
