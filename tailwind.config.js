@@ -2,7 +2,7 @@
 const config = {
   mode: 'jit',
   purge: ['public/**/*.html', 'src/**/*.{js,jsx,ts,tsx,vue}'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
     extend: {
       fontFamily: {
@@ -10,11 +10,14 @@ const config = {
         IranNastaliq: 'IranNastaliq',
         IRANSans: 'IRANSans',
         Yekan: 'Yekan',
-        neirizi: 'neirizi',
+        neirizi: 'neirizi'
       },
       spacing: {
         17: '17px'
 
+      },
+      inset: {
+      //  '1/5: '20%'
       }
     }
   },

@@ -1,11 +1,22 @@
 <template>
   <Header />
+  <transition name="modal">
+    <modal
+      v-if="modalPremiumValue"
+      @close="modalPremiumValue = false"
+    >
+      <template #header>
+        <h3>premium header</h3>
+      </template>
+    </modal>
+  </transition>
   <div class="h-full pt-16">
     <div class="h-11 flex items-center justify-center">
       <input
         type="text"
         placeholder="جستجو کنید ...."
         class="h-full rounded-r-full pr-2 focus:outline-none font-IRANSans"
+        @keyup.enter="submit"
       >
       <button
         class="
@@ -88,6 +99,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -104,6 +116,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -120,6 +133,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -136,6 +150,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -148,6 +163,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -160,6 +176,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -172,6 +189,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -184,6 +202,7 @@
         <div
           v-if="lockValue"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          @click="modalPremiumValue = true"
         >
           <fa
             icon="lock"
@@ -198,6 +217,7 @@
       </div>
     </div>
   </div>
+
   <div
     class="
       w-screen
@@ -244,10 +264,12 @@
 import { defineComponent, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
+import Modal from '../components/Modal.vue'
 export default defineComponent({
   name: 'Home',
   components: {
-    Header
+    Header,
+    Modal
   },
   setup () {
     const router = useRouter()
@@ -259,15 +281,21 @@ export default defineComponent({
         name: link
       })
     }
+    const modalPremiumValue = ref(false)
     function change () {
       lockValue.value = !lockValue.value
     }
+    function submit () {
+      alert('salam')
+    }
     return {
+      submit,
       lockValue,
       pushLink,
       change,
       quiz,
-      list
+      list,
+      modalPremiumValue
     }
   }
 })
