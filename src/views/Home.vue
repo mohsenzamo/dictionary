@@ -26,15 +26,15 @@
       </button>
     </div>
     <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
-      <div class="category-box">
+      <div class="category-box" @click="pushLink(list)">
         <fa icon="book-reader" class="text-green-700 text-2xl" />
         <p>نشان شده ها</p>
       </div>
-      <div class="category-box">
+      <div class="category-box" @click="pushLink(list)">
         <fa icon="users" class="text-pink-700 text-2xl" />
         <p>پیشنهادات مردمی</p>
       </div>
-      <div class="category-box">
+      <div class="category-box" @click="pushLink(list)">
         <fa icon="globe" class="text-red-700 text-2xl" />
         <p>اصطلاحات خلیجی</p>
       </div>
@@ -153,7 +153,7 @@
         rounded-t-2xl
         gap-x-3
       "
-      @click="pushLink"
+      @click="pushLink(quiz)"
     >
       <fa icon="pencil-alt" />
       <p>تمرین لغات</p>
@@ -186,9 +186,11 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const lockValue = ref(1);
-    function pushLink() {
+    const quiz = ref("Quiz")
+    const list = ref("List")
+    function pushLink(link:string) {
       router.push({
-        name: "List",
+        name: link,
       });
     }
     function change() {
@@ -202,6 +204,8 @@ export default defineComponent({
       lockValue,
       pushLink,
       change,
+      quiz,
+      list
     };
   },
 });

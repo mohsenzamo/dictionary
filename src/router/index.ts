@@ -13,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/List.vue')
   },
   {
+    path: '/quiz',
+    name: 'Quiz',
+    component: () => import('../views/Quiz.vue')
+  },
+  {
     path:'/index',
     redirect:'/'
   },
