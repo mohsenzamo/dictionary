@@ -1,19 +1,19 @@
 <template>
   <Header />
-  <!-- use the modal component, pass in the prop -->
-  <modal v-if="showModal" @close="showModal = false">
-    <!--
-      you can use custom content here to overwrite
-      default content
-    -->
-    <h3 slot="header">custom header</h3>
+  <transition name="modal">
+  <modal v-if="modalPremiumValue" @close="modalPremiumValue = false">
+    <template v-slot:header>
+      <h3>premium header</h3>
+    </template>
   </modal>
+  </transition>
   <div class="h-full pt-16">
     <div class="h-11 flex items-center justify-center">
       <input
         type="text"
         placeholder="جستجو کنید ...."
         class="h-full rounded-r-full pr-2 focus:outline-none font-IRANSans"
+        @keyup.enter="submit"
       />
       <button
         class="
@@ -34,7 +34,7 @@
       </button>
     </div>
     <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
-      <div class="category-box" @click="showModal = true">
+      <div class="category-box">
         <fa icon="book-reader" class="text-green-700 text-2xl" />
         <p>نشان شده ها</p>
       </div>
@@ -66,6 +66,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -76,6 +77,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -86,6 +88,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -96,6 +99,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -105,6 +109,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -114,6 +119,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -123,6 +129,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -132,6 +139,7 @@
         <div
           v-if="lockValue == 1"
           class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+           @click="modalPremiumValue = true"
         >
           <fa icon="lock" class="absolute top-2 right-2 text-yellow-500" />
         </div>
@@ -202,7 +210,7 @@ export default defineComponent({
         name: "List",
       });
     }
-    let showModal = ref(false)
+    let modalPremiumValue = ref(false)
     function change() {
       if (lockValue.value == 1) {
         lockValue.value = 0;
@@ -210,11 +218,15 @@ export default defineComponent({
         lockValue.value = 1;
       }
     }
+    function submit(){
+      alert('salam')
+    }
     return {
+      submit,
       lockValue,
       pushLink,
       change,
-      showModal
+      modalPremiumValue
     };
   },
 });
