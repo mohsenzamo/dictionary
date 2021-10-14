@@ -1,17 +1,14 @@
+<script lang="ts" setup>
+import backHeader from '../components/backHeader.vue'
+</script>
+
 <template>
   <backHeader>
     لیست لغات
   </backHeader>
   <div
-    class="grid grid-rows-9 h-screen bg-white pt-16 gap-x-8 gap-y-2 justify-items-stretch"
+    class="grid grid-rows-9 h-screen bg-white pt-10 gap-x-8 gap-y-2 justify-items-stretch"
   >
-    <div class="bg-white w-screen rounded-b-lg h-8">
-      <div>
-        <fa
-          icon="arrow-right"
-        />
-      </div>
-    </div>
     <div
       v-for="n in 9"
       :key="n"
