@@ -51,9 +51,7 @@ const modalMenuValue = ref(false)
       v-if="modalMenuValue"
       @close="modalMenuValue = false"
     >
-      <template #header>
         <h3>menu header</h3>
-      </template>
     </modal>
   </transition>
 </template>

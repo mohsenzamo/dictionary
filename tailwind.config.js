@@ -14,10 +14,18 @@ const config = {
       },
       spacing: {
         17: '17px'
-
       },
       inset: {
-      //  '1/5: '20%'
+        //  '1/5: '20%'
+      },
+      keyframes: {
+        open: {
+          '0%': { transform: 'scale(0)' },
+          '100%': { transform: 'scale(1)' }
+        }
+      },
+      animation: {
+        open: 'open .3s ease-in-out'
       }
     }
   },

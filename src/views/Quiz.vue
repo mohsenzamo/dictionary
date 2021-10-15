@@ -1,4 +1,6 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import backHeader from '../components/backHeader.vue'
+</script>
 <template>
   <backHeader> تمرین لغات </backHeader>
   <div class="pt-16 w-screen h-auto grid">
@@ -12,7 +14,7 @@
         <span>1</span>
       </p>
     </div>
-    <div class="w-9/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl">
+    <div class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl">
       <p class="self-end font-IRANSans text-sm">
         معنی عبارت زیر چیست؟
       </p>

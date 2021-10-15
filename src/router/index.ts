@@ -7,9 +7,8 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Home.vue')
   },
   {
-    path: '/list',
+    path: '/list/:id',
     name: 'List',
-    alias: ['/ist', '/lst', '/lis'],
     component: () => import('../views/List.vue')
   },
   {

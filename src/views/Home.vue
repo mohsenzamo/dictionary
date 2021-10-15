@@ -7,6 +7,12 @@ const router = useRouter()
 const lockValue = ref(true)
 const quiz = ref('Quiz')
 const list = ref('List')
+function pushLinkList (link:string, param:string) {
+  router.push({
+    name: link,
+    params: { id: param }
+  })
+}
 function pushLink (link:string) {
   router.push({
     name: link
@@ -28,9 +34,20 @@ function submit () {
       v-if="modalPremiumValue"
       @close="modalPremiumValue = false"
     >
-      <template #header>
-        <h3>premium header</h3>
-      </template>
+      <div class="grid font-IRANSans text-sm gap-4">
+        <p class="">
+          برای استفاده از این قسمت باید نرم افزار را به نسخه طلایی ارتقا دهید.<br>با دریافت نسخه طلایی نرم افزار، امکان دسترسی به هزاران لغت در دسته بندی های مختلف را خواهید داشت.
+        </p>
+        <button
+          class="
+        bg-yellow-500
+        rounded-md
+        h-8
+      "
+        >
+          <p>ارتقا به نسخه طلایی</p>
+        </button>
+      </div>
     </modal>
   </transition>
   <div class="h-full pt-16">
@@ -38,7 +55,7 @@ function submit () {
       <input
         type="text"
         placeholder="جستجو کنید ...."
-        class="h-full rounded-r-full pr-2 focus:outline-none font-IRANSans w-64"
+        class="h-full rounded-r-full pr-6 focus:outline-none font-IRANSans w-64"
         @keyup.enter="submit"
       >
       <button
@@ -62,7 +79,7 @@ function submit () {
     <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
       <div
         class="category-box"
-        @click="pushLink(list)"
+        @click="pushLinkList(list,list)"
       >
         <fa
           icon="book-reader"
@@ -72,7 +89,7 @@ function submit () {
       </div>
       <div
         class="category-box"
-        @click="pushLink(list)"
+        @click="pushLinkList(list,list)"
       >
         <fa
           icon="users"
@@ -82,7 +99,7 @@ function submit () {
       </div>
       <div
         class="category-box"
-        @click="pushLink(list)"
+        @click="pushLinkList(list,list)"
       >
         <fa
           icon="globe"
