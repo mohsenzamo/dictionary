@@ -1,3 +1,12 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from '../store/index'
+import Modal from '../components/Modal.vue'
+const router = useRouter()
+const store = useStore()
+const modalMenuValue = ref(false)
+</script>
 <template>
   <div
     class="
@@ -48,22 +57,3 @@
     </modal>
   </transition>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from '../store/index'
-import Modal from '../components/Modal.vue'
-export default defineComponent({
-  name: 'Header',
-  components: {
-    Modal
-  },
-  setup () {
-    const router = useRouter()
-    const store = useStore()
-    const modalMenuValue = ref(false)
-    return { modalMenuValue }
-  }
-})
-</script>

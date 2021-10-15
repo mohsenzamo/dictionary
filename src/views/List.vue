@@ -55,7 +55,6 @@ import backHeader from '../components/backHeader.vue'
         rounded-t-2xl
         gap-x-3
       "
-        @click="change"
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>

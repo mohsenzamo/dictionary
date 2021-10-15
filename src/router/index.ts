@@ -3,13 +3,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    alias:['/home','/index','/hom'],
+    alias: ['/home', '/index', '/hom'],
     component: () => import('../views/Home.vue')
   },
   {
     path: '/list',
     name: 'List',
-    alias:['/ist','/lst','/lis'],
+    alias: ['/ist', '/lst', '/lis'],
     component: () => import('../views/List.vue')
   },
   {
@@ -18,17 +18,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Quiz.vue')
   },
   {
-    path:'/index',
-    redirect:'/'
+    path: '/index',
+    redirect: '/'
   },
   {
-    path:'/index.html',
-    redirect:'/'
-  },
+    path: '/index.html',
+    redirect: '/'
+  }
 ]
 
 const router = createRouter({
-  history: createWebHistory("/"),
+  history: createWebHistory('/'),
   routes
 })
 

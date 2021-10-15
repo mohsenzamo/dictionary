@@ -1,3 +1,26 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import Header from '../components/Header.vue'
+import Modal from '../components/Modal.vue'
+const router = useRouter()
+const lockValue = ref(true)
+const quiz = ref('Quiz')
+const list = ref('List')
+function pushLink (link:string) {
+  router.push({
+    name: link
+  })
+}
+const modalPremiumValue = ref(false)
+function change () {
+  lockValue.value = !lockValue.value
+}
+function submit () {
+  alert('salam')
+}
+</script>
+
 <template>
   <Header />
   <transition name="modal">
@@ -125,7 +148,7 @@
         </div>
         <fa
           icon="user-nurse"
-          class="text-yellow-500 text-2xl"
+          class="text-yellow-500 text-2xl w-1/5"
         />
         <p>جملات کاربردی پزشکی</p>
       </div>
@@ -260,43 +283,3 @@
     </button>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
-import Header from '../components/Header.vue'
-import Modal from '../components/Modal.vue'
-export default defineComponent({
-  name: 'Home',
-  components: {
-    Header,
-    Modal
-  },
-  setup () {
-    const router = useRouter()
-    const lockValue = ref(true)
-    const quiz = ref('Quiz')
-    const list = ref('List')
-    function pushLink (link:string) {
-      router.push({
-        name: link
-      })
-    }
-    const modalPremiumValue = ref(false)
-    function change () {
-      lockValue.value = !lockValue.value
-    }
-    function submit () {
-      alert('salam')
-    }
-    return {
-      submit,
-      lockValue,
-      pushLink,
-      change,
-      quiz,
-      list,
-      modalPremiumValue
-    }
-  }
-})
-</script>

@@ -1,3 +1,11 @@
+<script lang="ts" setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
+function goBack () {
+  router.back()
+}
+</script>
+
 <template>
   <div
     class="
@@ -34,20 +42,3 @@
     </router-link>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
-export default defineComponent({
-  name: 'BackHeader',
-  setup () {
-    const router = useRouter()
-    function goBack () {
-      router.back()
-    }
-    return {
-      goBack
-    }
-  }
-})
-</script>

@@ -1,6 +1,13 @@
+
+<script lang="ts" setup>
+
+</script>
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-70" @click="$emit('close')"/>
+    <div
+      class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-70"
+      @click="$emit('close')"
+    />
     <div class="w-2/4 bg-gray-300 rounded-xl shadow-2xl relative">
       <div>
         <slot name="header">
@@ -26,18 +33,6 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import { defineComponent, ref, watchEffect } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from '../store/index'
-export default defineComponent({
-  name: 'Modal',
-  setup () {
-    const modalValue = ref(true)
-    return { modalValue }
-  }
-})
-</script>
 <style>
 .modal-enter-from {
   transform: scale(0);
