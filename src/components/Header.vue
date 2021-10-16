@@ -6,8 +6,82 @@ import Modal from '../components/Modal.vue'
 const router = useRouter()
 const store = useStore()
 const modalMenuValue = ref(false)
+const modalGuideValue = ref(false)
+const login = ref('Login')
+function pushLink (link:string) {
+  router.push({
+    name: link
+  })
+}
 </script>
 <template>
+  <transition name="modal">
+    <modal
+      v-if="modalMenuValue"
+      @close="modalMenuValue = false"
+    >
+      <div class="grid gap-4 font-IRANSans">
+        <button
+          class="
+        bg-yellow-500
+        rounded-md
+        h-10
+      "
+          @click="pushLink(login)"
+        >
+          <p class="flex items-center justify-center gap-3">
+            <fa icon="user-tie" />
+            حساب کاربری
+          </p>
+        </button>
+        <span class="w-full bg-black h-0.5" />
+        <button
+          class="
+        bg-yellow-500
+        rounded-md
+        h-10
+      "
+        >
+          <p class="flex items-center justify-center gap-3">
+            <fa icon="wallet" />
+            خرید نسخه طلایی
+          </p>
+        </button>
+        <span class="w-full bg-black h-0.5" />
+        <button
+          class="
+        bg-yellow-500
+        rounded-md
+        h-10
+      "
+        >
+          <p class="flex items-center justify-center gap-3">
+            <fa icon="address-card" />
+            درباره ما
+          </p>
+        </button>
+      </div>
+    </modal>
+  </transition>
+  <transition name="modal">
+    <modal
+      v-if="modalGuideValue"
+      @close="modalGuideValue = false"
+    >
+      <div class="grid gap-4 font-IRANSans">
+        <p class="text-center font-extrabold text-xl text-yellow-600">راهنما</p>
+        <span class="w-full bg-black h-0.5" />
+        <div>
+          <p><span class="text-yellow-600">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
+          <p><span class="text-yellow-600">2.</span> دسته‌بندی‌های موجود به صورت مشترک بین لهجه عراقی و خلیجی می‌باشد.</p>
+          <p><span class="text-yellow-600">3.</span> لغات نرم افزار به صورت آنلاین و مداوم بروزرسانی می‌شود.</p>
+          <p><span class="text-yellow-600">4.</span>در صورتی که لغت مد نظر خود را جستجو کرده و پیدا نکردید، از بخش «درخواست ترجمه» می‌توانید آن را به اطّلاع ما برسانید تا نهایتاً پس از چند روز به دیکشنری اضافه شود.</p>
+          <p>کلیه حقوق این نرم افزار متعلق به گروه آموزشی نبراس است و هر گونه کپی برداری از آن بدون ذکر منبع شرعاً و قانوناً ممنوع است.</p>
+          <p class="text-center font-bold">با تشکر از همراهی شما.</p>
+        </div>
+      </div>
+    </modal>
+  </transition>
   <div
     class="
       grid grid-cols-4
@@ -36,22 +110,11 @@ const modalMenuValue = ref(false)
         <span class="px-1 bg-gray-300 rounded-lg">خلیجی</span>
       </p>
     </div>
-    <router-link
-      to="/"
+    <img
+      alt="Vue logo"
+      src="../assets/logo.png"
+      class="h-12"
+      @click="modalGuideValue = true"
     >
-      <img
-        alt="Vue logo"
-        src="../assets/logo.png"
-        class="h-12"
-      >
-    </router-link>
   </div>
-  <transition name="modal">
-    <modal
-      v-if="modalMenuValue"
-      @close="modalMenuValue = false"
-    >
-        <h3>menu header</h3>
-    </modal>
-  </transition>
 </template>

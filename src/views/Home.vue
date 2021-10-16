@@ -156,7 +156,6 @@ const words = [
       </div>
       <div
         class="category-box"
-        @click="pushLink(login)"
       >
         <fa
           icon="clock"

@@ -22,10 +22,12 @@ function goBack () {
       z-10
     "
   >
-    <span
-      class="text-xl"
-      @click="goBack"
-    ><fa icon="arrow-right" /></span>
+    <slot name="arrow">
+      <span
+        class="text-xl"
+        @click="goBack"
+      ><fa icon="arrow-right" /></span>
+    </slot>
     <div class="justify-self-start col-span-2">
       <p class="text-base font-black font-IRANSans">
         <slot />
