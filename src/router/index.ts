@@ -20,6 +20,12 @@ const routes: Array<RouteRecordRaw> = [
     // meta: { transition: 'slide-left' }
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue')
+    // meta: { transition: 'slide-left' }
+  },
+  {
     path: '/index',
     redirect: '/'
   },

@@ -23,16 +23,16 @@ import backHeader from '../components/backHeader.vue'
       </p>
     </div>
     <div class="h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4">
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
         نترس
       </p>
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
         نیاز نداشته باش
       </p>
-      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl">
+      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
         پیدا نکن
       </p>
-      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl">
+      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
         زنگ نزن
       </p>
     </div>

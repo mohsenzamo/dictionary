@@ -7,6 +7,7 @@ const router = useRouter()
 const lockValue = ref(true)
 const quiz = ref('Quiz')
 const list = ref('List')
+const login = ref('Login')
 function pushLinkList (link:string, param:string) {
   router.push({
     name: link,
@@ -65,7 +66,7 @@ function submit () {
           rounded-l-full
           h-full
           text-sm
-          w-10
+          w-16
           grid
           items-center
           justify-items-center
@@ -76,7 +77,7 @@ function submit () {
         <fa icon="search" />
       </button>
     </div>
-    <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
+    <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16 px-4">
       <div
         class="category-box"
         @click="pushLinkList(list,list)"
@@ -114,7 +115,10 @@ function submit () {
         />
         <p>لوازم شخصی</p>
       </div>
-      <div class="category-box">
+      <div
+        class="category-box"
+        @click="pushLink(login)"
+      >
         <fa
           icon="clock"
           class="text-yellow-300 text-2xl"
