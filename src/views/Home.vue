@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
@@ -23,8 +23,42 @@ function change () {
   lockValue.value = !lockValue.value
 }
 function submit () {
-  alert('salam')
+  return resultQuery
 }
+// const searchQuery = ref('')
+// const words = [
+// { id: 1, title: 'ali' },
+// { id: 2, title: 'hassan' },
+// { id: 1, title: 'behzad' },
+// { id: 1, title: 'behnam' },
+// { id: 1, title: 'alireza' }
+// ]
+// const searchedWords = computed(() => {
+// return words.value.filter((word) => {
+// return (
+//   word.id
+//    .toLowerCase()
+//    .indexOf(searchQuery.value.toLowerCase()) != -1
+// )
+// })
+// })
+// -----------------------------------search---------------------------------------
+const searchQuery = ref('')
+const words = [
+  { id: 1, title: 'ali' },
+  { id: 2, title: 'hassan' },
+  { id: 3, title: 'alireza' },
+  { id: 4, title: 'behzad' },
+  { id: 5, title: 'behnam' }
+]
+
+const resultQuery = computed(() => {
+  return words.filter(word => {
+    return words.title
+  })
+})
+// -----------------------------------search---------------------------------------
+
 </script>
 
 <template>
@@ -53,6 +87,7 @@ function submit () {
   <div class="h-full pt-16">
     <div class="h-11 flex items-center justify-center">
       <input
+        v-model="searchQuery"
         type="text"
         placeholder="جستجو کنید ...."
         class="h-full rounded-r-full pr-6 focus:outline-none font-IRANSans w-64"
@@ -76,6 +111,19 @@ function submit () {
         <fa icon="search" />
       </button>
     </div>
+    <!--------------------------------------- searchedWords ---------------------------------------------->
+    <div
+      class="grid grid-rows-9 h-screen bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch"
+    >
+      <div
+        v-for="n in resultQuery"
+        :key="n.id"
+      >
+        {{ n.title }}
+      </div>
+    </div>
+    <!--------------------------------------- searchedWords ---------------------------------------------->
+
     <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
       <div
         class="category-box"
