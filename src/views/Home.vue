@@ -24,25 +24,9 @@ function change () {
   lockValue.value = !lockValue.value
 }
 function submit () {
-  return resultQuery
+  alert('mohsen')
 }
-// const searchQuery = ref('')
-// const words = [
-// { id: 1, title: 'ali' },
-// { id: 2, title: 'hassan' },
-// { id: 1, title: 'behzad' },
-// { id: 1, title: 'behnam' },
-// { id: 1, title: 'alireza' }
-// ]
-// const searchedWords = computed(() => {
-// return words.value.filter((word) => {
-// return (
-//   word.id
-//    .toLowerCase()
-//    .indexOf(searchQuery.value.toLowerCase()) != -1
-// )
-// })
-// })
+
 // -----------------------------------search---------------------------------------
 const searchQuery = ref('')
 const words = [
@@ -53,11 +37,6 @@ const words = [
   { id: 5, title: 'behnam' }
 ]
 
-const resultQuery = computed(() => {
-  return words.filter(word => {
-    return words.title
-  })
-})
 // -----------------------------------search---------------------------------------
 
 </script>
@@ -86,7 +65,7 @@ const resultQuery = computed(() => {
     </modal>
   </transition>
   <div class="h-full pt-16">
-    <div class="h-11 flex items-center justify-center">
+    <div class="h-11 flex fixed top-16 z-10 left-6">
       <input
         v-model="searchQuery"
         type="text"
@@ -112,20 +91,32 @@ const resultQuery = computed(() => {
         <fa icon="search" />
       </button>
     </div>
-    <!--------------------------------------- searchedWords ---------------------------------------------->
+    <!-- ------------------------------------- searchedWords ---------------------------------------------->
     <div
-      class="grid grid-rows-9 h-screen bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch"
+      v-if="searchQuery.length>0"
+      class="grid grid-rows-9 bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28"
     >
+      <!--------------------------------------- find ---------------------------------------------->
       <div
-        v-for="n in resultQuery"
+        v-for="n in words"
+        v-if="searchQuery.length<3"
         :key="n.id"
       >
         {{ n.title }}
       </div>
+      <!--------------------------------------- find ---------------------------------------------->
+      <!--------------------------------------- not find ---------------------------------------------->
+      <div
+        v-if="searchQuery.length>=3"
+        class="bg-red-600 text-center"
+      >
+        can not find
+      </div>
+    <!--------------------------------------- not find ---------------------------------------------->
     </div>
-    <!--------------------------------------- searchedWords ---------------------------------------------->
+    <!--------------------------------------- searchedWords -------------------------------------------- -->
 
-    <div class="h-full flex flex-wrap gap-4 justify-center mt-2 mb-16">
+    <div class="h-full flex flex-wrap gap-4 justify-center mt-14 mb-16">
       <div
         class="category-box"
         @click="pushLinkList(list,list)"
