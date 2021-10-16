@@ -55,10 +55,11 @@ function submit () {
       <input
         type="text"
         placeholder="جستجو کنید ...."
-        class="h-full rounded-r-full pr-6 focus:outline-none font-IRANSans w-64"
+        class="h-full rounded-r-full pr-6 focus:outline-none focus:border-t-4 focus:border-r-4 focus:border-b-4 focus:border-yellow-500 focus:border-opacity-50 font-IRANSans w-64"
         @keyup.enter="submit"
       >
       <button
+        id="button"
         class="
           bg-white
           rounded-l-full
@@ -70,7 +71,6 @@ function submit () {
           justify-items-center
           text-gray-500
           active:bg-gray-300
-          ...
         "
       >
         <fa icon="search" />
@@ -300,3 +300,8 @@ function submit () {
     </button>
   </div>
 </template>
+<style>
+input:focus + #button {
+  @apply border-t-4 border-l-4 border-b-4 border-yellow-500 border-opacity-50
+}
+</style>

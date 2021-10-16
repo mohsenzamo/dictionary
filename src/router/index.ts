@@ -5,16 +5,19 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     alias: ['/home', '/index', '/hom'],
     component: () => import('../views/Home.vue')
+    // meta: { transition: 'slide-left' }
   },
   {
     path: '/list/:id',
     name: 'List',
     component: () => import('../views/List.vue')
+    // meta: { transition: 'slide-left' }
   },
   {
     path: '/quiz',
     name: 'Quiz',
     component: () => import('../views/Quiz.vue')
+    // meta: { transition: 'slide-left' }
   },
   {
     path: '/index',

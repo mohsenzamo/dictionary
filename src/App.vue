@@ -2,24 +2,19 @@
 </script>
 
 <template>
-  <router-view v-slot="{Component}">
-    <transition
-      name="fade"
-      mode="default"
-    >
-      <component :is="Component" />
-    </transition>
-  </router-view>
+  <transition
+    name="page"
+    mode="out-in"
+  >
+    <router-view />
+  </transition>
 </template>
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
+<style>.page-enter-active, .page-leave-active {
+  transition: opacity 1s, transform 1s;
 }
-
-.fade-enter-from,
-.fade-leave-to {
+.page-enter, .page-leave-to {
   opacity: 0;
+  transform: translateX(-30%);
 }
 
 </style>
