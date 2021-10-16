@@ -1,130 +1,147 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import backHeader from '../components/backHeader.vue'
-function toggleForm () {
-
-}
+const formValue = ref(true)
 </script>
 <template>
   <backHeader>
     صفحه ورود
   </backHeader>
-  <div class="bg-red-500 h-screen grid items-center justify-center">
-    <div
-      class="form bg-white p-11 text-center w-80"
+  <div class="h-screen grid items-center justify-center">
+    <transition
+      name="scaleRight"
+      appear
     >
-      <form class="register-form">
-        <input
-          type="text"
-          placeholder="name"
-        >
-        <input
-          type="password"
-          placeholder="password"
-        >
-        <input
-          type="text"
-          placeholder="email address"
-        >
-        <button>create</button>
-        <p class="message">
-          Already registered? <a
-            href="#"
-            @click="toggleForm"
-          >Sign In</a>
+      <div
+        v-if="formValue"
+        class="form bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl"
+      >
+        <form class="w-full">
+          <div class="relative mb-11">
+            <input
+              type="text"
+              required
+              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+            >
+            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
+            <span class="focus-border" />
+          </div>
+          <div class="relative mb-11 w-full">
+            <input
+              type="text"
+              required
+              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+            >
+            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">ایمیل</label>
+            <span class="focus-border" />
+          </div>
+          <div class="relative mb-11 w-full">
+            <input
+              type="text"
+              required
+              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+            >
+            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
+            <span class="focus-border" />
+          </div>
+          <button
+            type="button"
+            class="bg-yellow-500 w-full h-10 font-IRANSans rounded-lg"
+          >
+            ثبت نام
+          </button>
+        </form>
+        <p class="mt-4 font-IRANSans text-xs">
+          حساب کاربری دارید!
+          <span
+            class="text-blue-700"
+            @click="formValue = !formValue"
+          >ورود به حساب</span>
         </p>
-      </form>
-      <form class="login-form">
-        <input
-          type="text"
-          placeholder="username"
-        >
-        <input
-          type="password"
-          placeholder="password"
-        >
-        <button>login</button>
-        <p class="message">
-          Not registered? <a
-            href="#"
-            @click="toggleForm"
-          >Create an account</a>
+      </div>
+    </transition>
+    <transition
+      name="scaleLeft"
+      appear
+    >
+      <div
+        v-if="formValue == false"
+        class="form bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl"
+      >
+        <form class="w-full">
+          <div class="relative mb-11">
+            <input
+              type="text"
+              required
+              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+            >
+            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
+            <span class="focus-border" />
+          </div>
+          <div class="relative mb-11 w-full">
+            <input
+              type="text"
+              required
+              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+            >
+            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
+            <span class="focus-border" />
+          </div>
+          <button
+            type="button"
+            class="bg-yellow-500 w-full h-10 font-IRANSans rounded-lg"
+          >
+            ورود
+          </button>
+        </form>
+        <p class="mt-4 font-IRANSans text-xs">
+          حساب کاربری ندارید؟
+          <span
+            class="text-blue-700"
+            @click="formValue = !formValue"
+          >ثبت نام کنید</span>
         </p>
-      </form>
-    </div>
+      </div>
+    </transition>
   </div>
 </template>
 <style>
-.form input {
-  font-family: "Roboto", sans-serif;
-  outline: 0;
-  background: #f2f2f2;
-  width: 100%;
-  border: 0;
-  margin: 0 0 15px;
-  padding: 15px;
-  box-sizing: border-box;
-  font-size: 14px;
+input:focus + label {
+  @apply -top-6 text-sm opacity-100
 }
-.form button {
-  font-family: "Roboto", sans-serif;
-  text-transform: uppercase;
-  outline: 0;
-  background: #4CAF50;
-  width: 100%;
-  border: 0;
-  padding: 15px;
-  color: #FFFFFF;
-  font-size: 14px;
-  -webkit-transition: all 0.3 ease;
-  transition: all 0.3 ease;
-  cursor: pointer;
+input ~ .focus-border{
+    @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-gray-400 transition-all duration-500
+    }
+input:focus ~ .focus-border{
+    @apply w-full transition-all left-0
+    }
+.scaleLeft-enter-active,
+.scaleRight-enter-active{
+  transition: all 0.7s ease;
 }
-.form button:hover,.form button:active,.form button:focus {
-  background: #43A047;
+.scaleLeft-leave-active,
+.scaleRight-leave-active {
+    transition: all 0.6s ease;
 }
-.form .message {
-  margin: 15px 0 0;
-  color: #b3b3b3;
-  font-size: 12px;
+
+.scaleRight-enter-from,
+.scaleRight-leave-to{
+    z-index: 5;
+    opacity: 0;
+  transform: rotateY(-180deg);
+  position: absolute;
 }
-.form .message a {
-  color: #4CAF50;
-  text-decoration: none;
+.scaleRight-leave-from{
+    opacity: 0;
 }
-.form .register-form {
-    display:none;
+.scaleLeft-enter-from,
+.scaleLeft-leave-to{
+    z-index: 5;
+    opacity: 0;
+  transform: rotateY(180deg);
+  position: absolute;
 }
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 300px;
-  margin: 0 auto;
-}
-.container:before, .container:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.container .info {
-  margin: 50px auto;
-  text-align: center;
-}
-.container .info h1 {
-  margin: 0 0 15px;
-  padding: 0;
-  font-size: 36px;
-  font-weight: 300;
-  color: #1a1a1a;
-}
-.container .info span {
-  color: #4d4d4d;
-  font-size: 12px;
-}
-.container .info span a {
-  color: #000000;
-  text-decoration: none;
-}
-.container .info span .fa {
-  color: #EF3B3A;
+.scaleLeft-leave-from{
+    opacity: 0;
 }
 </style>
