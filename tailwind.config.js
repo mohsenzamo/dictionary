@@ -26,6 +26,9 @@ const config = {
       },
       animation: {
         open: 'open .3s ease-in-out'
+      },
+      backgroundImage: {
+        logo: "url('./src/assets/logo.png')"
       }
     }
   },
