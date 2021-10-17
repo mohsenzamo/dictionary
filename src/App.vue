@@ -2,18 +2,15 @@
 </script>
 
 <template>
-  <!-- <transition
-    name="page"
-    mode="out-in"
-  >
-    <router-view />
-  </transition> -->
   <router-view v-slot="{ Component, route }">
     <transition
       name="page"
       mode="out-in"
     >
-      <div :key="route.path">
+      <div
+        :key="route.path"
+        class="bg-gray-200"
+      >
         <component :is="Component" />
       </div>
     </transition>
