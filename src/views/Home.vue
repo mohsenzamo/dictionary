@@ -5,7 +5,6 @@ import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
 const router = useRouter()
 const lockValue = ref(true)
-const quiz = ref('Quiz')
 const list = ref('List')
 const login = ref('Login')
 function pushLinkList (link:string, param:string) {
@@ -94,16 +93,38 @@ const words = [
     <!-- ------------------------------------- searchedWords ---------------------------------------------->
     <div
       v-if="searchQuery.length>0"
-      class="grid grid-rows-9 bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28"
+      class="grid grid-rows-9 bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full"
     >
       <!--------------------------------------- find ---------------------------------------------->
-      <div
-        v-for="n in words"
-        v-if="searchQuery.length<3"
-        :key="n.id"
-      >
-        {{ n.title }}
-      </div>
+      <template v-if="searchQuery.length<3">
+        <div
+          v-for="n in 9"
+          :key="n"
+          class="bg-gray-200 even:bg-gray-400 row-span-1 rounded-lg active:-translate-y-1"
+        >
+          <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
+            <div class="font-semibold">
+              semibol text
+            </div>
+            <div class="font-light">
+              light text
+            </div>
+          </div>
+          <div class="bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center">
+            <div>
+              <fa
+                icon="bookmark"
+                style="color:rgb(18, 156, 18);"
+              />
+            </div>
+            <div>
+              <fa
+                icon="volume-off"
+              />
+            </div>
+          </div>
+        </div>
+      </template>
       <!--------------------------------------- find ---------------------------------------------->
       <!--------------------------------------- not find ---------------------------------------------->
       <div
@@ -321,7 +342,7 @@ const words = [
         rounded-t-2xl
         gap-x-3
       "
-      @click="pushLink(quiz)"
+      @click="pushLink('Quiz')"
     >
       <fa icon="pencil-alt" />
       <p>تمرین لغات</p>

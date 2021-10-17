@@ -2,17 +2,28 @@
 </script>
 
 <template>
-  <transition
+  <!-- <transition
     name="page"
     mode="out-in"
   >
     <router-view />
-  </transition>
+  </transition> -->
+  <router-view v-slot="{ Component, route }">
+    <transition
+      name="page"
+      mode="out-in"
+    >
+      <div :key="route.path">
+        <component :is="Component" />
+      </div>
+    </transition>
+  </router-view>
 </template>
-<style>.page-enter-active, .page-leave-active {
+<style>
+.page-enter-active, .page-leave-active {
   transition: opacity 1s, transform 1s;
 }
-.page-enter, .page-leave-to {
+.page-enter-from, .page-leave-to {
   opacity: 0;
   transform: translateX(-30%);
 }

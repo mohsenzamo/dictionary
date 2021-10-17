@@ -27,7 +27,7 @@ function pushLink (link:string) {
         rounded-md
         h-10
       "
-          @click="pushLink(login)"
+          @click="pushLink('Login')"
         >
           <p class="flex items-center justify-center gap-3">
             <fa icon="user-tie" />
@@ -54,6 +54,7 @@ function pushLink (link:string) {
         rounded-md
         h-10
       "
+      @click="pushLink('AboutUs')"
         >
           <p class="flex items-center justify-center gap-3">
             <fa icon="address-card" />
@@ -69,7 +70,9 @@ function pushLink (link:string) {
       @close="modalGuideValue = false"
     >
       <div class="grid gap-4 font-IRANSans">
-        <p class="text-center font-extrabold text-xl text-yellow-600">راهنما</p>
+        <p class="text-center font-extrabold text-xl text-yellow-600">
+          راهنما
+        </p>
         <span class="w-full bg-black h-0.5" />
         <div>
           <p><span class="text-yellow-600">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
@@ -77,7 +80,9 @@ function pushLink (link:string) {
           <p><span class="text-yellow-600">3.</span> لغات نرم افزار به صورت آنلاین و مداوم بروزرسانی می‌شود.</p>
           <p><span class="text-yellow-600">4.</span>در صورتی که لغت مد نظر خود را جستجو کرده و پیدا نکردید، از بخش «درخواست ترجمه» می‌توانید آن را به اطّلاع ما برسانید تا نهایتاً پس از چند روز به دیکشنری اضافه شود.</p>
           <p>کلیه حقوق این نرم افزار متعلق به گروه آموزشی نبراس است و هر گونه کپی برداری از آن بدون ذکر منبع شرعاً و قانوناً ممنوع است.</p>
-          <p class="text-center font-bold">با تشکر از همراهی شما.</p>
+          <p class="text-center font-bold">
+            با تشکر از همراهی شما.
+          </p>
         </div>
       </div>
     </modal>

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import backHeader from '../components/backHeader.vue'
-import { defineProps } from 'vue'
+
 const props = defineProps<{
   id: string
 }>()
-const x = props.id
+
 </script>
 
 <template>
   <backHeader>
-    {{ x }}
+    {{ props.id }}
   </backHeader>
   <div
-    class="grid grid-rows-9 h-screen bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch"
+    class="grid grid-rows-9 h-screen bg-white pt-13 gap-x-8 gap-y-2 justify-items-stretch"
   >
     <div
       v-for="n in 9"
