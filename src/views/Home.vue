@@ -5,8 +5,6 @@ import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
 const router = useRouter()
 const lockValue = ref(true)
-const list = ref('List')
-const login = ref('Login')
 function pushLinkList (link:string, param:string) {
   router.push({
     name: link,
@@ -140,7 +138,7 @@ const words = [
     <div class="h-full flex flex-wrap gap-4 justify-center mt-14 mb-16">
       <div
         class="category-box"
-        @click="pushLinkList(list,list)"
+        @click="pushLinkList('List','نشان شده ها')"
       >
         <fa
           icon="book-reader"
@@ -150,7 +148,7 @@ const words = [
       </div>
       <div
         class="category-box"
-        @click="pushLinkList(list,list)"
+        @click="pushLinkList('List','پیشنهادات مردمی')"
       >
         <fa
           icon="users"
@@ -160,7 +158,7 @@ const words = [
       </div>
       <div
         class="category-box"
-        @click="pushLinkList(list,list)"
+        @click="pushLinkList('List','اصطلاحات خلیجی')"
       >
         <fa
           icon="globe"

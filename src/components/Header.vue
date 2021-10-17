@@ -13,6 +13,10 @@ function pushLink (link:string) {
     name: link
   })
 }
+function openGuide () {
+  modalGuideValue.value = true
+  modalMenuValue.value = false
+}
 </script>
 <template>
   <transition name="modal">
@@ -54,11 +58,25 @@ function pushLink (link:string) {
         rounded-md
         h-10
       "
-      @click="pushLink('AboutUs')"
+          @click="pushLink('AboutUs')"
         >
           <p class="flex items-center justify-center gap-3">
             <fa icon="address-card" />
             درباره ما
+          </p>
+        </button>
+        <span class="w-full bg-black h-0.5" />
+        <button
+          class="
+        bg-yellow-500
+        rounded-md
+        h-10
+      "
+          @click="openGuide"
+        >
+          <p class="flex items-center justify-center gap-3">
+            <fa icon="book" />
+            راهنما
           </p>
         </button>
       </div>
@@ -119,7 +137,6 @@ function pushLink (link:string) {
       alt="Vue logo"
       src="../assets/logo.png"
       class="h-12"
-      @click="modalGuideValue = true"
     >
   </div>
 </template>

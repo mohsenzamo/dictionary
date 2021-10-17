@@ -20,12 +20,14 @@
   </router-view>
 </template>
 <style>
-.page-enter-active, .page-leave-active {
-  transition: opacity 1s, transform 1s;
-}
-.page-enter-from, .page-leave-to {
-  opacity: 0;
-  transform: translateX(-30%);
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
 }
 
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
 </style>
