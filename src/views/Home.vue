@@ -62,13 +62,7 @@ const words = [
     </modal>
   </transition>
   <div class="h-full pt-16">
-    <div class="h-11 flex fixed top-16 z-10 left-6 justify-items-center">
-      <span
-        class="z-10 h-full leading-snug font-normal text-center text-gray-500 absolute bg-transparent rounded text-base items-center justify-center w-8 left-4 pr-3 py-3"
-        @click="submit"
-      >
-        <fa icon="search" />
-      </span>
+    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center">
       <input
         v-model="searchQuery"
         type="text"
@@ -76,6 +70,12 @@ const words = [
         class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20"
         @keyup.enter="submit"
       >
+      <span
+        class="z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12"
+        @click="submit"
+      >
+        <fa icon="search" />
+      </span>
     </div>
     <!-- ------------------------------------- searchedWords ---------------------------------------------->
     <div
@@ -358,7 +358,4 @@ const words = [
   </div>
 </template>
 <style>
-input:focus + #button {
-  @apply border-t-4 border-l-4 border-b-4 border-yellow-500 border-opacity-50
-}
 </style>

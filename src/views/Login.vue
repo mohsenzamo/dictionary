@@ -21,7 +21,7 @@ const formValue = ref(true)
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+              class="block w-full border-b-2 border-solid border-black focus:outline-none border-opacity-60"
             >
             <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
             <span class="focus-border" />
@@ -30,7 +30,7 @@ const formValue = ref(true)
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
             >
             <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">ایمیل</label>
             <span class="focus-border" />
@@ -39,7 +39,7 @@ const formValue = ref(true)
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
             >
             <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
             <span class="focus-border" />
@@ -73,7 +73,7 @@ const formValue = ref(true)
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
             >
             <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
             <span class="focus-border" />
@@ -82,7 +82,7 @@ const formValue = ref(true)
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none"
+              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
             >
             <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
             <span class="focus-border" />
