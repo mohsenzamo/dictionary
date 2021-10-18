@@ -24,7 +24,7 @@ import backHeader from '../components/backHeader.vue'
       style="direction: ltr;"
     >
       <p class="w-full bg-red-600 rounded-3xl h-10 flex items-center pl-4 gap-2 text-white mb-4 select-all">
-        <fa icon="search" />
+        <fa icon="fa-instagram" />
         @Nebras_arabic
       </p>
       <p class="w-full bg-blue-600 rounded-3xl h-10 flex items-center pl-4 gap-2 text-white mb-4 select-all">
