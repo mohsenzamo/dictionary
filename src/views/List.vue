@@ -17,7 +17,7 @@ const props = defineProps<{
     <div
       v-for="n in 9"
       :key="n"
-      class="bg-gray-200 even:bg-gray-400 row-span-1 rounded-lg active:-translate-y-1"
+      class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
     >
       <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
         <div class="font-semibold">
@@ -31,7 +31,7 @@ const props = defineProps<{
         <div>
           <fa
             icon="bookmark"
-            style="color:rgb(18, 156, 18);"
+            style="color:rgb(11, 182, 11);"
           />
         </div>
         <div>

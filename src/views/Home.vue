@@ -63,28 +63,31 @@ const words = [
   </transition>
   <div class="h-full pt-16">
     <div class="h-11 flex fixed top-16 z-10 left-6 justify-items-center">
-      <span @click="submit" class="z-10 h-full leading-snug font-normal text-center text-gray-500 absolute bg-transparent rounded text-base items-center justify-center w-8 left-4 pr-3 py-3">
+      <span
+        class="z-10 h-full leading-snug font-normal text-center text-gray-500 absolute bg-transparent rounded text-base items-center justify-center w-8 left-4 pr-3 py-3"
+        @click="submit"
+      >
         <fa icon="search" />
       </span>
       <input
         v-model="searchQuery"
         type="text"
         placeholder="جستجو کنید ...."
-        class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80"
+        class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20"
         @keyup.enter="submit"
       >
     </div>
     <!-- ------------------------------------- searchedWords ---------------------------------------------->
     <div
       v-if="searchQuery.length>0"
-      class="grid grid-rows-9 bg-white pt-9 gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full"
+      class="grid grid-rows-9 bg-white  gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full "
     >
       <!--------------------------------------- find ---------------------------------------------->
       <template v-if="searchQuery.length<3">
         <div
           v-for="n in 9"
           :key="n"
-          class="bg-gray-200 even:bg-gray-400 row-span-1 rounded-lg active:-translate-y-1"
+          class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
         >
           <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
             <div class="font-semibold">
@@ -98,7 +101,7 @@ const words = [
             <div>
               <fa
                 icon="bookmark"
-                style="color:rgb(18, 156, 18);"
+                style="color:rgb(11, 182, 11);"
               />
             </div>
             <div>
@@ -113,9 +116,16 @@ const words = [
       <!--------------------------------------- not find ---------------------------------------------->
       <div
         v-if="searchQuery.length>=3"
-        class="bg-red-600 text-center"
+        class="bg-gray-200 h-screen w-screen text-center "
       >
-        can not find
+        <p class="font-IRANSans pt-16 text-xl">
+          نتیجه ای یافت نشد!
+        </p>
+        <br>
+        <fa
+          icon="frown"
+          style="color: rgba(245, 158, 11) ; font-size: 32px;"
+        />
       </div>
     <!--------------------------------------- not find ---------------------------------------------->
     </div>
@@ -185,7 +195,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -202,7 +212,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -219,7 +229,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -236,7 +246,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -249,7 +259,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -262,7 +272,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -275,7 +285,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -288,7 +298,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-black w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
           @click="modalPremiumValue = true"
         >
           <fa
