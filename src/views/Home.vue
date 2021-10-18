@@ -63,7 +63,10 @@ const words = [
   </transition>
   <div class="h-full pt-16">
     <div class="h-11 flex fixed top-16 z-10 left-6 justify-items-center">
-      <span @click="submit" class="z-10 h-full leading-snug font-normal text-center text-gray-500 absolute bg-transparent rounded text-base items-center justify-center w-8 left-4 pr-3 py-3">
+      <span
+        class="z-10 h-full leading-snug font-normal text-center text-gray-500 absolute bg-transparent rounded text-base items-center justify-center w-8 left-4 pr-3 py-3"
+        @click="submit"
+      >
         <fa icon="search" />
       </span>
       <input
