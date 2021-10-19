@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { Nodes } from '../database/table'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
+const mohsen = new Nodes()
 const router = useRouter()
 const lockValue = ref(true)
 function pushLinkList (link:string, param:string) {
@@ -62,7 +64,7 @@ const words = [
     </modal>
   </transition>
   <div class="h-full pt-16">
-    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center">
+    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center bg-gray-200">
       <input
         v-model="searchQuery"
         type="text"
@@ -78,57 +80,64 @@ const words = [
       </span>
     </div>
     <!-- ------------------------------------- searchedWords ---------------------------------------------->
-    <div
-      v-if="searchQuery.length>0"
-      class="grid grid-rows-9 bg-white  gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full "
+    <transition
+      name="page"
+      mode="out-in"
     >
-      <!--------------------------------------- find ---------------------------------------------->
-      <template v-if="searchQuery.length<3">
-        <div
-          v-for="n in 9"
-          :key="n"
-          class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
-        >
-          <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
-            <div class="font-semibold">
-              semibol text
-            </div>
-            <div class="font-light">
-              light text
-            </div>
-          </div>
-          <div class="bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center">
-            <div>
-              <fa
-                icon="bookmark"
-                style="color:rgb(11, 182, 11);"
-              />
-            </div>
-            <div>
-              <fa
-                icon="volume-off"
-              />
-            </div>
-          </div>
-        </div>
-      </template>
-      <!--------------------------------------- find ---------------------------------------------->
-      <!--------------------------------------- not find ---------------------------------------------->
       <div
-        v-if="searchQuery.length>=3"
-        class="bg-gray-200 h-screen w-screen text-center "
+        v-if="searchQuery.length>0"
+        class="grid grid-rows-9 bg-white  gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full "
       >
-        <p class="font-IRANSans pt-16 text-xl">
-          نتیجه ای یافت نشد!
-        </p>
-        <br>
-        <fa
-          icon="frown"
-          style="color: rgba(245, 158, 11) ; font-size: 32px;"
-        />
+        <!--------------------------------------- find ---------------------------------------------->
+        <template v-if="searchQuery.length<3">
+          <div
+            v-for="n in 9"
+            :key="n"
+            class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
+          >
+            <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
+              <div class="font-semibold">
+                semibol text
+              </div>
+              <div class="font-light">
+                light text
+              </div>
+            </div>
+            <div class="bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center">
+              <div>
+                <fa
+                  icon="bookmark"
+                  style="color:rgb(11, 182, 11);"
+                />
+              </div>
+              <div>
+                <fa
+                  icon="volume-off"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+        <!--------------------------------------- find ---------------------------------------------->
+        <!--------------------------------------- not find ---------------------------------------------->
+
+        <div
+          v-if="searchQuery.length>=3"
+          class="bg-gray-200 h-screen w-screen text-center animate-open"
+        >
+          <p class="font-IRANSans pt-16 text-xl">
+            نتیجه ای یافت نشد!
+          </p>
+          <br>
+          <fa
+            icon="frown"
+            style="color: rgba(245, 158, 11) ; font-size: 32px;"
+          />
+        </div>
+
+        <!--------------------------------------- not find ---------------------------------------------->
       </div>
-    <!--------------------------------------- not find ---------------------------------------------->
-    </div>
+    </transition>
     <!--------------------------------------- searchedWords -------------------------------------------- -->
 
     <div class="h-full flex flex-wrap gap-4 justify-center mt-14 mb-16">
@@ -195,7 +204,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -212,7 +221,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -229,7 +238,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -246,7 +255,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -259,7 +268,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -272,7 +281,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -285,7 +294,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -298,7 +307,7 @@ const words = [
       <div class="category-box">
         <div
           v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50"
+          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -358,4 +367,14 @@ const words = [
   </div>
 </template>
 <style>
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
 </style>

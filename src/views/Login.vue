@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import backHeader from '../components/backHeader.vue'
+import backHeader from '../components/BackHeader.vue'
 const formValue = ref(true)
 </script>
 <template>
@@ -54,7 +54,7 @@ const formValue = ref(true)
         <p class="mt-4 font-IRANSans text-xs">
           حساب کاربری دارید!
           <span
-            class="text-blue-700"
+            class="text-blue-700 cursor-pointer"
             @click="formValue = !formValue"
           >ورود به حساب</span>
         </p>
@@ -97,7 +97,7 @@ const formValue = ref(true)
         <p class="mt-4 font-IRANSans text-xs">
           حساب کاربری ندارید؟
           <span
-            class="text-blue-700"
+            class="text-blue-700 cursor-pointer"
             @click="formValue = !formValue"
           >ثبت نام کنید</span>
         </p>

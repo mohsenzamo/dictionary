@@ -24,7 +24,7 @@ function goBack () {
   >
     <slot name="arrow">
       <span
-        class="text-xl"
+        class="text-xl cursor-pointer"
         @click="goBack"
       ><fa icon="arrow-right" /></span>
     </slot>

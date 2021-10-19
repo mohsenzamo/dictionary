@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import backHeader from '../components/backHeader.vue'
+import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
 const modalQuizValue = ref(false)
@@ -13,7 +13,7 @@ function goBack () {
   <backHeader>
     <template #arrow>
       <span
-        class="text-xl"
+        class="text-xl cursor-pointer"
         @click="modalQuizValue = true"
       ><fa icon="arrow-right" /></span>
     </template>
@@ -51,7 +51,7 @@ function goBack () {
         rounded-md
         h-8
       "
-      @click="goBack"
+          @click="goBack"
         >
           <p>خروج از تمرین لغات</p>
         </button>
@@ -80,16 +80,16 @@ function goBack () {
       </p>
     </div>
     <div class="h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4">
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         نترس
       </p>
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         نیاز نداشته باش
       </p>
-      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         پیدا نکن
       </p>
-      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         زنگ نزن
       </p>
     </div>

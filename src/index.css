@@ -30,30 +30,5 @@
   }
   .category-box {
     @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative;
-  }
-  /* .modal-leave-active{
-    @apply transition duration-500 transform scale-0
-  }
-  .modal-enter-active{
-    @apply transition duration-500 transform scale-100
-  }
-   */
-   
-}
-
-@keyframes fadeOut {
-  0% {
-    transform: opacity(0.7);
-  }
-  100% {
-    transform: opacity(0);
-  }
-}
-@keyframes fadeIn {
-  0% {
-    transform: opacity(0);
-  }
-  100% {
-    transform: opacity(0.7);
-  }
+  }   
 }

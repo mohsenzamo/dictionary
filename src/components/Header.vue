@@ -121,7 +121,7 @@ function openGuide () {
     "
   >
     <span
-      class="text-xl"
+      class="text-xl cursor-pointer"
       @click="modalMenuValue = true"
     ><fa icon="align-justify" /></span>
     <div class="grid items-center justify-items-center col-span-2">

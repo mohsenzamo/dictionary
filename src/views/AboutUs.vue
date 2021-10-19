@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import backHeader from '../components/backHeader.vue'
+import backHeader from '../components/BackHeader.vue'
 </script>
 <template>
   <backHeader>
