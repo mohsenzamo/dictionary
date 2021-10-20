@@ -42,24 +42,10 @@ const props = defineProps<{
       </div>
     </div>
     <div
-      class="
-      w-screen
-      fixed
-      inset-x-0
-      bottom-0
-      h-12
-      font-IRANSans
-      grid"
+      class=" yellow-button__box"
     >
       <button
-        class="
-        bg-yellow-500
-        flex
-        items-center
-        justify-center
-        rounded-t-2xl
-        gap-x-3
-      "
+        class="yellow-button"
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>
@@ -79,6 +65,23 @@ const props = defineProps<{
 }
 .word-box__abilities{
   @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center;
+}
+.yellow-button__box{
+  @apply w-screen
+      fixed
+      inset-x-0
+      bottom-0
+      h-12
+      font-IRANSans
+      grid
+}
+.yellow-button{
+  @apply bg-yellow-500
+        flex
+        items-center
+        justify-center
+        rounded-t-2xl
+        gap-x-3
 }
 
 </style>

@@ -17,6 +17,7 @@ export const useStore = defineStore('main', {
       const res = await fetch('/api/getUpdates.php?variant=normal&lastUpdate=-1')
       const tables: Output = await res.json()
       db.categories.bulkPut(tables.categories)
+      db.words.bulkPut(tables.words)
     }
 
   }

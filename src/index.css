@@ -19,6 +19,7 @@
   body{
     @apply bg-gray-200;
     direction:rtl;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 @tailwind components;

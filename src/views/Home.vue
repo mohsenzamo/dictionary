@@ -11,7 +11,7 @@ function res () {
 // const loadingValue = ref(true)
 store.request()
   .then(res => {
-    
+
   })
   .finally(() => loading.v)
 // loadingValue.value = false
@@ -59,15 +59,13 @@ const words = [
       v-if="modalPremiumValue"
       @close="modalPremiumValue = false"
     >
-      <div class="grid font-IRANSans text-sm gap-4">
+      <div class="premium-modal__box">
         <p class="">
           برای استفاده از این قسمت باید نرم افزار را به نسخه طلایی ارتقا دهید.<br>با دریافت نسخه طلایی نرم افزار، امکان دسترسی به هزاران لغت در دسته بندی های مختلف را خواهید داشت.
         </p>
         <button
           class="
-        bg-yellow-500
-        rounded-md
-        h-8
+        preimuim-modal__btn
       "
         >
           <p>ارتقا به نسخه طلایی</p>
@@ -82,16 +80,16 @@ const words = [
     loading
   </div> -->
   <div class="h-full pt-16">
-    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center">
+    <div class="input-box">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="جستجو کنید ...."
-        class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20"
+        class="search-input"
         @keyup.enter="submit"
       >
       <span
-        class="z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12"
+        class="search-input__submit"
         @click="submit"
       >
         <fa icon="search" />
@@ -111,9 +109,9 @@ const words = [
           <div
             v-for="n in 9"
             :key="n"
-            class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
+            class="find-box"
           >
-            <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
+            <div class="find-word__main">
               <div class="font-semibold">
                 semibol text
               </div>
@@ -121,7 +119,7 @@ const words = [
                 light text
               </div>
             </div>
-            <div class="bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center">
+            <div class="find-word__abilities">
               <div>
                 <fa
                   icon="bookmark"
@@ -141,9 +139,9 @@ const words = [
 
         <div
           v-if="searchQuery.length>=3"
-          class="bg-gray-200 h-screen w-screen text-center animate-opacity"
+          class="not-find-box"
         >
-          <p class="font-IRANSans pt-16 text-xl">
+          <p class="not-find__text">
             نتیجه ای یافت نشد!
           </p>
           <br>
@@ -158,7 +156,7 @@ const words = [
     </transition>
     <!--------------------------------------- searchedWords -------------------------------------------- -->
 
-    <div class="h-full flex flex-wrap gap-4 justify-center mt-14 mb-16">
+    <div class="home-box">
       <div
         v-for="n in 15"
         :key="n"
@@ -167,7 +165,7 @@ const words = [
       >
         <div
           v-if="n%2 == 0"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
+          class="premium"
           @click="modalPremiumValue = true"
         >
           <fa
@@ -186,24 +184,11 @@ const words = [
 
   <div
     class="
-      w-screen
-      fixed
-      inset-x-0
-      bottom-0
-      h-12
-      grid grid-cols-2
-      font-IRANSans
-      gap-x-2
-    "
+      yellow-btns-box"
   >
     <button
       class="
-        bg-yellow-500
-        flex
-        items-center
-        justify-center
-        rounded-t-2xl
-        gap-x-3
+        yellow-btns
       "
       @click="pushLink('Quiz')"
     >
@@ -212,12 +197,7 @@ const words = [
     </button>
     <button
       class="
-        bg-yellow-500
-        flex
-        items-center
-        justify-center
-        rounded-t-2xl
-        gap-x-3
+        yellow-btns
       "
       @click="change"
     >
@@ -236,5 +216,62 @@ const words = [
 .page-leave-to {
   opacity: 0;
   transform: scale(0.9);
+}
+.premium-modal__box{
+  @apply grid font-IRANSans text-sm gap-4
+}
+.premium-modal__btn{
+  @apply bg-yellow-500
+        rounded-md
+        h-8
+}
+.input-box{
+  @apply h-11 flex fixed top-16 z-10  w-screen justify-center
+}
+.search-input{
+  @apply h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20
+}
+.search-input__submit{
+  @apply z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12
+}
+.find-box{
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1
+}
+.find-word__main{
+  @apply bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center
+}
+.find-word__abilities{
+  @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center
+}
+.not-find-box{
+  @apply bg-gray-200 h-screen w-screen text-center animate-opacity
+}
+.not-find__text{
+  @apply font-IRANSans pt-16 text-xl
+}
+.home-box{
+  @apply h-full flex flex-wrap gap-4 justify-center mt-14 mb-16
+}
+.premium{
+  @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
+}
+.yellow-btns-box{
+  @apply w-screen
+      fixed
+      inset-x-0
+      bottom-0
+      h-12
+      grid grid-cols-2
+      font-IRANSans
+      gap-x-2
+
+}
+.yellow-btns{
+  @apply bg-yellow-500
+        flex
+        items-center
+        justify-center
+        rounded-t-2xl
+        gap-x-3
 }
 </style>
