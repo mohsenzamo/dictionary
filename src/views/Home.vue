@@ -9,7 +9,11 @@ function res () {
   store.request()
 }
 // const loadingValue = ref(true)
-res()
+store.request()
+  .then(res => {
+    
+  })
+  .finally(() => loading.v)
 // loadingValue.value = false
 const router = useRouter()
 const lockValue = ref(false)

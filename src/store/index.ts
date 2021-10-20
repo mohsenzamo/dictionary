@@ -18,5 +18,6 @@ export const useStore = defineStore('main', {
       const tables: Output = await res.json()
       db.categories.bulkPut(tables.categories)
     }
+
   }
 })
