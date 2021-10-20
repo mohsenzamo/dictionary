@@ -6,7 +6,7 @@ import backHeader from '../components/BackHeader.vue'
     درباره ما
   </backHeader>
   <div class="bg-logo w-screen h-screen bg-contain bg-no-repeat bg-opacity-75 bg-top blur-sm opacity-70" />
-  <div class="absolute top-44 grid w-screen text-center justify-items-center font-IRANSans">
+  <div class="absolute top-44 grid w-screen text-center justify-items-center font-IRANSans cursor-default">
     <img
       src="../assets/logo.png"
       class="w-32"

@@ -1,17 +1,25 @@
 <script lang="ts" setup>
-import { Nodes } from '../database/table'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
-const mohsen = new Nodes()
+import { useStore } from '../store'
+const store = useStore()
+function res () {
+  store.request()
+}
+// const loadingValue = ref(true)
+res()
+// loadingValue.value = false
 const router = useRouter()
-const lockValue = ref(true)
+const lockValue = ref(false)
 function pushLinkList (link:string, param:string) {
-  router.push({
-    name: link,
-    params: { id: param }
-  })
+  if (lockValue.value === !true) {
+    router.push({
+      name: link,
+      params: { id: param }
+    })
+  }
 }
 function pushLink (link:string) {
   router.push({
@@ -63,8 +71,14 @@ const words = [
       </div>
     </modal>
   </transition>
+  <!-- <div
+    v-if="loadingValue"
+    class="h-screen w-screen bg-white z-40 fixed"
+  >
+    loading
+  </div> -->
   <div class="h-full pt-16">
-    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center bg-gray-200">
+    <div class="h-11 flex fixed top-16 z-10  w-screen justify-center">
       <input
         v-model="searchQuery"
         type="text"
@@ -123,7 +137,7 @@ const words = [
 
         <div
           v-if="searchQuery.length>=3"
-          class="bg-gray-200 h-screen w-screen text-center animate-open"
+          class="bg-gray-200 h-screen w-screen text-center animate-opacity"
         >
           <p class="font-IRANSans pt-16 text-xl">
             نتیجه ای یافت نشد!
@@ -142,85 +156,13 @@ const words = [
 
     <div class="h-full flex flex-wrap gap-4 justify-center mt-14 mb-16">
       <div
+        v-for="n in 15"
+        :key="n"
         class="category-box"
-        @click="pushLinkList('List','نشان شده ها')"
+        @click="pushLinkList('List','دسته بندی')"
       >
-        <fa
-          icon="book-reader"
-          class="text-green-700 text-2xl"
-        />
-        <p>نشان شده ها</p>
-      </div>
-      <div
-        class="category-box"
-        @click="pushLinkList('List','پیشنهادات مردمی')"
-      >
-        <fa
-          icon="users"
-          class="text-pink-700 text-2xl"
-        />
-        <p>پیشنهادات مردمی</p>
-      </div>
-      <div
-        class="category-box"
-        @click="pushLinkList('List','اصطلاحات خلیجی')"
-      >
-        <fa
-          icon="globe"
-          class="text-red-700 text-2xl"
-        />
-        <p>اصطلاحات خلیجی</p>
-      </div>
-      <div class="category-box">
-        <fa
-          icon="tools"
-          class="text-purple-400 text-2xl"
-        />
-        <p>لوازم شخصی</p>
-      </div>
-      <div
-        class="category-box"
-      >
-        <fa
-          icon="clock"
-          class="text-yellow-300 text-2xl"
-        />
-        <p>زمان/روزهای هفته</p>
-      </div>
-      <div class="category-box">
-        <fa
-          icon="couch"
-          class="text-blue-500 text-2xl"
-        />
-        <p>لوازم منزل</p>
-      </div>
-      <div class="category-box">
-        <fa
-          icon="palette"
-          class="text-blue-600 text-2xl"
-        />
-        <p>رنگ ها</p>
-      </div>
-      <div class="category-box">
         <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <fa
-          icon="briefcase-medical"
-          class="text-green-500 text-2xl"
-        />
-        <p>پزشکی</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
+          v-if="n%2 == 0"
           class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
           @click="modalPremiumValue = true"
         >
@@ -234,92 +176,6 @@ const words = [
           class="text-yellow-500 text-2xl w-1/5"
         />
         <p>جملات کاربردی پزشکی</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <fa
-          icon="question-circle"
-          class="text-yellow-800 text-2xl"
-        />
-        <p>ادات سوال</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <p>فعل ماضی</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <p>فعل مضارع</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <p>فعل امر</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <p>فعل نهی</p>
-      </div>
-      <div class="category-box">
-        <div
-          v-if="lockValue"
-          class="absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <fa
-          icon="cloud-sun"
-          class="text-blue-900 text-2xl"
-        />
-        <p>آب و هوا</p>
       </div>
     </div>
   </div>

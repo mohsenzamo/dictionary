@@ -2,15 +2,7 @@ import Dexie from 'dexie'
 
 export interface Categories{
   CategoryID: number,
-  Title: string,
-  Icon: string,
-  CustomOrder: number,
-  IsFree: number,
-  LastUpdate: number,
-  Status: number,
-  ActiveInIraqDialect: number,
-  ActiveInEmiratesDialect: number,
-  ActiveInLebanonDialect: number
+  Title: string
 }
 
 export interface Words {
@@ -42,3 +34,6 @@ export class MyAppDatabase extends Dexie {
 
 // By defining the interface of table records,
 // you get better type safety and code completion
+const db = new MyAppDatabase()
+
+export default db

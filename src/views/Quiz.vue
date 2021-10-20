@@ -60,7 +60,7 @@ function goBack () {
   </transition>
   <div class="pt-16 w-screen h-auto grid">
     <div
-      class="w-full h-auto float-right flex gap-x-3 pr-5 text-white font-IRANSans mt-2"
+      class="w-full h-auto float-right flex gap-x-3 pr-5 text-white font-IRANSans mt-2 cursor-default"
     >
       <p class="bg-green-600 rounded-2xl w-14 flex items-center gap-x-3 pr-1 shadow-2xl">
         <fa icon="check-circle" />
@@ -71,7 +71,7 @@ function goBack () {
         <span>1</span>
       </p>
     </div>
-    <div class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl">
+    <div class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default">
       <p class="self-end font-IRANSans text-sm">
         معنی عبارت زیر چیست؟
       </p>

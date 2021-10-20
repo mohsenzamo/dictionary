@@ -124,7 +124,7 @@ function openGuide () {
       class="text-xl cursor-pointer"
       @click="modalMenuValue = true"
     ><fa icon="align-justify" /></span>
-    <div class="grid items-center justify-items-center col-span-2">
+    <div class="grid items-center justify-items-center col-span-2 cursor-default">
       <p class="text-base font-black font-IRANSans">
         دیکشنری عربی نبراس
       </p>
