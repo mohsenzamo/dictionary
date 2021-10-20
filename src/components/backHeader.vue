@@ -24,12 +24,12 @@ function goBack () {
   >
     <slot name="arrow">
       <span
-        class="text-xl"
+        class="text-xl cursor-pointer"
         @click="goBack"
       ><fa icon="arrow-right" /></span>
     </slot>
     <div class="justify-self-start col-span-2">
-      <p class="text-base font-black font-IRANSans">
+      <p class="text-base font-black font-IRANSans cursor-default">
         <slot />
       </p>
     </div>

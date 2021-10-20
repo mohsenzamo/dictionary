@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import backHeader from '../components/backHeader.vue'
+import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
 const modalQuizValue = ref(false)
@@ -13,7 +13,7 @@ function goBack () {
   <backHeader>
     <template #arrow>
       <span
-        class="text-xl"
+        class="text-xl cursor-pointer"
         @click="modalQuizValue = true"
       ><fa icon="arrow-right" /></span>
     </template>
@@ -51,7 +51,7 @@ function goBack () {
         rounded-md
         h-8
       "
-      @click="goBack"
+          @click="goBack"
         >
           <p>خروج از تمرین لغات</p>
         </button>
@@ -60,7 +60,7 @@ function goBack () {
   </transition>
   <div class="pt-16 w-screen h-auto grid">
     <div
-      class="w-full h-auto float-right flex gap-x-3 pr-5 text-white font-IRANSans mt-2"
+      class="w-full h-auto float-right flex gap-x-3 pr-5 text-white font-IRANSans mt-2 cursor-default"
     >
       <p class="bg-green-600 rounded-2xl w-14 flex items-center gap-x-3 pr-1 shadow-2xl">
         <fa icon="check-circle" />
@@ -71,7 +71,7 @@ function goBack () {
         <span>1</span>
       </p>
     </div>
-    <div class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl">
+    <div class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default">
       <p class="self-end font-IRANSans text-sm">
         معنی عبارت زیر چیست؟
       </p>
@@ -80,16 +80,16 @@ function goBack () {
       </p>
     </div>
     <div class="h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4">
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         نترس
       </p>
-      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-white rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         نیاز نداشته باش
       </p>
-      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-green-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         پیدا نکن
       </p>
-      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105">
+      <p class="w-full bg-red-500 rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer">
         زنگ نزن
       </p>
     </div>
