@@ -140,3 +140,6 @@ function openGuide () {
     >
   </div>
 </template>
+<style>
+
+</style>

@@ -12,14 +12,14 @@ const props = defineProps<{
     {{ props.id }}
   </backHeader>
   <div
-    class="grid grid-rows-9 h-screen bg-white pt-13 gap-x-8 gap-y-2 justify-items-stretch"
+    class="list-box"
   >
     <div
       v-for="n in 9"
       :key="n"
-      class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1"
+      class="word-box"
     >
-      <div class="bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center ">
+      <div class="word-box__main">
         <div class="font-semibold">
           semibol text
         </div>
@@ -27,7 +27,7 @@ const props = defineProps<{
           light text
         </div>
       </div>
-      <div class="bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center">
+      <div class="word-box__abilities">
         <div>
           <fa
             icon="bookmark"
@@ -67,3 +67,18 @@ const props = defineProps<{
     </div>
   </div>
 </template>
+<style>
+.word-box{
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1;
+}
+.list-box{
+  @apply grid  h-screen bg-white pt-12 gap-x-8 gap-y-2 justify-items-stretch;
+}
+.word-box__main{
+  @apply bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center;
+}
+.word-box__abilities{
+  @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center;
+}
+
+</style>
