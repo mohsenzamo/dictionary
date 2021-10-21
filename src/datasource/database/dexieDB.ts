@@ -33,23 +33,16 @@ export class MyAppDatabase extends Dexie {
     constructor () {
       super('MyAppDatabase')
 
-      //
-      // Define tables and indexes
-      // (Here's where the implicit table props are dynamically created)
-      //
       this.version(1).stores({
-        categories: 'CategoryID',
-        words: 'WordID,Fa,Ar'
+        categories: 'CategoryID,CustomOrder',
+        words: 'WordID,CategoryID,Fa,Ar'
       })
 
-      // The following lines are needed for it to work across typescipt using babel-preset-typescript:
       this.categories = this.table('categories')
       this.words = this.table('words')
     }
 }
 
-// By defining the interface of table records,
-// you get better type safety and code completion
 const db = new MyAppDatabase()
 
 export default db

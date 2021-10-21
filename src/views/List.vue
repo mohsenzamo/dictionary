@@ -1,10 +1,16 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import backHeader from '../components/BackHeader.vue'
-
+import { Words } from '../datasource/database/dexieDB'
+import { useWordsStore } from '../datasource/database/wordsDB'
 const props = defineProps<{
   id: string
 }>()
-
+const resultW = ref<Words[] | null>(null)
+useWordsStore().wordsGet(+props.id)
+  .then(r => {
+    resultW.value = r
+  })
 </script>
 
 <template>
@@ -15,16 +21,16 @@ const props = defineProps<{
     class="list-box"
   >
     <div
-      v-for="n in 9"
-      :key="n"
+      v-for="item in resultW"
+      :key="item.WordID"
       class="word-box"
     >
       <div class="word-box__main">
         <div class="font-semibold">
-          semibol text
+          {{ item.Fa }}
         </div>
         <div class="font-light">
-          light text
+          {{ item.Ar }}
         </div>
       </div>
       <div class="word-box__abilities">

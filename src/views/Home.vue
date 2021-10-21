@@ -3,22 +3,31 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
-import { useStore } from '../store'
-const store = useStore()
-function res () {
-  store.request()
-}
-// const loadingValue = ref(true)
-store.request()
-  .then(res => {
-
+import { useCategoriesStore } from '../datasource/database/categoriesDB'
+import { Categories } from '../datasource/database/dexieDB'
+const result = ref<Categories[] | null>(null)
+const loading = ref(true)
+useCategoriesStore().categoriesGet()
+  .then(r => {
+    result.value = r
+    console.log(result.value)
   })
-  .finally(() => loading.v)
+  .catch((err) => {
+    
+  })
+  .finally(() => { loading.value = false })
+
+// const loadingValue = ref(true)
+// store.request()
+//   .then(res => {
+
+//   })
+//   .finally(() => loading.v)
 // loadingValue.value = false
 const router = useRouter()
 const lockValue = ref(false)
-function pushLinkList (link:string, param:string) {
-  if (lockValue.value === !true) {
+function pushLinkList (link:string, param:number, lock:number) {
+  if (lock === 1) {
     router.push({
       name: link,
       params: { id: param }
@@ -73,12 +82,12 @@ const words = [
       </div>
     </modal>
   </transition>
-  <!-- <div
-    v-if="loadingValue"
+  <div
+    v-if="loading"
     class="h-screen w-screen bg-white z-40 fixed"
   >
     loading
-  </div> -->
+  </div>
   <div class="h-full pt-16">
     <div class="input-box">
       <input
@@ -158,13 +167,13 @@ const words = [
 
     <div class="home-box">
       <div
-        v-for="n in 15"
-        :key="n"
+        v-for="item in result"
+        :key="item.CategoryID"
         class="category-box"
-        @click="pushLinkList('List','دسته بندی')"
+        @click="pushLinkList('List',item.CategoryID,item.IsFree)"
       >
         <div
-          v-if="n%2 == 0"
+          v-if="item.IsFree === 0"
           class="premium"
           @click="modalPremiumValue = true"
         >
@@ -173,11 +182,13 @@ const words = [
             class="absolute top-2 right-2 text-yellow-500"
           />
         </div>
-        <fa
-          icon="user-nurse"
-          class="text-yellow-500 text-2xl w-1/5"
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div
+          v-if="item.Icon"
+          class="w-10"
+          v-html="item.Icon"
         />
-        <p>جملات کاربردی پزشکی</p>
+        <p>{{ item.Title }}</p>
       </div>
     </div>
   </div>

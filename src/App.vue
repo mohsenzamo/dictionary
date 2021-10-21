@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useCreateDB } from './datasource/call/createDB'
+useCreateDB().putDB()
 </script>
 
 <template>
