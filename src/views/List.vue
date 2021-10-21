@@ -4,19 +4,27 @@ import backHeader from '../components/BackHeader.vue'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsStore } from '../datasource/database/wordsDB'
 const props = defineProps<{
+  title: string
   id: string
 }>()
+const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
 useWordsStore().wordsGet(+props.id)
   .then(r => {
     resultW.value = r
-  })
+  }).finally(() => { loading.value = false })
 </script>
 
 <template>
   <backHeader>
-    {{ props.id }}
+    {{ props.title }}
   </backHeader>
+  <div
+    v-if="loading"
+    class="h-screen w-screen bg-white z-40 fixed"
+  >
+    loading
+  </div>
   <div
     class="list-box"
   >

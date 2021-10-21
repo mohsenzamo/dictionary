@@ -13,7 +13,7 @@ useCategoriesStore().categoriesGet()
     console.log(result.value)
   })
   .catch((err) => {
-    
+
   })
   .finally(() => { loading.value = false })
 
@@ -26,11 +26,14 @@ useCategoriesStore().categoriesGet()
 // loadingValue.value = false
 const router = useRouter()
 const lockValue = ref(false)
-function pushLinkList (link:string, param:number, lock:number) {
+function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
     router.push({
       name: link,
-      params: { id: param }
+      params: {
+        title: param,
+        id: id
+      }
     })
   }
 }
@@ -170,7 +173,7 @@ const words = [
         v-for="item in result"
         :key="item.CategoryID"
         class="category-box"
-        @click="pushLinkList('List',item.CategoryID,item.IsFree)"
+        @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
       >
         <div
           v-if="item.IsFree === 0"
