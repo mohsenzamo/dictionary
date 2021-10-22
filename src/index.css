@@ -29,8 +29,4 @@
   .header-shadow{
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   }
-  .category-box {
-    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer;
-  } 
-    
 }
