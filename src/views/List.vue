@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import backHeader from '../components/BackHeader.vue'
-
+import loader from '../components/loader.vue'
 const props = defineProps<{
   id: string
 }>()
@@ -11,9 +11,13 @@ const props = defineProps<{
   <backHeader>
     {{ props.id }}
   </backHeader>
+
   <div
     class="list-box"
   >
+    <loader>
+      sa
+    </loader>
     <div
       v-for="n in 9"
       :key="n"
