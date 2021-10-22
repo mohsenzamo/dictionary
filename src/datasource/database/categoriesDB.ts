@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import db, { Categories } from './dexieDB'
 
-export const useCategoriesStore = defineStore('useCategoriesStore', {
+export const useCategoriesDB = defineStore('useCategoriesDB', {
   state () {
     return {
     }

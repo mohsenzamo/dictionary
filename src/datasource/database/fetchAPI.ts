@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { Categories, Words } from './dexieDB'
 
-export const useApiStore = defineStore('useApiStore', {
+export const useFetchApiStore = defineStore('useApiStore', {
   state () {
     return {
     }
