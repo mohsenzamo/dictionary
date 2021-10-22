@@ -10,20 +10,12 @@ const loading = ref(true)
 useCategoriesStore().categoriesGet()
   .then(r => {
     result.value = r
-    console.log(result.value)
   })
   .catch((err) => {
 
   })
   .finally(() => { loading.value = false })
 
-// const loadingValue = ref(true)
-// store.request()
-//   .then(res => {
-
-//   })
-//   .finally(() => loading.v)
-// loadingValue.value = false
 const router = useRouter()
 const lockValue = ref(false)
 function pushLinkList (link:string, param:string, id:number, lock:number) {
@@ -112,88 +104,92 @@ const words = [
       name="page"
       mode="out-in"
     >
-      <div
-        v-if="searchQuery.length>0"
-        class="grid grid-rows-9 bg-white  gap-x-8 gap-y-2 justify-items-stretch fixed z-10 w-screen top-28 h-full "
-      >
-        <!--------------------------------------- find ---------------------------------------------->
-        <template v-if="searchQuery.length<3">
-          <div
-            v-for="n in 9"
-            :key="n"
-            class="find-box"
-          >
-            <div class="find-word__main">
-              <div class="font-semibold">
-                semibol text
-              </div>
-              <div class="font-light">
-                light text
-              </div>
-            </div>
-            <div class="find-word__abilities">
-              <div>
-                <fa
-                  icon="bookmark"
-                  style="color:rgb(11, 182, 11);"
-                />
-              </div>
-              <div>
-                <fa
-                  icon="volume-off"
-                />
-              </div>
-            </div>
-          </div>
-        </template>
-        <!--------------------------------------- find ---------------------------------------------->
-        <!--------------------------------------- not find ---------------------------------------------->
-
+      <div>
         <div
-          v-if="searchQuery.length>=3"
-          class="not-find-box"
+          v-if="searchQuery.length>0"
+          class="grid grid-rows-9 bg-white  gap-x-8 gap-y-2 justify-items-stretch absolute w-screen top-28 h-full "
         >
-          <p class="not-find__text">
-            نتیجه ای یافت نشد!
-          </p>
-          <br>
-          <fa
-            icon="frown"
-            style="color: rgba(245, 158, 11) ; font-size: 32px;"
-          />
-        </div>
+          <!--------------------------------------- find ---------------------------------------------->
+          <template v-if="searchQuery.length<3">
+            <div
+              v-for="n in 9"
+              :key="n"
+              class="find-box"
+            >
+              <div class="find-word__main">
+                <div class="font-semibold">
+                  semibol text
+                </div>
+                <div class="font-light">
+                  light text
+                </div>
+              </div>
+              <div class="find-word__abilities">
+                <div>
+                  <fa
+                    icon="bookmark"
+                    style="color:rgb(11, 182, 11);"
+                  />
+                </div>
+                <div>
+                  <fa
+                    icon="volume-off"
+                  />
+                </div>
+              </div>
+            </div>
+          </template>
+          <!--------------------------------------- find ---------------------------------------------->
+          <!--------------------------------------- not find ---------------------------------------------->
+
+          <div
+            v-if="searchQuery.length>=3"
+            class="not-find-box"
+          >
+            <p class="not-find__text">
+              نتیجه ای یافت نشد!
+            </p>
+            <br>
+            <fa
+              icon="frown"
+              style="color: rgba(245, 158, 11) ; font-size: 32px;"
+            />
+          </div>
 
         <!--------------------------------------- not find ---------------------------------------------->
+        </div>
+        <div
+          v-if="searchQuery.length<=0"
+          class="home-box"
+        >
+          <div
+            v-for="item in result"
+            :key="item.CategoryID"
+            class="category-box"
+            @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
+          >
+            <div
+              v-if="item.IsFree === 0"
+              class="premium"
+              @click="modalPremiumValue = true"
+            >
+              <fa
+                icon="lock"
+                class="absolute top-2 right-2 text-yellow-500"
+              />
+            </div>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div
+              v-if="item.Icon"
+              class="w-10"
+              v-html="item.Icon"
+            />
+            <p>{{ item.Title }}</p>
+          </div>
+        </div>
       </div>
     </transition>
     <!--------------------------------------- searchedWords -------------------------------------------- -->
-
-    <div class="home-box">
-      <div
-        v-for="item in result"
-        :key="item.CategoryID"
-        class="category-box"
-        @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
-      >
-        <div
-          v-if="item.IsFree === 0"
-          class="premium"
-          @click="modalPremiumValue = true"
-        >
-          <fa
-            icon="lock"
-            class="absolute top-2 right-2 text-yellow-500"
-          />
-        </div>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div
-          v-if="item.Icon"
-          class="w-10"
-          v-html="item.Icon"
-        />
-        <p>{{ item.Title }}</p>
-      </div>
-    </div>
   </div>
 
   <div
@@ -249,7 +245,7 @@ const words = [
   @apply z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12
 }
 .find-box{
-  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1 animate-opacity
 }
 .find-word__main{
   @apply bg-transparent w-28 h-14 float-right rounded-lg grid grid-rows-2 justify-items-center items-center
@@ -264,7 +260,7 @@ const words = [
   @apply font-IRANSans pt-16 text-xl
 }
 .home-box{
-  @apply h-full flex flex-wrap gap-4 justify-center mt-14 mb-16
+  @apply h-full flex flex-wrap gap-4 justify-center mt-14 mb-16 animate-opacity
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
