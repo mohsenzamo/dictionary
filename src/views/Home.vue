@@ -275,7 +275,7 @@ watchEffect(async () => {
   @apply font-IRANSans pt-16 text-xl
 }
 .home-box{
-  @apply h-full flex flex-wrap gap-4 justify-center mt-14 mb-16 animate-opacity
+  @apply h-full flex flex-wrap gap-2 justify-center mt-14 mb-16 animate-opacity xsm:gap-4
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
