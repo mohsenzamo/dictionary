@@ -69,7 +69,7 @@ const words = [
         </p>
         <button
           class="
-        preimuim-modal__btn
+        premium-modal__btn
       "
         >
           <p>ارتقا به نسخه طلایی</p>
@@ -181,7 +181,7 @@ const words = [
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div
               v-if="item.Icon"
-              class="w-10"
+              class="category-box__svg"
               v-html="item.Icon"
             />
             <p>{{ item.Title }}</p>
@@ -231,9 +231,7 @@ const words = [
   @apply grid font-IRANSans text-sm gap-4
 }
 .premium-modal__btn{
-  @apply bg-yellow-500
-        rounded-md
-        h-8
+  @apply bg-yellow-500 rounded-md h-8
 }
 .input-box{
   @apply h-11 flex fixed top-16 z-10  w-screen justify-center
@@ -264,6 +262,16 @@ const words = [
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
+}
+  .category-box {
+    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer;
+  }
+.category-box__svg{
+  @apply w-8 h-8
+}
+.category-box__svg svg{
+  width: 100% !important;
+  height: 100% !important;
 }
 .yellow-btns-box{
   @apply w-screen
