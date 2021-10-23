@@ -37,6 +37,9 @@ const config = {
       },
       backgroundSize: {
         // mohsen: '300px 400px'
+      },
+      screens: {
+        xsm: '340px'
       }
     }
   },
