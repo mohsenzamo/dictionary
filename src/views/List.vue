@@ -46,11 +46,13 @@ useWordsDB().wordsGet(+props.id)
         <div>
           <fa
             icon="bookmark"
+            class="active:-translate-y-1"
           />
         </div>
         <div>
           <fa
-            icon="volume-off"
+            icon="volume-up"
+            class="active:-translate-y-1"
           />
         </div>
       </div>
@@ -69,7 +71,7 @@ useWordsDB().wordsGet(+props.id)
 </template>
 <style>
 .word-box{
-  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1 mx-2 pr-4 font-IRANSans active:shadow-xl;
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg mx-2 pr-4 font-IRANSans;
 }
 .list-box{
   @apply grid h-screen bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch;

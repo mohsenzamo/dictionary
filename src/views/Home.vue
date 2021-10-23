@@ -139,12 +139,14 @@ watchEffect(async () => {
                   <div>
                     <fa
                       icon="bookmark"
+                      class="active:-translate-y-1"
                       style="color:rgb(11, 182, 11);"
                     />
                   </div>
                   <div>
                     <fa
-                      icon="volume-off"
+                      icon="volume-up"
+                      class="active:-translate-y-1"
                     />
                   </div>
                 </div>
@@ -255,7 +257,7 @@ watchEffect(async () => {
   @apply z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12
 }
 .find-box{
-  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1 active:shadow-xl animate-opacity mx-2 pr-4
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg animate-opacity mx-2 pr-4
 }
 .find-word__main{
   @apply w-auto h-14 float-right rounded-lg grid grid-rows-2 items-center font-IRANSans
