@@ -75,7 +75,7 @@ function openGuide () {
         <p class="guide__text__main">
           راهنما
         </p>
-        <span class="w-full bg-black h-0.5" />
+        <span class="guide-line" />
         <div>
           <p><span class="guide-number">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
           <p><span class="guide-number">2.</span> دسته‌بندی‌های موجود به صورت مشترک بین لهجه عراقی و خلیجی می‌باشد.</p>
@@ -163,5 +163,8 @@ function openGuide () {
 }
 .guide-box{
   @apply grid gap-4 font-IRANSans
+}
+.guide-line{
+  @apply w-full bg-black h-0.5
 }
 </style>

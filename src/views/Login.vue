@@ -7,46 +7,46 @@ const formValue = ref(true)
   <backHeader>
     صفحه ورود
   </backHeader>
-  <div class="h-screen grid items-center justify-center">
+  <div class="login-page">
     <transition
       name="scaleRight"
       appear
     >
       <div
         v-if="formValue"
-        class="form bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl"
+        class="login-form"
       >
         <form class="w-full">
           <div class="relative mb-11">
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none border-opacity-60"
+              class="login-form__input"
             >
-            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
+            <label class="login-form__input-label">نام کاربری</label>
             <span class="focus-border" />
           </div>
           <div class="relative mb-11 w-full">
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
+              class="login-form__input"
             >
-            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">ایمیل</label>
+            <label class="login-form__input-label">ایمیل</label>
             <span class="focus-border" />
           </div>
           <div class="relative mb-11 w-full">
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
+              class="login-form__input"
             >
-            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
+            <label class="login-form__input-label">پسورد</label>
             <span class="focus-border" />
           </div>
           <button
             type="button"
-            class="bg-yellow-500 w-full h-10 font-IRANSans rounded-lg"
+            class="login-btn"
           >
             ثبت نام
           </button>
@@ -54,7 +54,7 @@ const formValue = ref(true)
         <p class="mt-4 font-IRANSans text-xs">
           حساب کاربری دارید!
           <span
-            class="text-blue-700 cursor-pointer"
+            class="go-to-login"
             @click="formValue = !formValue"
           >ورود به حساب</span>
         </p>
@@ -66,30 +66,30 @@ const formValue = ref(true)
     >
       <div
         v-if="formValue == false"
-        class="form bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl"
+        class="sign-up-form"
       >
         <form class="w-full">
           <div class="relative mb-11">
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
+              class="sign-up-form__input"
             >
-            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">نام کاربری</label>
+            <label class="sign-up-form__input-label">نام کاربری</label>
             <span class="focus-border" />
           </div>
           <div class="relative mb-11 w-full">
             <input
               type="text"
               required
-              class="block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60"
+              class="sign-up-form__input"
             >
-            <label class="text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans">پسورد</label>
+            <label class="sign-up-form__input-label">پسورد</label>
             <span class="focus-border" />
           </div>
           <button
             type="button"
-            class="bg-yellow-500 w-full h-10 font-IRANSans rounded-lg"
+            class="sign-up-btn"
           >
             ورود
           </button>
@@ -97,7 +97,7 @@ const formValue = ref(true)
         <p class="mt-4 font-IRANSans text-xs">
           حساب کاربری ندارید؟
           <span
-            class="text-blue-700 cursor-pointer"
+            class="go-to-sign-up"
             @click="formValue = !formValue"
           >ثبت نام کنید</span>
         </p>
@@ -143,5 +143,38 @@ input:focus ~ .focus-border{
 }
 .scaleLeft-leave-from{
     opacity: 0;
+}
+.login-page{
+  @apply h-screen grid items-center justify-center
+}
+.login-form{
+  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl
+}
+.login-form__input{
+  @apply block w-full border-b-2 border-solid border-black focus:outline-none border-opacity-60
+}
+.login-form__input-label{
+  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans
+}
+.sign-up-form{
+  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl
+}
+.sign-up-form__input{
+  @apply block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60
+}
+.sign-up-form__input-label{
+  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans
+}
+.login-btn{
+  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg
+}
+.sign-up-btn{
+  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg
+}
+.go-to-login{
+  @apply text-blue-700 cursor-pointer
+}
+.go-to-sign-up{
+  @apply text-blue-700 cursor-pointer
 }
 </style>

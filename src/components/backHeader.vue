@@ -8,19 +8,7 @@ function goBack () {
 
 <template>
   <div
-    class="
-      grid grid-cols-4
-      items-center
-      h-14
-      justify-items-center
-      header-shadow
-      fixed
-      w-screen
-      bg-white
-      inset-x-0
-      top-0
-      z-10
-    "
+    class="back-header-box"
   >
     <slot name="arrow">
       <span
@@ -44,3 +32,18 @@ function goBack () {
     </router-link>
   </div>
 </template>
+<style>
+.back-header-box{
+  @apply grid grid-cols-4
+      items-center
+      h-14
+      justify-items-center
+      header-shadow
+      fixed
+      w-screen
+      bg-white
+      inset-x-0
+      top-0
+      z-10
+}
+</style>
