@@ -38,9 +38,6 @@ const modalPremiumValue = ref(false)
 function change () {
   lockValue.value = !lockValue.value
 }
-function submit () {
-  alert('mohsen')
-}
 
 const words = ref()
 const searchFind = ref(false)
@@ -100,11 +97,9 @@ watchEffect(async () => {
           type="text"
           placeholder="جستجو کنید ...."
           class="search-input"
-          @keyup.enter="submit"
         >
         <span
           class="search-input__submit"
-          @click="submit"
         >
           <fa icon="search" />
         </span>
@@ -290,6 +285,9 @@ watchEffect(async () => {
   width: 100% !important;
   height: 100% !important;
 }
+/* .category-box__svg svg path{
+  fill: red;
+} */
 .yellow-btns-box{
   @apply w-screen
       fixed
