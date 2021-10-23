@@ -2,7 +2,7 @@
 
 </script>
 <template>
-  <section class="w-screen h-screen">
+  <section class="w-screen h-screen bg-green-200">
     <span class="loader" />
   </section>
 </template>
@@ -45,7 +45,7 @@ section:nth-child(2n+1) {
   background: currentColor;
   display: inline-block;
   position: relative;
-  color: #fff;
+  color: rgb(255, 153, 0);
   left: -30px;
           animation: animloader60 2s ease infinite;
 }
@@ -56,7 +56,7 @@ section:nth-child(2n+1) {
   box-shadow: 0 30px, 0 -30px;
   border-radius: 4px;
   background: currentColor;
-  color: #fff;
+  color: rgb(255, 153, 0);
   position: absolute;
   left: 30px;
   top: 0;
@@ -70,16 +70,15 @@ section:nth-child(2n+1) {
 @keyframes animloader60 {
   0% {
     top: 0;
-    color: white;
+    color: rgb(255, 153, 0);
   }
   50% {
     top: 30px;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgb(0, 68, 255);
   }
   100% {
     top: 0;
-    color: white;
+    color: rgb(255, 153, 0);
   }
 }
-
 </style>

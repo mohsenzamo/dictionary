@@ -6,6 +6,7 @@ import Modal from '../components/Modal.vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import db, { Categories } from '../datasource/database/dexieDB'
 import { useCreateRepo } from '../datasource/repository/repo'
+import Loader from '../components/Loader.vue'
 const result = ref<Categories[] | null>(null)
 const loading = ref(true)
 useCreateRepo().createRepo().then(async () => {
@@ -83,12 +84,7 @@ watchEffect(async () => {
       </div>
     </modal>
   </transition>
-  <div
-    v-if="loading"
-    class="h-screen w-full bg-red-500 text-center grid items-center"
-  >
-    loading
-  </div>
+  <Loader v-if="loading" />
   <div v-else>
     <div class="h-full pt-16">
       <div class="input-box">

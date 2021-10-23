@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
-import Loader from '../components/loader.vue'
+import Loader from '../components/Loader.vue'
 const props = defineProps<{
   title: string
   id: string
@@ -20,16 +20,11 @@ useWordsDB().wordsGet(+props.id)
   <backHeader>
     {{ props.title }}
   </backHeader>
-  <Loader v-if="loading">
-    sad
-  </Loader>
+  <Loader v-if="loading" />
   <div
     v-else
     class="list-box"
   >
-    <!-- <loader>
-    asd
-  </loader> -->
     <div
       v-for="item in resultW"
       :key="item.WordID"
