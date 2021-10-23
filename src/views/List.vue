@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
+import Loader from '../components/loader.vue'
 const props = defineProps<{
   title: string
   id: string
@@ -19,20 +20,16 @@ useWordsDB().wordsGet(+props.id)
   <backHeader>
     {{ props.title }}
   </backHeader>
-
-  <div
-    v-if="loading"
-    class="h-screen w-full bg-red-500 text-center grid items-center"
-  >
-    loading
-  </div>
+  <Loader v-if="loading">
+    sad
+  </Loader>
   <div
     v-else
     class="list-box"
   >
-    <loader>
-      sa
-    </loader>
+  <!-- <loader>
+    asd
+  </loader> -->
     <div
       v-for="item in resultW"
       :key="item.WordID"
@@ -47,15 +44,25 @@ useWordsDB().wordsGet(+props.id)
         </div>
       </div>
       <div class="word-box__abilities">
-        <div>
+        <div class="word-box__abilities-bookmark">
           <fa
             icon="bookmark"
+
+            class=" black-bookmark"
+          />
+          <fa
+            icon="bookmark"
+            class=" green-bookmark"
+            style="color: rgb(16, 129, 16);"
           />
         </div>
         <div>
-          <fa
-            icon="volume-off"
-          />
+          <button type="button">
+            <fa
+              icon="volume-up"
+              class="active:text-xl"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -73,7 +80,7 @@ useWordsDB().wordsGet(+props.id)
 </template>
 <style>
 .word-box{
-  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg active:-translate-y-1 mx-2 pr-4 font-IRANSans active:shadow-xl;
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg mx-2 pr-4 font-IRANSans;
 }
 .list-box{
   @apply grid h-screen bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch;
@@ -100,6 +107,15 @@ useWordsDB().wordsGet(+props.id)
         justify-center
         rounded-t-2xl
         gap-x-3
+}
+.word-box__abilities-bookmark:active .black-bookmark {
+  display: none;
+}
+.word-box__abilities-bookmark .green-bookmark{
+  display: none;
+}
+.word-box__abilities-bookmark:active .green-bookmark{
+  display: block;
 }
 
 </style>
