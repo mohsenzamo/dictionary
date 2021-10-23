@@ -42,20 +42,14 @@ useWordsDB().wordsGet(+props.id)
         <div class="word-box__abilities-bookmark">
           <fa
             icon="bookmark"
-
-            class=" black-bookmark"
-          />
-          <fa
-            icon="bookmark"
-            class=" green-bookmark"
-            style="color: rgb(16, 129, 16);"
+            class="active:text-xl active:text-green-500"
           />
         </div>
         <div>
           <button type="button">
             <fa
               icon="volume-up"
-              class="active:text-xl"
+              class="active:text-xl active:text-blue-500"
             />
           </button>
         </div>
@@ -103,14 +97,4 @@ useWordsDB().wordsGet(+props.id)
         rounded-t-2xl
         gap-x-3
 }
-.word-box__abilities-bookmark:active .black-bookmark {
-  display: none;
-}
-.word-box__abilities-bookmark .green-bookmark{
-  display: none;
-}
-.word-box__abilities-bookmark:active .green-bookmark{
-  display: block;
-}
-
 </style>

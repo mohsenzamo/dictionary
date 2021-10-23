@@ -135,14 +135,13 @@ watchEffect(async () => {
                   <div>
                     <fa
                       icon="bookmark"
-                      class="active:-translate-y-1"
-                      style="color:rgb(11, 182, 11);"
+                      class="active:text-xl active:text-green-500"
                     />
                   </div>
                   <div>
                     <fa
                       icon="volume-up"
-                      class="active:-translate-y-1"
+                      class="active:text-xl active:text-blue-500"
                     />
                   </div>
                 </div>
