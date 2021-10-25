@@ -2,7 +2,7 @@
 
 </script>
 <template>
-  <section class="w-screen h-screen bg-green-200">
+  <section class="w-screen h-screen bg-gray-300">
     <span class="loader" />
   </section>
 </template>
