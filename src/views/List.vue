@@ -4,6 +4,7 @@ import backHeader from '../components/BackHeader.vue'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
+import backToTop from 'vue-backtotop'
 const props = defineProps<{
   title: string
   id: string
@@ -20,6 +21,21 @@ useWordsDB().wordsGet(+props.id)
   <backHeader>
     {{ props.title }}
   </backHeader>
+
+  <backToTop
+    visibleoffset="400"
+    class="bottom-10 left-0 mb-10"
+  >
+    <button
+      type="button"
+      class="w-8 h-8 rounded-md bg-yellow-500"
+    >
+      <fa
+        icon="arrow-up"
+        class="text-gray-700"
+      />
+    </button>
+  </backToTop>
   <Loader v-if="loading" />
   <div
     v-else
