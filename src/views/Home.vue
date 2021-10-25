@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
