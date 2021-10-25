@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
@@ -8,13 +8,37 @@ const router = useRouter()
 function goBack () {
   router.back()
 }
+let intervalId:any = null
+const timer = ref(0)
+const settimer = function () {
+  if (modalQuizValue.value === false) {
+    timer.value++
+    console.log(timer.value)
+  } else {
+    clearInterval(intervalId)
+  }
+}
+watchEffect(() => {
+  intervalId = setInterval(settimer, 1000)
+})
+const second = ref(0)
+const minute = ref(0)
+function modalOpen () {
+  minute.value = (Math.floor(timer.value / 60))
+  second.value = (timer.value % 60)
+  modalQuizValue.value = true
+}
+function modalClose () {
+  intervalId = setInterval(settimer, 1000)
+  modalQuizValue.value = false
+}
 </script>
 <template>
   <backHeader>
     <template #arrow>
       <span
         class="text-xl cursor-pointer"
-        @click="modalQuizValue = true"
+        @click="modalOpen"
       ><fa icon="arrow-right" /></span>
     </template>
     <template #default>
@@ -24,7 +48,7 @@ function goBack () {
   <transition name="modal">
     <modal
       v-if="modalQuizValue"
-      @close="modalQuizValue = false"
+      @close="modalClose"
     >
       <div class="grid font-IRANSans text-sm gap-4">
         <div>
@@ -42,7 +66,20 @@ function goBack () {
           </p>
           <p class="flex justify-between">
             <span>زمان</span>
-            <span>1 دقیقه و 11 ثانیه</span>
+            <span>
+              <span v-if="minute > 0">
+                {{ minute }}
+              </span>
+              <span v-if="minute > 0">
+                دقیقه
+              </span>
+              <span v-if="second > 0">
+                {{ second }}
+              </span>
+              <span v-if="second > 0">
+                ثانیه
+              </span>
+            </span>
           </p>
         </div>
         <button

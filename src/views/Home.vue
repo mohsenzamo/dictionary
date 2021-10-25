@@ -18,7 +18,6 @@ useCreateRepo().createRepo().then(async () => {
 })
 
 const router = useRouter()
-const lockValue = ref(false)
 function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
     router.push({
@@ -36,9 +35,6 @@ function pushLink (link:string) {
   })
 }
 const modalPremiumValue = ref(false)
-function change () {
-  lockValue.value = !lockValue.value
-}
 
 const words = ref()
 const searchFind = ref(false)
@@ -161,6 +157,7 @@ watchEffect(async () => {
               <fa
                 icon="frown"
                 style="color: rgba(245, 158, 11) ; font-size: 32px;"
+                class="animate-spin"
               />
             </div>
 
@@ -217,7 +214,6 @@ watchEffect(async () => {
         class="
         yellow-btns
       "
-        @click="change"
       >
         <fa icon="spell-check" />
         <p>آزمون مرحله ای</p>
@@ -243,7 +239,7 @@ watchEffect(async () => {
   @apply bg-yellow-500 rounded-md h-8
 }
 .input-box{
-  @apply h-11 flex fixed top-16 z-10  w-screen justify-center
+  @apply h-11 flex fixed top-16 z-10  w-screen justify-center px-2
 }
 .search-input{
   @apply h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20

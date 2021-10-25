@@ -1,8 +1,6 @@
 import Dexie from 'dexie'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import { useCategoriesDB } from '../database/categoriesDB'
-import { Categories } from '../database/dexieDB'
 import { useFetchApiStore } from '../database/fetchAPI'
 import { useWordsDB } from '../database/wordsDB'
 
