@@ -24,7 +24,8 @@ useWordsDB().wordsGet(+props.id)
 
   <backToTop
     visibleoffset="400"
-    class="bottom-10 left-0 mb-10"
+    bottom="50px"
+    right="10px"
   >
     <button
       type="button"
