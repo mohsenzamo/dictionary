@@ -2,7 +2,7 @@
   "name": "dictionary",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "eslint src/**/*.{ts,vue} && vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },

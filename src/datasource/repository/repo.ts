@@ -1,26 +1,25 @@
 import Dexie from 'dexie'
 import { defineStore } from 'pinia'
 import { useCategoriesDB } from '../database/categoriesDB'
+import { Categories } from '../database/dexieDB'
 import { useFetchApiStore } from '../database/fetchAPI'
 import { useWordsDB } from '../database/wordsDB'
 
 export const useCreateRepo = defineStore('useCreateRepo', {
   state () {
     return {
+      categroyTable: null as null | Categories[]
     }
   },
   actions: {
-    async createRepo () {
-      await Dexie.exists('MyAppDatabase').then(async function (exists) {
-        if (exists) {
-          console.log('Database exists')
-        } else {
-          await useFetchApiStore().request().then(async table => {
-            localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
-            await useCategoriesDB().categoriesPut(table.categories)
-            await useWordsDB().wordsPut(table.words)
-          })
-        }
+    async updateWordandCategory (lastUpdate:string) {
+      useFetchApiStore().requestGet(lastUpdate).then(async table => {
+        localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
+        useCategoriesDB().categoriesPut(table.categories)
+        useCategoriesDB().categoriesGet().then(r => {
+          this.categroyTable = r
+        })
+        useWordsDB().wordsPut(table.words)
       })
     }
   }

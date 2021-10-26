@@ -1,22 +1,16 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import db, { Categories } from '../datasource/database/dexieDB'
-import { useCreateRepo } from '../datasource/repository/repo'
 import Loader from '../components/Loader.vue'
+import { useCreateRepo } from '../datasource/repository/repo'
 const result = ref<Categories[] | null>(null)
-const loading = ref(true)
-useCreateRepo().createRepo().then(async () => {
-  await useCategoriesDB().categoriesGet().then(r => {
-    result.value = r
-  })
-}).catch((err) => { console.error(err) }).finally(() => {
-  loading.value = false
-})
 
+const categoryRepo = useCreateRepo()
+const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
 const router = useRouter()
 function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
@@ -43,14 +37,19 @@ const searchQuery = ref('')
 watchEffect(async () => {
   if (searchQuery.value.length > 0) {
     searchLoading.value = true
-    await db.words.where('Fa').startsWith(searchQuery.value).toArray(function (findList) {
-      searchFind.value = true
-      searchLoading.value = false
-      words.value = findList
-      if (findList.length === 0) {
-        searchFind.value = false
-      }
-    })
+    await db.words
+      .where('Fa')
+      .startsWith(searchQuery.value)
+      // .offset(40)
+      .limit(40)
+      .toArray(function (findList) {
+        searchFind.value = true
+        searchLoading.value = false
+        words.value = findList
+        if (findList.length === 0) {
+          searchFind.value = false
+        }
+      })
   }
 })
 // -----------------------------------search---------------------------------------
@@ -104,7 +103,7 @@ watchEffect(async () => {
         <div>
           <div
             v-if="searchQuery.length>0"
-            class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-14"
+            class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-14 mb-16"
           >
             <div
               v-if="searchLoading"
@@ -168,7 +167,7 @@ watchEffect(async () => {
             class="home-box"
           >
             <div
-              v-for="item in result"
+              v-for="item in categoryRepo.categroyTable"
               :key="item.CategoryID"
               class="category-box"
               @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"

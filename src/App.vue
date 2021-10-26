@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useCreateRepo } from './datasource/repository/repo'
+const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
+useCreateRepo().updateWordandCategory(lastUpdate)
 </script>
 
 <template>

@@ -7,13 +7,13 @@ export const useFetchApiStore = defineStore('useApiStore', {
     }
   },
   actions: {
-    async request () {
+    async requestGet (lastUpdate:string) {
       type Output = {
         lastUpdate: number
         words: Words[]
         categories: Categories[]
       }
-      const res = await fetch('/api/getUpdates.php?variant=normal&lastUpdate=-1')
+      const res = await fetch('/api/getUpdates.php?variant=normal&lastUpdate=' + lastUpdate)
       const tables: Output = await res.json()
       return tables
     }

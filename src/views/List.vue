@@ -4,6 +4,7 @@ import backHeader from '../components/BackHeader.vue'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
+// @ts-ignore
 import backToTop from 'vue-backtotop'
 const props = defineProps<{
   title: string
@@ -89,7 +90,7 @@ useWordsDB().wordsGet(+props.id)
   @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg mx-2 pr-4 font-IRANSans;
 }
 .list-box{
-  @apply grid h-screen bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch;
+  @apply grid h-auto bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch mb-16;
 }
 .word-box__main{
   @apply w-auto h-14 float-right rounded-lg grid grid-rows-2 items-center;
