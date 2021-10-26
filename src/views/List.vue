@@ -6,6 +6,7 @@ import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
 // @ts-ignore
 import backToTop from 'vue-backtotop'
+import { useRouter } from 'vue-router'
 const props = defineProps<{
   title: string
   id: string
@@ -16,6 +17,15 @@ useWordsDB().wordsGet(+props.id)
   .then(r => {
     resultW.value = r
   }).finally(() => { loading.value = false })
+const router = useRouter()
+function pushLinkQuiz (id:number) {
+  router.push({
+    name: 'Quiz',
+    params: {
+      id: id
+    }
+  })
+}
 </script>
 
 <template>
@@ -78,6 +88,7 @@ useWordsDB().wordsGet(+props.id)
     >
       <button
         class="yellow-button"
+        @click="pushLinkQuiz(+props.id)"
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>

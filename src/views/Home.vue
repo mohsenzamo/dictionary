@@ -23,6 +23,14 @@ function pushLinkList (link:string, param:string, id:number, lock:number) {
     })
   }
 }
+function pushLinkQuiz (id:string) {
+  router.push({
+    name: 'Quiz',
+    params: {
+      id: id
+    }
+  })
+}
 function pushLink (link:string) {
   router.push({
     name: link
@@ -41,7 +49,7 @@ watchEffect(async () => {
       .where('Fa')
       .startsWith(searchQuery.value)
       // .offset(40)
-      .limit(40)
+      // .limit(40)
       .toArray(function (findList) {
         searchFind.value = true
         searchLoading.value = false
@@ -204,7 +212,7 @@ watchEffect(async () => {
         class="
         yellow-btns
       "
-        @click="pushLink('Quiz')"
+        @click="pushLinkQuiz('all')"
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>

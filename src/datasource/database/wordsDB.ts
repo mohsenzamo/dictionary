@@ -16,6 +16,10 @@ export const useWordsDB = defineStore('useWordsDB', {
         .equals(categoryId)
         .toArray()
       return wordsresult
+    },
+    async wordsGetAll () {
+      const wordsresult:Words[] = await db.words.toArray()
+      return wordsresult
     }
   }
 })

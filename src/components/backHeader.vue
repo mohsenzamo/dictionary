@@ -21,15 +21,17 @@ function goBack () {
         <slot />
       </p>
     </div>
-    <router-link
-      to="/"
-    >
-      <img
-        alt="Vue logo"
-        src="../assets/logo.png"
-        class="h-12"
+    <slot name="logo">
+      <router-link
+        to="/"
       >
-    </router-link>
+        <img
+          alt="Vue logo"
+          src="../assets/logo.png"
+          class="h-12"
+        >
+      </router-link>
+    </slot>
   </div>
 </template>
 <style>

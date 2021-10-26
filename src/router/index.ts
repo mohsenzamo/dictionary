@@ -13,8 +13,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/List.vue')
   },
   {
-    path: '/quiz',
+    path: '/quiz/:id',
     name: 'Quiz',
+    props: true,
     component: () => import('../views/Quiz.vue')
   },
   {

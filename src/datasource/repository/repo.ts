@@ -12,7 +12,8 @@ export const useCreateRepo = defineStore('useCreateRepo', {
     }
   },
   actions: {
-    async updateWordandCategory (lastUpdate:string) {
+    async updateWordandCategory () {
+      const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
       useFetchApiStore().requestGet(lastUpdate).then(async table => {
         localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
         useCategoriesDB().categoriesPut(table.categories)
