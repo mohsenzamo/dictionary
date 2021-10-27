@@ -73,6 +73,35 @@ const bgRedAnswer4 = ref(false)
 const openAnime = ref(false)
 const correctAnswer = ref(0)
 const wrongAnswer = ref(0)
+const randomQ = ref<null|number>(null)
+const expectNumber1 = ref<null|number>(null)
+const expectNumber2 = ref<null|number>(null)
+const expectNumber3 = ref<null|number>(null)
+
+function expectRandom1 () {
+  const num = Math.floor(Math.random() * resultW.value?.length)
+  if (num === randomQ.value) {
+    expectRandom1()
+  } else {
+    expectNumber1.value = num
+  }
+}
+function expectRandom2 () {
+  const num = Math.floor(Math.random() * resultW.value?.length)
+  if (num === randomQ.value || num === expectNumber1.value) {
+    expectRandom2()
+  } else {
+    expectNumber2.value = num
+  }
+}
+function expectRandom3 () {
+  const num = Math.floor(Math.random() * resultW.value?.length)
+  if (num === randomQ.value || num === expectNumber1.value || num === expectNumber2.value) {
+    expectRandom3()
+  } else {
+    expectNumber3.value = num
+  }
+}
 function randomQuiz () {
   openAnime.value = true
   bgGreenAnswer1.value = false
@@ -83,32 +112,35 @@ function randomQuiz () {
   bgRedAnswer2.value = false
   bgRedAnswer3.value = false
   bgRedAnswer4.value = false
-  const randomQ = Math.floor(Math.random() * resultW.value?.length)
+  randomQ.value = Math.floor(Math.random() * resultW.value?.length)
   randomA.value = Math.floor(Math.random() * 4) + 1
-  question.value = resultW.value[randomQ].Ar
+  expectRandom1()
+  expectRandom2()
+  expectRandom3()
+  question.value = resultW.value[randomQ.value].Ar
   if (randomA.value === 1) {
-    answer1.value = resultW.value[randomQ].Fa
-    answer2.value = 'اشتباه'
-    answer3.value = 'اشتباه'
-    answer4.value = 'اشتباه'
+    answer1.value = resultW.value[randomQ.value].Fa
+    answer2.value = resultW.value[expectNumber1.value].Fa
+    answer3.value = resultW.value[expectNumber2.value].Fa
+    answer4.value = resultW.value[expectNumber3.value].Fa
   }
   if (randomA.value === 2) {
-    answer1.value = 'اشتباه'
-    answer2.value = resultW.value[randomQ].Fa
-    answer3.value = 'اشتباه'
-    answer4.value = 'اشتباه'
+    answer1.value = resultW.value[expectNumber1.value].Fa
+    answer2.value = resultW.value[randomQ.value].Fa
+    answer3.value = resultW.value[expectNumber2.value].Fa
+    answer4.value = resultW.value[expectNumber3.value].Fa
   }
   if (randomA.value === 3) {
-    answer1.value = 'اشتباه'
-    answer2.value = 'اشتباه'
-    answer3.value = resultW.value[randomQ].Fa
-    answer4.value = 'اشتباه'
+    answer1.value = resultW.value[expectNumber1.value].Fa
+    answer2.value = resultW.value[expectNumber2.value].Fa
+    answer3.value = resultW.value[randomQ.value].Fa
+    answer4.value = resultW.value[expectNumber3.value].Fa
   }
   if (randomA.value === 4) {
-    answer1.value = 'اشتباه'
-    answer2.value = 'اشتباه'
-    answer3.value = 'اشتباه'
-    answer4.value = resultW.value[randomQ].Fa
+    answer1.value = resultW.value[expectNumber1.value].Fa
+    answer2.value = resultW.value[expectNumber2.value].Fa
+    answer3.value = resultW.value[expectNumber3.value].Fa
+    answer4.value = resultW.value[randomQ.value].Fa
   }
 }
 function checkAnswer (num:number) {
