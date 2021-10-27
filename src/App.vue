@@ -16,6 +16,7 @@ function err () {
     errorLoading.value = true
   })
 }
+
 </script>
 <template>
   <div

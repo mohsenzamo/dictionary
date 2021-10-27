@@ -26,20 +26,28 @@ export interface Words {
     SoundVersion: number,
     Status: number,
 }
+export interface Search {
+    Word: string,
+    WordID: number,
+    text:string
+}
 export class MyAppDatabase extends Dexie {
     categories: Dexie.Table<Categories, number>;
     words:Dexie.Table<Words, number>;
+    search:Dexie.Table<Search, number>;
 
     constructor () {
       super('MyAppDatabase')
 
       this.version(1).stores({
         categories: 'CategoryID,CustomOrder',
-        words: 'WordID,CategoryID,Fa,Ar'
+        words: 'WordID,CategoryID,Fa,Ar',
+        search: '++id,Word'
       })
 
       this.categories = this.table('categories')
       this.words = this.table('words')
+      this.search = this.table('search')
     }
 }
 

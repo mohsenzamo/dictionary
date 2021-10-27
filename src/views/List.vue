@@ -13,10 +13,16 @@ const props = defineProps<{
 }>()
 const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
-useWordsDB().wordsGet(+props.id)
-  .then(r => {
-    resultW.value = r
-  }).finally(() => { loading.value = false })
+const emptyBookmark = ref(false)
+if (+props.id === -100) {
+  emptyBookmark.value = true
+  loading.value = false
+} else {
+  useWordsDB().wordsGet(+props.id)
+    .then(r => {
+      resultW.value = r
+    }).finally(() => { loading.value = false })
+}
 const router = useRouter()
 function pushLinkQuiz (id:number) {
   router.push({
@@ -53,36 +59,72 @@ function pushLinkQuiz (id:number) {
     v-else
     class="list-box"
   >
-    <div
-      v-for="item in resultW"
-      :key="item.WordID"
-      class="word-box"
-    >
-      <div class="word-box__main">
-        <div class="font-semibold text-base">
-          {{ item.Ar }}
+    <div v-if="emptyBookmark">
+      emptyBookmark
+    </div>
+    <template v-else>
+      <div
+        v-for="item in resultW"
+        :key="item.WordID"
+        class="word-box"
+      >
+        <div class="word-box__main">
+          <div class="font-semibold text-base">
+            {{ item.Ar }}
+          </div>
+          <div class="font-light text-sm">
+            {{ item.Fa }}
+          </div>
         </div>
-        <div class="font-light text-sm">
-          {{ item.Fa }}
-        </div>
-      </div>
-      <div class="word-box__abilities">
-        <div class="word-box__abilities-bookmark">
+        <div class="word-box__abilities">
+          <!--this <fa> for active svg -->
+          <!-- <fa
+          icon="bookmark"
+          class="text-xl text-green-500"
+        /> -->
+          <span class="w-5 h-5">
+            <svg
+              id="Layer_1"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 512 512"
+              style="enable-background:new 0 0 512 512;"
+              xml:space="preserve"
+            >
+              <g>
+                <g>
+                  <path
+                    d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                  />
+                </g>
+              </g>
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+            </svg>
+          </span>
           <fa
-            icon="bookmark"
-            class="active:text-xl active:text-green-500"
+            icon="volume-up"
+            class="active:text-xl active:text-blue-500"
           />
         </div>
-        <div>
-          <button type="button">
-            <fa
-              icon="volume-up"
-              class="active:text-xl active:text-blue-500"
-            />
-          </button>
-        </div>
       </div>
-    </div>
+    </template>
     <div
       class=" yellow-button__box"
     >
@@ -101,7 +143,7 @@ function pushLinkQuiz (id:number) {
   @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg mx-2 pr-4 font-IRANSans;
 }
 .list-box{
-  @apply grid h-auto bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch mb-16;
+  @apply grid h-auto bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch mb-24;
 }
 .word-box__main{
   @apply w-auto h-14 float-right rounded-lg grid grid-rows-2 items-center;

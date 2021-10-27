@@ -6,6 +6,10 @@ import { useRouter } from 'vue-router'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
+import { useSearchDB } from '../datasource/database/searchDB'
+// -------------------------------------------------------------
+
+// -------------------------------------------------------------
 const modalQuizValue = ref(false)
 const router = useRouter()
 function goBack () {
@@ -39,7 +43,6 @@ const props = defineProps<{
   id: string
 }>()
 if (props.id === 'all') {
-  console.log('all')
   useWordsDB().wordsGetAll().then(r => {
     resultW.value = r
     randomQuiz()
@@ -384,7 +387,7 @@ function checkAnswer (num:number) {
   @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default
 }
 .quiz-option{
-  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer
+  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer text-center
 }
 .quiz-option-box{
   @apply h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4

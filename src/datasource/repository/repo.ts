@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useCategoriesDB } from '../database/categoriesDB'
 import { Categories } from '../database/dexieDB'
 import { useFetchApiStore } from '../database/fetchAPI'
+import { useSearchDB } from '../database/searchDB'
 import { useWordsDB } from '../database/wordsDB'
 
 export const useCreateRepo = defineStore('useCreateRepo', {
@@ -21,6 +22,7 @@ export const useCreateRepo = defineStore('useCreateRepo', {
           this.categroyTable = r
         })
         useWordsDB().wordsPut(table.words)
+        useSearchDB().createSearchArray(table.words)
       })
     }
   }

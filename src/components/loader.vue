@@ -2,19 +2,14 @@
 
 </script>
 <template>
-  <section class="w-screen h-screen bg-gray-300">
+  <section class="sectionLo w-screen h-screen bg-gray-300">
     <span class="loader" />
   </section>
 </template>
 
 <style>
 
-*:after,
-*:before {
-  box-sizing: border-box;
-}
-
-section {
+.sectionLo {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,20 +17,9 @@ section {
   cursor: pointer;
   transition: 0.3s linear;
 }
-section:nth-child(2n+1) {
+/* section:nth-child(2n+1) {
   @apply bg-gray-400
-}
-
-@media (max-width: 768px) {
-  section {
-    width: 50%;
-  }
-}
-@media (max-width: 480px) {
-  section {
-    width: 100%;
-  }
-}
+} */
 
 .loader {
   width: 13px;
