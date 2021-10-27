@@ -77,6 +77,7 @@ const randomQ = ref<null|number>(null)
 const expectNumber1 = ref<null|number>(null)
 const expectNumber2 = ref<null|number>(null)
 const expectNumber3 = ref<null|number>(null)
+const counter = ref(0)
 
 function expectRandom1 () {
   const num = Math.floor(Math.random() * resultW.value?.length)
@@ -103,6 +104,7 @@ function expectRandom3 () {
   }
 }
 function randomQuiz () {
+  counter.value = 0
   openAnime.value = true
   bgGreenAnswer1.value = false
   bgGreenAnswer2.value = false
@@ -144,13 +146,18 @@ function randomQuiz () {
   }
 }
 function checkAnswer (num:number) {
+  counter.value++
   openAnime.value = false
   if (num === 1) {
     if (randomA.value === num) {
-      correctAnswer.value++
+      if (counter.value === 1) {
+        correctAnswer.value++
+      }
       bgGreenAnswer1.value = true
     } else {
-      wrongAnswer.value++
+      if (counter.value === 1) {
+        wrongAnswer.value++
+      }
       bgRedAnswer1.value = true
       if (randomA.value === 2) {
         bgGreenAnswer2.value = true
@@ -165,10 +172,14 @@ function checkAnswer (num:number) {
   }
   if (num === 2) {
     if (randomA.value === num) {
-      correctAnswer.value++
+      if (counter.value === 1) {
+        correctAnswer.value++
+      }
       bgGreenAnswer2.value = true
     } else {
-      wrongAnswer.value++
+      if (counter.value === 1) {
+        wrongAnswer.value++
+      }
       bgRedAnswer2.value = true
       if (randomA.value === 1) {
         bgGreenAnswer1.value = true
@@ -183,10 +194,14 @@ function checkAnswer (num:number) {
   }
   if (num === 3) {
     if (randomA.value === num) {
-      correctAnswer.value++
+      if (counter.value === 1) {
+        correctAnswer.value++
+      }
       bgGreenAnswer3.value = true
     } else {
-      wrongAnswer.value++
+      if (counter.value === 1) {
+        wrongAnswer.value++
+      }
       bgRedAnswer3.value = true
       if (randomA.value === 2) {
         bgGreenAnswer2.value = true
@@ -201,10 +216,14 @@ function checkAnswer (num:number) {
   }
   if (num === 4) {
     if (randomA.value === num) {
-      correctAnswer.value++
+      if (counter.value === 1) {
+        correctAnswer.value++
+      }
       bgGreenAnswer4.value = true
     } else {
-      wrongAnswer.value++
+      if (counter.value === 1) {
+        wrongAnswer.value++
+      }
       bgRedAnswer4.value = true
       if (randomA.value === 2) {
         bgGreenAnswer2.value = true
@@ -217,7 +236,9 @@ function checkAnswer (num:number) {
       }
     }
   }
-  setTimeout(randomQuiz, 2000)
+  if (counter.value === 1) {
+    setTimeout(randomQuiz, 2000)
+  }
 }
 </script>
 <template>
