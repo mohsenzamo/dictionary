@@ -59,6 +59,10 @@ if (props.id === 'all') {
     })
 }
 const resultW = ref<Words[] | null>(null)
+function mohsen () {
+  useSearchDB().createSearchArray(resultW.value!)
+}
+
 const question = ref<null|string>(null)
 const answer1 = ref<null|string>(null)
 const answer2 = ref<null|string>(null)
@@ -122,29 +126,29 @@ function randomQuiz () {
   expectRandom1()
   expectRandom2()
   expectRandom3()
-  question.value = resultW.value[randomQ.value].Ar
-  if (randomA.value === 1) {
-    answer1.value = resultW.value[randomQ.value].Fa
-    answer2.value = resultW.value[expectNumber1.value].Fa
-    answer3.value = resultW.value[expectNumber2.value].Fa
-    answer4.value = resultW.value[expectNumber3.value].Fa
+  question.value = resultW.value![randomQ.value].Ar
+  if (randomA.value === 1 && resultW.value) {
+    answer1.value = resultW.value![randomQ.value].Fa
+    answer2.value = resultW.value[expectNumber1.value!].Fa
+    answer3.value = resultW.value[expectNumber2.value!].Fa
+    answer4.value = resultW.value[expectNumber3.value!].Fa
   }
-  if (randomA.value === 2) {
-    answer1.value = resultW.value[expectNumber1.value].Fa
+  if (randomA.value === 2 && resultW.value) {
+    answer1.value = resultW.value[expectNumber1.value!].Fa
     answer2.value = resultW.value[randomQ.value].Fa
-    answer3.value = resultW.value[expectNumber2.value].Fa
-    answer4.value = resultW.value[expectNumber3.value].Fa
+    answer3.value = resultW.value[expectNumber2.value!].Fa
+    answer4.value = resultW.value[expectNumber3.value!].Fa
   }
-  if (randomA.value === 3) {
-    answer1.value = resultW.value[expectNumber1.value].Fa
-    answer2.value = resultW.value[expectNumber2.value].Fa
+  if (randomA.value === 3 && resultW.value) {
+    answer1.value = resultW.value[expectNumber1.value!].Fa
+    answer2.value = resultW.value[expectNumber2.value!].Fa
     answer3.value = resultW.value[randomQ.value].Fa
-    answer4.value = resultW.value[expectNumber3.value].Fa
+    answer4.value = resultW.value[expectNumber3.value!].Fa
   }
-  if (randomA.value === 4) {
-    answer1.value = resultW.value[expectNumber1.value].Fa
-    answer2.value = resultW.value[expectNumber2.value].Fa
-    answer3.value = resultW.value[expectNumber3.value].Fa
+  if (randomA.value === 4 && resultW.value) {
+    answer1.value = resultW.value[expectNumber1.value!].Fa
+    answer2.value = resultW.value[expectNumber2.value!].Fa
+    answer3.value = resultW.value[expectNumber3.value!].Fa
     answer4.value = resultW.value[randomQ.value].Fa
   }
 }
@@ -333,6 +337,7 @@ function checkAnswer (num:number) {
     <div
       class="quiz-question-box"
       :class="{'animate-opacity':openAnime}"
+      @click="mohsen"
     >
       <p class="self-end font-IRANSans text-sm">
         معنی عبارت زیر چیست؟

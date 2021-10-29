@@ -21,7 +21,9 @@ if (+props.id === -100) {
   useWordsDB().wordsGet(+props.id)
     .then(r => {
       resultW.value = r
-    }).finally(() => { loading.value = false })
+    }).finally(() => {
+      loading.value = false
+    })
 }
 const router = useRouter()
 function pushLinkQuiz (id:number) {
@@ -74,6 +76,13 @@ function pushLinkQuiz (id:number) {
           </div>
           <div class="font-light text-sm">
             {{ item.Fa }}
+          </div>
+          <div
+            v-if="item.Example.length > 0"
+            class="flex text-xs text-gray-500"
+          >
+            <p>مثال: </p>
+            <p>{{ item.Example }}</p>
           </div>
         </div>
         <div class="word-box__abilities">
@@ -146,10 +155,10 @@ function pushLinkQuiz (id:number) {
   @apply grid h-auto bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch mb-24;
 }
 .word-box__main{
-  @apply w-auto h-14 float-right rounded-lg grid grid-rows-2 items-center;
+  @apply w-40 h-auto float-right rounded-lg grid grid-rows-2 items-center;
 }
 .word-box__abilities{
-  @apply w-28 h-14 float-left grid grid-cols-2 justify-items-center items-center;
+  @apply w-24 h-14 float-left grid grid-cols-2 justify-items-center items-center;
 }
 .yellow-button__box{
   @apply w-screen

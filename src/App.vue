@@ -6,14 +6,14 @@ const errorLoading = ref(true)
 useCreateRepo().updateWordandCategory().catch(er => {
   errorShow.value = true
 }).finally(() => {
-  errorShow.value = false
+  // errorShow.value = false
 })
 function err () {
   useCreateRepo().updateWordandCategory().catch(er => {
     errorLoading.value = false
   }).finally(() => {
-    errorShow.value = false
-    errorLoading.value = true
+    // errorShow.value = false
+    // errorLoading.value = true
   })
 }
 

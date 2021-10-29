@@ -32,37 +32,52 @@ function pushLinkQuiz (id:string) {
     }
   })
 }
-function pushLink (link:string) {
-  router.push({
-    name: link
-  })
-}
+// function pushLink (link:string) {
+//   router.push({
+//     name: link
+//   })
+// }
 const modalPremiumValue = ref(false)
 
 const words = ref()
 const searchFind = ref(true)
 const searchLoading = ref(false)
 const searchQuery = ref('')
+const options = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 1.0
+}
+const x = ref(false)
+const emptySpan = ref<HTMLSpanElement>()
+const observer = new IntersectionObserver(e => {
+  if (e[0].intersectionRatio === 1) {
+    x.value = true
+  } else {
+    x.value = false
+  }
+}, options)
 watchEffect(async () => {
   if (searchQuery.value.length > 0) {
     searchLoading.value = true
-    // await db.search
-    //   .where('Word')
-    //   .startsWith(searchQuery.value)
-    //   // .offset(40)
-    //   // .limit(40)
-    //   .toArray(function (findList) {
-    //     // searchFind.value = true
-    //     // searchLoading.value = false
-    //     // words.value = findList
-    //     // if (findList.length === 0) {
-    //     //   searchFind.value = false
-    //     // }
-    //     for (let i = 0; i < findList.length; i++) {
-    //       console.log(findList[i].WordID)
-    //       db.words.where('WordID').equalsIgnoreCase(findList[i].WordID)
-    //     }
-    //   })
+    const findList = await db.search
+      .where('Word')
+      .startsWith(searchQuery.value)
+      // .offset(page * 20)
+      .limit(20)
+      .toArray()
+    // if(findList)
+    //       observer.unobserve()
+
+    // searchFind.value = true
+    // searchLoading.value = false
+    const ids = findList.map(word => word.WordID)
+    words.value = await db.words.where('WordID').anyOf(ids).toArray()
+    searchLoading.value = false
+    observer.observe(emptySpan.value!)
+    if (words.value.length === 0) {
+      searchFind.value = false
+    }
   }
 })
 // -----------------------------------search---------------------------------------
@@ -149,6 +164,11 @@ watchEffect(async () => {
                   </div>
                 </div>
               </div>
+              <span
+                ref="emptySpan"
+                class="bg-red-500 w-screen"
+                :class="{'animate-open':x}"
+              >Empty</span>
             </template>
             <!--------------------------------------- find ---------------------------------------------->
             <!--------------------------------------- not find ---------------------------------------------->
