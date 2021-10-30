@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
-import db, { Categories, Search, Words } from '../datasource/database/dexieDB'
+import db, { Search, Words } from '../datasource/database/dexieDB'
 import Loader from '../components/Loader.vue'
 import { useCreateRepo } from '../datasource/repository/repo'
 import { useSearchDB } from '../datasource/database/searchDB'

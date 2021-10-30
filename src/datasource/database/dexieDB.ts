@@ -42,7 +42,7 @@ export class MyAppDatabase extends Dexie {
       this.version(1).stores({
         categories: 'CategoryID,CustomOrder',
         words: 'WordID,CategoryID,Fa,Ar',
-        search: '++id,Word'
+        search: '++id,Word,WordID'
       })
 
       this.categories = this.table('categories')

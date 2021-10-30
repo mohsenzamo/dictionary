@@ -51,10 +51,25 @@ export const useSearchDB = defineStore('useSearchDB', {
           allArray = allArray.concat(myEx)
         }
       }
-      this.searchPut(allArray)
+      // ------------------------------change-----------------------
+      const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
+      if (lastUpdate === '-1') {
+        this.searchPut(allArray)
+      } else {
+        for (let j = 0; j < array.length; j++) {
+          await db.search.where('WordID').equals(array[j].WordID).delete()
+        }
+        this.searchPut(allArray)
+      }
     },
     async searchPut (table:Search[]) {
       await db.search.bulkPut(table)
     }
+    // async searchAdd () {
+    //   await db.search.add({ Word: 'mohsen', WordID: 10, text: 'Fa' }, 1).catch(() => {
+    //     // console.log(er, 'errrrrr')
+    //     alert('asas')
+    //   })
+    // }
   }
 })
