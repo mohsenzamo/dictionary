@@ -44,15 +44,15 @@
   position: absolute;
   left: 30px;
   top: 0;
-          animation: animloader60 2s ease infinite;
+          animation: animloader60 2s 0.2s ease infinite;
 }
 .loader::before {
-          /* animation-delay: 0.4s; */
+          animation-delay: 0.4s;
   left: 60px;
 }
 
 @keyframes animloader60 {
-  /* 0% {
+  0% {
     top: 0;
     color: rgb(255, 153, 0);
   }
@@ -63,8 +63,6 @@
   100% {
     top: 0;
     color: rgb(255, 153, 0);
-  } */
-  from {transform: rotate(0)}
-  to {transform: rotate(360deg);}
+  }
 }
 </style>

@@ -86,7 +86,6 @@ function pushLinkQuiz (id:number) {
           </div>
         </div>
         <div class="word-box__abilities">
-          <!--this <fa> for active svg -->
           <!-- <fa
           icon="bookmark"
           class="text-xl text-green-500"
@@ -143,6 +142,8 @@ function pushLinkQuiz (id:number) {
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>
+        <span>/</span>
+        <p>{{ props.title }}</p>
       </button>
     </div>
   </div>

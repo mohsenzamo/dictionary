@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-56 grid items-center justify-items-center">
+  <div class="h-screen w-screen grid pt-20 justify-items-center">
     <span class="loader-94" />
   </div>
 </template>

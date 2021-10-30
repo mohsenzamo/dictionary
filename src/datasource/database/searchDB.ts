@@ -24,45 +24,34 @@ export const useSearchDB = defineStore('useSearchDB', {
       // -------Ar-------
       for (let i = 0; i < array.length; i++) {
         const strAr = array[i].Ar
-        const myAr1 = strAr
+        const myAr = strAr
           .split(/[ /()]/)
           .filter(x => x.trim())
-          .map(word => ({ Word: this.normalizeAr(word), WordID: array[i].WordID, text: 'Ar' }))
+          .map(wordAr => ({ Word: this.normalizeAr(wordAr), WordID: array[i].WordID, text: 'Ar' }))
 
-        allArray = allArray.concat(myAr1)
+        allArray = allArray.concat(myAr)
       }
       // -------Fa-------
-      // for (let i = 0; i < array.length; i++) {
-      //   const strFa = array[i].Fa
-      //   const myFa1 = strFa.split(' ')
-      //   for (let j = 0; j < myFa1.length; j++) {
-      //     const myFa2 = myFa1[j].split('/')
-      //     for (let k = 0; k < myFa2.length; k++) {
-      //       if (myFa2[k].length > 0 || myFa2[k] !== '' || myFa2[k] !== '(' || myFa2[k] !== ')') {
-      //         const objectFa = { Word: myFa2[k], WordID: array[i].WordID, text: 'Fa' }
-      //         allArray.push(objectFa)
-      //       }
-      //     }
-      //   }
-      // }
+      for (let i = 0; i < array.length; i++) {
+        const strFa = array[i].Fa
+        const myFa = strFa
+          .split(/[ /()]/)
+          .filter(y => y.trim())
+          .map(wordFa => ({ Word: wordFa, WordID: array[i].WordID, text: 'Fa' }))
+        allArray = allArray.concat(myFa)
+      }
       // ------Ex--------
-      // for (let i = 0; i < array.length; i++) {
-      //   const strEx = array[i].Example
-      //   if (strEx.length > 0) {
-      //     const myEx1 = strEx.split(' ')
-      //     for (let j = 0; j < myEx1.length; j++) {
-      //       const myEx2 = myEx1[j].split('/')
-      //       for (let k = 0; k < myEx2.length; k++) {
-      //         if (myEx2[k].length > 0 || myEx2[k] !== '' || myEx2[k] !== '(' || myEx2[k] !== ')') {
-      //           const objectEx = { Word: this.normalizeAr(myEx2[k]), WordID: array[i].WordID, text: 'Ex' }
-      //           allArray.push(objectEx)
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      console.log(allArray)
-      // this.searchPut(allArray)
+      for (let i = 0; i < array.length; i++) {
+        const strEx = array[i].Example
+        if (strEx.length > 0) {
+          const myEx = strEx
+            .split(/[ /()]/)
+            .filter(z => z.trim())
+            .map(wordEx => ({ Word: this.normalizeAr(wordEx), WordID: array[i].WordID, text: 'Ex' }))
+          allArray = allArray.concat(myEx)
+        }
+      }
+      this.searchPut(allArray)
     },
     async searchPut (table:Search[]) {
       await db.search.bulkPut(table)
