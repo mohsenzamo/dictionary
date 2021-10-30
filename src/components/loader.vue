@@ -17,10 +17,6 @@
   cursor: pointer;
   transition: 0.3s linear;
 }
-/* section:nth-child(2n+1) {
-  @apply bg-gray-400
-} */
-
 .loader {
   width: 13px;
   height: 13px;
@@ -31,7 +27,7 @@
   position: relative;
   color: rgb(255, 153, 0);
   left: -30px;
-          animation: animloader60 2s ease infinite;
+          animation: loader 2s ease infinite;
 }
 .loader::after, .loader::before {
   content: "";
@@ -44,14 +40,14 @@
   position: absolute;
   left: 30px;
   top: 0;
-          animation: animloader60 2s 0.2s ease infinite;
+          animation: loader 2s 0.2s ease infinite;
 }
 .loader::before {
           animation-delay: 0.4s;
   left: 60px;
 }
 
-@keyframes animloader60 {
+@keyframes loader {
   0% {
     top: 0;
     color: rgb(255, 153, 0);
