@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import db, { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
@@ -7,6 +7,8 @@ import Loader from '../components/Loader.vue'
 // @ts-ignore
 import backToTop from 'vue-backtotop'
 import { useRouter } from 'vue-router'
+import { useSearchDB } from '../datasource/database/searchDB'
+import searchLoader from '../components/searchLoader.vue'
 const props = defineProps<{
   title: string
   id: string
@@ -84,7 +86,6 @@ async function bookmarkSelect (WordID:number) {
   <Loader v-if="loading" />
   <div
     v-else
-    class="list-box"
   >
     <div
       v-if="emptyBookmark"
@@ -263,21 +264,28 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </template>
     </div>
     <template v-else>
-      <div
-        v-for="item in resultW"
-        :key="item.WordID"
-        class="word-box"
+      <!-----------------------------------search--------------------------------------->
+      <div class="input-box">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="جستجو کنید ...."
+          class="search-input"
+        >
+        <span
+          class="search-input__submit"
+        >
+          <fa icon="search" />
+        </span>
+      </div>
+      <transition
+        name="page"
+        mode="out-in"
       >
-        <div class="word-box__main">
-          <div class="font-semibold text-base">
-            {{ item.Ar }}
-          </div>
-          <div class="font-light text-sm">
-            {{ item.Fa }}
-          </div>
+        <div>
           <div
-            v-if="item.Example.length > 0"
-            class="flex text-xs text-gray-500"
+            v-if="searchQuery.length>0"
+            class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-28 mb-16"
           >
             <p>مثال: </p>
             <p>{{ item.Example }}</p>
@@ -338,7 +346,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
             class="active:text-xl active:text-blue-500"
           />
         </div>
-      </div>
+      </transition>
     </template>
     <div
       class=" yellow-button__box"
@@ -349,6 +357,8 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       >
         <fa icon="pencil-alt" />
         <p>تمرین لغات</p>
+        <span>/</span>
+        <p>{{ props.title }}</p>
       </button>
     </div>
   </div>
@@ -358,7 +368,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
   @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg mx-2 pr-4 font-IRANSans;
 }
 .list-box{
-  @apply grid h-auto bg-gray-200 pt-16 gap-x-8 gap-y-2 justify-items-stretch mb-24;
+  @apply grid h-auto bg-gray-200 pt-28 gap-x-8 gap-y-2 justify-items-stretch mb-24;
 }
 .word-box__main{
   @apply w-40 h-auto float-right rounded-lg grid grid-rows-2 items-center;

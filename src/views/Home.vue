@@ -1,17 +1,21 @@
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
-import db, { Categories } from '../datasource/database/dexieDB'
+import db, { Search, Words } from '../datasource/database/dexieDB'
 import Loader from '../components/Loader.vue'
 import { useCreateRepo } from '../datasource/repository/repo'
 import { useSearchDB } from '../datasource/database/searchDB'
 import searchLoader from '../components/searchLoader.vue'
-const result = ref<Categories[] | null>(null)
+import { useCategoriesDB } from '../datasource/database/categoriesDB'
+
+useCategoriesDB().categoriesGet().then(r => {
+  useCreateRepo().categroyTable = r
+})
+const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
 
 const categoryRepo = useCreateRepo()
-const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
 const router = useRouter()
 function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
@@ -32,54 +36,73 @@ function pushLinkQuiz (id:string) {
     }
   })
 }
-// function pushLink (link:string) {
-//   router.push({
-//     name: link
-//   })
-// }
 const modalPremiumValue = ref(false)
-
-const words = ref()
+const words = ref<Words[]|null>(null)
 const searchFind = ref(true)
 const searchLoading = ref(false)
 const searchQuery = ref('')
+const listLoading = ref(false)
 const options = {
   root: null,
   rootMargin: '0px',
   threshold: 1.0
 }
-const x = ref(false)
-const emptySpan = ref<HTMLSpanElement>()
-const observer = new IntersectionObserver(e => {
+const emptyDiv = ref<HTMLDivElement>()
+const findList = ref<Search[]|null>(null)
+const page = ref(0)
+const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
-    x.value = true
-  } else {
-    x.value = false
+    page.value++
+    console.log(page.value)
+    const ids = findList.value!.map(word => word.WordID)
+    const wordArray = await db.words
+      .where('WordID')
+      .anyOf(ids)
+      .offset(page.value * 10)
+      .limit(10)
+      .toArray()
+    if (wordArray.length < 10) {
+      listLoading.value = false
+      observer.unobserve(emptyDiv.value!)
+    }
+    words.value = words.value!.concat(wordArray)
   }
 }, options)
-watchEffect(async () => {
-  if (searchQuery.value.length > 0) {
-    searchLoading.value = true
-    const findList = await db.search
-      .where('Word')
-      .startsWith(searchQuery.value)
-      // .offset(page * 20)
-      .limit(20)
-      .toArray()
-    // if(findList)
-    //       observer.unobserve()
-
-    // searchFind.value = true
-    // searchLoading.value = false
-    const ids = findList.map(word => word.WordID)
-    words.value = await db.words.where('WordID').anyOf(ids).toArray()
-    searchLoading.value = false
-    observer.observe(emptySpan.value!)
-    if (words.value.length === 0) {
-      searchFind.value = false
-    }
+async function search () {
+  page.value = 0
+  searchFind.value = true
+  words.value = null
+  searchLoading.value = true
+  listLoading.value = false
+  findList.value = await db.search
+    .where('Word')
+    .startsWith(useSearchDB().normalizeAr(searchQuery.value))
+    .toArray()
+  const ids = findList.value.map(word => word.WordID)
+  words.value = await db.words
+    .where('WordID')
+    .anyOf(ids)
+    .limit(10)
+    .toArray()
+  searchLoading.value = false
+  if (words.value.length < 10) {
+    listLoading.value = false
+    observer.unobserve(emptyDiv.value!)
+  } else {
+    listLoading.value = true
+    observer.observe(emptyDiv.value!)
   }
-})
+  if (words.value.length === 0) {
+    listLoading.value = false
+    searchFind.value = false
+  }
+}
+watch(searchQuery, search)
+// watch(searchQuery, (searchQuery) => {
+//   if (searchQuery.length === 0) {
+//     observer.unobserve(emptyDiv.value!)
+//   }
+// })
 // -----------------------------------search---------------------------------------
 
 // -----------------------------------search---------------------------------------
@@ -136,39 +159,87 @@ watchEffect(async () => {
             <searchLoader v-if="searchLoading" />
             <!--------------------------------------- find ---------------------------------------------->
             <template v-if="searchFind">
-              <div
-                v-for="item in words"
-                :key="item.WordID"
-                class="find-box"
+              <transition-group
+                name="list"
               >
-                <div class="find-word__main">
-                  <div class="font-semibold  text-base">
-                    {{ item.Ar }}
+                <div
+                  v-for="item in words"
+                  :key="item.WordID"
+                  class="find-box"
+                >
+                  <div class="find-word__main">
+                    <div class="font-semibold  text-base">
+                      {{ item.Ar }}
+                    </div>
+                    <div class="font-light  text-sm">
+                      {{ item.Fa }}
+                    </div>
+                    <div
+                      v-if="item.Example.length > 0"
+                      class="flex text-xs text-gray-500"
+                    >
+                      <p>مثال: </p>
+                      <p>{{ item.Example }}</p>
+                    </div>
                   </div>
-                  <div class="font-light  text-sm">
-                    {{ item.Fa }}
-                  </div>
-                </div>
-                <div class="find-word__abilities">
-                  <div>
-                    <fa
-                      icon="bookmark"
-                      class="active:text-xl active:text-green-500"
-                    />
-                  </div>
-                  <div>
+                  <div class="find-word__abilities">
+                    <!-- <fa
+          icon="bookmark"
+          class="text-xl text-green-500"
+        /> -->
+                    <span class="w-5 h-5">
+                      <svg
+                        id="Layer_1"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        style="enable-background:new 0 0 512 512;"
+                        xml:space="preserve"
+                      >
+                        <g>
+                          <g>
+                            <path
+                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                            />
+                          </g>
+                        </g>
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                      </svg>
+                    </span>
                     <fa
                       icon="volume-up"
                       class="active:text-xl active:text-blue-500"
                     />
                   </div>
                 </div>
+              </transition-group>
+              <!-------------------empty--------------------------->
+              <div
+                ref="emptyDiv"
+                class="grid w-screen items-center justify-items-center"
+              >
+                <sapn
+                  v-if="listLoading"
+                  class="list-loading"
+                />
               </div>
-              <span
-                ref="emptySpan"
-                class="bg-red-500 w-screen"
-                :class="{'animate-open':x}"
-              >Empty</span>
             </template>
             <!--------------------------------------- find ---------------------------------------------->
             <!--------------------------------------- not find ---------------------------------------------->
@@ -309,6 +380,56 @@ watchEffect(async () => {
   </div>
 </template>
 <style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.list-loading {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  color: orange;
+  left: -100px;
+          animation: shadowRolling 2s linear infinite;
+}
+@keyframes shadowRolling {
+  0% {
+    box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+  }
+  12% {
+    box-shadow: 100px 0 orange, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+  }
+  25% {
+    box-shadow: 110px 0 orange, 100px 0 orange, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+  }
+  36% {
+    box-shadow: 120px 0 orange, 110px 0 orange, 100px 0 orange, 0px 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 130px 0 orange, 120px 0 orange, 110px 0 orange, 100px 0 orange;
+  }
+  62% {
+    box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 orange, 120px 0 orange, 110px 0 orange;
+  }
+  75% {
+    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 orange, 120px 0 orange;
+  }
+  87% {
+    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 orange;
+  }
+  100% {
+    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
+  }
+}
+
 .page-enter-active,
 .page-leave-active {
   transition: all 0.3s ease;
@@ -338,7 +459,7 @@ watchEffect(async () => {
   @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg animate-opacity mx-2 pr-4
 }
 .find-word__main{
-  @apply w-auto h-14 float-right rounded-lg grid grid-rows-2 items-center font-IRANSans
+  @apply w-40 h-auto float-right rounded-lg grid items-center font-IRANSans
 }
 .find-word__abilities{
   @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center
@@ -350,13 +471,13 @@ watchEffect(async () => {
   @apply font-IRANSans pt-16 text-xl
 }
 .home-box{
-  @apply h-full flex flex-wrap gap-2 justify-center mt-14 mb-16 animate-opacity xsm:gap-4
+  @apply h-full flex flex-wrap justify-center mt-14 mb-16 animate-opacity xsm:gap-4
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
 }
   .category-box {
-    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer;
+    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer m-1;
   }
 .category-box__svg{
   @apply w-8 h-8
@@ -365,9 +486,6 @@ watchEffect(async () => {
   width: 100% !important;
   height: 100% !important;
 }
-/* .category-box__svg svg path{
-  fill: red;
-} */
 .yellow-btns-box{
   @apply w-screen
       fixed

@@ -16,13 +16,13 @@ export const useCreateRepo = defineStore('useCreateRepo', {
     async updateWordandCategory () {
       const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
       useFetchApiStore().requestGet(lastUpdate).then(async table => {
-        localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
         useCategoriesDB().categoriesPut(table.categories)
         useCategoriesDB().categoriesGet().then(r => {
           this.categroyTable = r
         })
         useWordsDB().wordsPut(table.words)
         useSearchDB().createSearchArray(table.words)
+        localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
       })
     }
   }

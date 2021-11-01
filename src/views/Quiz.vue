@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
-import { useSearchDB } from '../datasource/database/searchDB'
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
@@ -59,10 +58,6 @@ if (props.id === 'all') {
     })
 }
 const resultW = ref<Words[] | null>(null)
-function mohsen () {
-  useSearchDB().createSearchArray(resultW.value!)
-}
-
 const question = ref<null|string>(null)
 const answer1 = ref<null|string>(null)
 const answer2 = ref<null|string>(null)
@@ -87,7 +82,7 @@ const expectNumber3 = ref<null|number>(null)
 const counter = ref(0)
 
 function expectRandom1 () {
-  const num = Math.floor(Math.random() * resultW.value?.length)
+  const num = Math.floor(Math.random() * resultW.value!.length)
   if (num === randomQ.value) {
     expectRandom1()
   } else {
@@ -95,7 +90,7 @@ function expectRandom1 () {
   }
 }
 function expectRandom2 () {
-  const num = Math.floor(Math.random() * resultW.value?.length)
+  const num = Math.floor(Math.random() * resultW.value!.length)
   if (num === randomQ.value || num === expectNumber1.value) {
     expectRandom2()
   } else {
@@ -103,7 +98,7 @@ function expectRandom2 () {
   }
 }
 function expectRandom3 () {
-  const num = Math.floor(Math.random() * resultW.value?.length)
+  const num = Math.floor(Math.random() * resultW.value!.length)
   if (num === randomQ.value || num === expectNumber1.value || num === expectNumber2.value) {
     expectRandom3()
   } else {
@@ -121,7 +116,7 @@ function randomQuiz () {
   bgRedAnswer2.value = false
   bgRedAnswer3.value = false
   bgRedAnswer4.value = false
-  randomQ.value = Math.floor(Math.random() * resultW.value?.length)
+  randomQ.value = Math.floor(Math.random() * resultW.value!.length)
   randomA.value = Math.floor(Math.random() * 4) + 1
   expectRandom1()
   expectRandom2()
@@ -337,7 +332,6 @@ function checkAnswer (num:number) {
     <div
       class="quiz-question-box"
       :class="{'animate-opacity':openAnime}"
-      @click="mohsen"
     >
       <p class="self-end font-IRANSans text-sm">
         معنی عبارت زیر چیست؟

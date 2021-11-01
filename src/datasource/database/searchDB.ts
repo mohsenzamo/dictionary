@@ -24,48 +24,57 @@ export const useSearchDB = defineStore('useSearchDB', {
       // -------Ar-------
       for (let i = 0; i < array.length; i++) {
         const strAr = array[i].Ar
-        const myAr1 = strAr
-          .split(/[ /()]/)
+        const myAr = this.normalizeAr(strAr)
+          .split(/[ -()/.=+_!~]/)
           .filter(x => x.trim())
-          .map(word => ({ Word: this.normalizeAr(word), WordID: array[i].WordID, text: 'Ar' }))
-
-        allArray = allArray.concat(myAr1)
+          .map(textAr => textAr.replace(/[-()/.=+_!~{}،?؟]/, ''))
+          .filter(x => x.trim())
+          .map(wordAr => ({ Word: wordAr, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Ar' }))
+        allArray = allArray.concat(myAr)
       }
       // -------Fa-------
-      // for (let i = 0; i < array.length; i++) {
-      //   const strFa = array[i].Fa
-      //   const myFa1 = strFa.split(' ')
-      //   for (let j = 0; j < myFa1.length; j++) {
-      //     const myFa2 = myFa1[j].split('/')
-      //     for (let k = 0; k < myFa2.length; k++) {
-      //       if (myFa2[k].length > 0 || myFa2[k] !== '' || myFa2[k] !== '(' || myFa2[k] !== ')') {
-      //         const objectFa = { Word: myFa2[k], WordID: array[i].WordID, text: 'Fa' }
-      //         allArray.push(objectFa)
-      //       }
-      //     }
-      //   }
-      // }
+      for (let i = 0; i < array.length; i++) {
+        const strFa = array[i].Fa
+        const myFa = strFa
+          .split(/[ -()/.=+_!~]/)
+          .filter(y => y.trim())
+          .map(textFa => textFa.replace(/[-()/.=+_!~{}،?؟]/, ''))
+          .filter(y => y.trim())
+          .map(wordFa => ({ Word: wordFa, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Fa' }))
+        allArray = allArray.concat(myFa)
+      }
       // ------Ex--------
-      // for (let i = 0; i < array.length; i++) {
-      //   const strEx = array[i].Example
-      //   if (strEx.length > 0) {
-      //     const myEx1 = strEx.split(' ')
-      //     for (let j = 0; j < myEx1.length; j++) {
-      //       const myEx2 = myEx1[j].split('/')
-      //       for (let k = 0; k < myEx2.length; k++) {
-      //         if (myEx2[k].length > 0 || myEx2[k] !== '' || myEx2[k] !== '(' || myEx2[k] !== ')') {
-      //           const objectEx = { Word: this.normalizeAr(myEx2[k]), WordID: array[i].WordID, text: 'Ex' }
-      //           allArray.push(objectEx)
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
-      console.log(allArray)
-      // this.searchPut(allArray)
+      for (let i = 0; i < array.length; i++) {
+        const strEx = array[i].Example
+        if (strEx.length > 0) {
+          const myEx = this.normalizeAr(strEx)
+            .split(/[ -()/.=+_!~]/)
+            .filter(z => z.trim())
+            .map(textEx => textEx.replace(/[-()/.=+_!~{}،?؟]/, ''))
+            .filter(z => z.trim())
+            .map(wordEx => ({ Word: wordEx, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Ex' }))
+          allArray = allArray.concat(myEx)
+        }
+      }
+      // ------------------------------change-----------------------
+      const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
+      if (lastUpdate === '-1') {
+        this.searchPut(allArray)
+      } else {
+        for (let j = 0; j < array.length; j++) {
+          await db.search.where('WordID').equals(array[j].WordID).delete()
+        }
+        this.searchPut(allArray)
+      }
     },
     async searchPut (table:Search[]) {
       await db.search.bulkPut(table)
     }
+    // async searchAdd () {
+    //   await db.search.add({ Word: 'mohsen', WordID: 10, text: 'Fa' }, 1).catch(() => {
+    //     // console.log(er, 'errrrrr')
+    //     alert('asas')
+    //   })
+    // }
   }
 })
