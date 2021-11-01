@@ -74,7 +74,6 @@ async function search () {
   words.value = null
   searchLoading.value = true
   listLoading.value = false
-  console.log(useSearchDB().normalizeAr(searchQuery.value))
   findList.value = await db.search
     .where('Word')
     .startsWith(useSearchDB().normalizeAr(searchQuery.value))
@@ -99,6 +98,11 @@ async function search () {
   }
 }
 watch(searchQuery, search)
+// watch(searchQuery, (searchQuery) => {
+//   if (searchQuery.length === 0) {
+//     observer.unobserve(emptyDiv.value!)
+//   }
+// })
 // -----------------------------------search---------------------------------------
 
 // -----------------------------------search---------------------------------------
@@ -155,73 +159,77 @@ watch(searchQuery, search)
             <searchLoader v-if="searchLoading" />
             <!--------------------------------------- find ---------------------------------------------->
             <template v-if="searchFind">
-              <div
-                v-for="item in words"
-                :key="item.WordID"
-                class="find-box"
+              <transition-group
+                name="list"
               >
-                <div class="find-word__main">
-                  <div class="font-semibold  text-base">
-                    {{ item.Ar }}
+                <div
+                  v-for="item in words"
+                  :key="item.WordID"
+                  class="find-box"
+                >
+                  <div class="find-word__main">
+                    <div class="font-semibold  text-base">
+                      {{ item.Ar }}
+                    </div>
+                    <div class="font-light  text-sm">
+                      {{ item.Fa }}
+                    </div>
+                    <div
+                      v-if="item.Example.length > 0"
+                      class="flex text-xs text-gray-500"
+                    >
+                      <p>مثال: </p>
+                      <p>{{ item.Example }}</p>
+                    </div>
                   </div>
-                  <div class="font-light  text-sm">
-                    {{ item.Fa }}
-                  </div>
-                  <div
-                    v-if="item.Example.length > 0"
-                    class="flex text-xs text-gray-500"
-                  >
-                    <p>مثال: </p>
-                    <p>{{ item.Example }}</p>
-                  </div>
-                </div>
-                <div class="find-word__abilities">
-                  <!-- <fa
+                  <div class="find-word__abilities">
+                    <!-- <fa
           icon="bookmark"
           class="text-xl text-green-500"
         /> -->
-                  <span class="w-5 h-5">
-                    <svg
-                      id="Layer_1"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 512 512"
-                      style="enable-background:new 0 0 512 512;"
-                      xml:space="preserve"
-                    >
-                      <g>
+                    <span class="w-5 h-5">
+                      <svg
+                        id="Layer_1"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        style="enable-background:new 0 0 512 512;"
+                        xml:space="preserve"
+                      >
                         <g>
-                          <path
-                            d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                          />
+                          <g>
+                            <path
+                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                            />
+                          </g>
                         </g>
-                      </g>
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                    </svg>
-                  </span>
-                  <fa
-                    icon="volume-up"
-                    class="active:text-xl active:text-blue-500"
-                  />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                      </svg>
+                    </span>
+                    <fa
+                      icon="volume-up"
+                      class="active:text-xl active:text-blue-500"
+                    />
+                  </div>
                 </div>
-              </div>
+              </transition-group>
               <!-------------------empty--------------------------->
               <div
                 ref="emptyDiv"
@@ -229,7 +237,7 @@ watch(searchQuery, search)
               >
                 <sapn
                   v-if="listLoading"
-                  class="loader-43"
+                  class="list-loading"
                 />
               </div>
             </template>
@@ -372,8 +380,17 @@ watch(searchQuery, search)
   </div>
 </template>
 <style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 
-.loader-43 {
+.list-loading {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -381,7 +398,6 @@ watch(searchQuery, search)
   position: relative;
   color: orange;
   left: -100px;
-  -webkit-animation: shadowRolling 2s linear infinite;
           animation: shadowRolling 2s linear infinite;
 }
 @keyframes shadowRolling {
@@ -455,13 +471,13 @@ watch(searchQuery, search)
   @apply font-IRANSans pt-16 text-xl
 }
 .home-box{
-  @apply h-full flex flex-wrap gap-2 justify-center mt-14 mb-16 animate-opacity xsm:gap-4
+  @apply h-full flex flex-wrap justify-center mt-14 mb-16 animate-opacity xsm:gap-4
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
 }
   .category-box {
-    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer;
+    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer m-1;
   }
 .category-box__svg{
   @apply w-8 h-8
@@ -470,9 +486,6 @@ watch(searchQuery, search)
   width: 100% !important;
   height: 100% !important;
 }
-/* .category-box__svg svg path{
-  fill: red;
-} */
 .yellow-btns-box{
   @apply w-screen
       fixed

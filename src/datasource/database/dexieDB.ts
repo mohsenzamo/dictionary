@@ -29,6 +29,7 @@ export interface Words {
 export interface Search {
     Word: string,
     WordID: number,
+    CategoryID: number,
     text:string
 }
 export class MyAppDatabase extends Dexie {
@@ -42,7 +43,7 @@ export class MyAppDatabase extends Dexie {
       this.version(1).stores({
         categories: 'CategoryID,CustomOrder',
         words: 'WordID,CategoryID,Fa,Ar',
-        search: '++id,Word,WordID'
+        search: '++id,Word,WordID,CategoryID'
       })
 
       this.categories = this.table('categories')
