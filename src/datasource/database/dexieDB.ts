@@ -25,6 +25,7 @@ export interface Words {
     LastUpdate: number,
     SoundVersion: number,
     Status: number,
+    bookmark: number,
 }
 export interface Search {
     Word: string,
@@ -42,7 +43,7 @@ export class MyAppDatabase extends Dexie {
 
       this.version(1).stores({
         categories: 'CategoryID,CustomOrder',
-        words: 'WordID,CategoryID,Fa,Ar',
+        words: 'WordID,CategoryID,wordID,Fa,Ar,bookmark',
         search: '++id,Word,WordID,CategoryID'
       })
 
