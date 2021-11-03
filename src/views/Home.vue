@@ -61,6 +61,29 @@ watch(searchQuery, (searchQuery) => {
 watch(observeValue, (observeValue) => {
   observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
 })
+async function bookmarkSelect (WordID:number) {
+  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  if (getWord[0].bookmark === 0) {
+    getWord[0].bookmark = 1
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 1
+        }
+      }
+    }
+  } else {
+    getWord[0].bookmark = 0
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 0
+        }
+      }
+    }
+  }
+  db.words.put(getWord[0])
+}
 </script>
 
 <template>
@@ -137,46 +160,63 @@ watch(observeValue, (observeValue) => {
                     </div>
                   </div>
                   <div class="find-word__abilities">
-                    <!-- <fa
-          icon="bookmark"
-          class="text-xl text-green-500"
-        /> -->
-                    <span class="w-5 h-5">
-                      <svg
-                        id="Layer_1"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        x="0px"
-                        y="0px"
-                        viewBox="0 0 512 512"
-                        style="enable-background:new 0 0 512 512;"
-                        xml:space="preserve"
+                    <transition
+                      name="bookmarkButton"
+                      mode="out-in"
+                    >
+                      <button
+                        v-if="item.bookmark===0"
+                        type="submit"
+                        class="w-5 h-5"
+                        @click="bookmarkSelect(item.WordID)"
                       >
-                        <g>
+                        <svg
+                          id="Layer_1"
+                          version="1.1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                          x="0px"
+                          y="0px"
+                          viewBox="0 0 512 512"
+                          style="enable-background:new 0 0 512 512;"
+                          xml:space="preserve"
+                        >
                           <g>
-                            <path
-                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                            />
+                            <g>
+                              <path
+                                d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                              />
+                            </g>
                           </g>
-                        </g>
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                      </svg>
-                    </span>
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                        </svg>
+                      </button>
+                      <button
+                        v-else
+                        type="submit"
+                        class="w-5 h-5"
+                        @click="bookmarkSelect(item.WordID)"
+                      >
+                        <fa
+                          icon="bookmark"
+                          class="text-xl text-green-500"
+                        />
+                      </button>
+                    </transition>
                     <fa
                       icon="volume-up"
                       class="active:text-xl active:text-blue-500"
@@ -334,6 +374,16 @@ watch(observeValue, (observeValue) => {
   </div>
 </template>
 <style>
+.bookmarkButton-enter-active,
+.bookmarkButton-leave-active {
+  transition: all 0.5s ease;
+}
+
+.bookmarkButton-enter-from,
+.bookmarkButton-leave-to {
+  opacity: 0;
+  transform: translateY(-50%);
+}
 .list-enter-active,
 .list-leave-active {
   transition: all 1s ease;
