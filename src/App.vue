@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useCreateRepo } from './datasource/repository/repo'
-const errorShow = ref(false)
+const errorShow = computed(() => useCreateRepo().errorValue)
+
 const errorLoading = ref(true)
-// const errorComputed = computed(() => errorShow.value && )
-useCreateRepo().updateWordandCategory().catch(er => {
-  errorShow.value = true
-})
+useCreateRepo().updateWordandCategory()
 function err () {
   useCreateRepo().updateWordandCategory().then(() => {
     errorLoading.value = false

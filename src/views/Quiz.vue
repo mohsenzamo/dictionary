@@ -321,11 +321,17 @@ function checkAnswer (num:number) {
       class="quiz-correction-box"
     >
       <p class="quiz-correction-text__correct">
-        <fa icon="check-circle" />
+        <fa
+          icon="check-circle"
+          class="ml-3"
+        />
         <span>{{ correctAnswer }}</span>
       </p>
       <p class="quiz-correction-text__false">
-        <fa icon="times-circle" />
+        <fa
+          icon="times-circle"
+          class="ml-3"
+        />
         <span>{{ wrongAnswer }}</span>
       </p>
     </div>
@@ -374,19 +380,19 @@ function checkAnswer (num:number) {
 </template>
 <style>
 .quiz-correction-text__false{
-  @apply bg-red-600 rounded-2xl w-14 flex items-center gap-x-3 pr-1 shadow-2xl
+  @apply bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2
 }
 .quiz-correction-text__correct{
-  @apply bg-green-600 rounded-2xl w-14 flex items-center gap-x-3 pr-1 shadow-2xl
+  @apply bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl
 }
 .quiz-correction-box{
-  @apply w-full h-auto float-right flex gap-x-3 pr-5 text-white font-IRANSans mt-2 cursor-default
+  @apply w-full h-auto float-right flex pr-5 text-white font-IRANSans mt-2 cursor-default
 }
 .quiz-question-box{
   @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default
 }
 .quiz-option{
-  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-105 cursor-pointer text-center
+  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center
 }
 .quiz-option-box{
   @apply h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4

@@ -9,6 +9,7 @@ import { useCreateRepo } from '../datasource/repository/repo'
 import { useSearchDB } from '../datasource/database/searchDB'
 import searchLoader from '../components/searchLoader.vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
+import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
 
 useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
@@ -37,76 +38,29 @@ function pushLinkQuiz (id:string) {
   })
 }
 const modalPremiumValue = ref(false)
-const words = ref<Words[]|null>(null)
-const searchFind = ref(true)
-const searchLoading = ref(false)
+const words = computed(() => useHomeSearchRepo().words)
+const searchFind = computed(() => useHomeSearchRepo().searchFind)
+const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
 const searchQuery = ref('')
-const listLoading = ref(false)
+const listLoading = computed(() => useHomeSearchRepo().listLoading)
 const options = {
   root: null,
   rootMargin: '0px',
   threshold: 1.0
 }
 const emptyDiv = ref<HTMLDivElement>()
-const findList = ref<Search[]|null>(null)
-const page = ref(0)
+const observeValue = computed(() => useHomeSearchRepo().observeValue)
 const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
-    page.value++
-    console.log(page.value)
-    const ids = findList.value!.map(word => word.WordID)
-    const wordArray = await db.words
-      .where('WordID')
-      .anyOf(ids)
-      .offset(page.value * 10)
-      .limit(10)
-      .toArray()
-    if (wordArray.length < 10) {
-      listLoading.value = false
-      observer.unobserve(emptyDiv.value!)
-    }
-    words.value = words.value!.concat(wordArray)
+    useHomeSearchRepo().pages()
   }
 }, options)
-async function search () {
-  page.value = 0
-  searchFind.value = true
-  words.value = null
-  searchLoading.value = true
-  listLoading.value = false
-  findList.value = await db.search
-    .where('Word')
-    .startsWith(useSearchDB().normalizeAr(searchQuery.value))
-    .toArray()
-  const ids = findList.value.map(word => word.WordID)
-  words.value = await db.words
-    .where('WordID')
-    .anyOf(ids)
-    .limit(10)
-    .toArray()
-  searchLoading.value = false
-  if (words.value.length < 10) {
-    listLoading.value = false
-    observer.unobserve(emptyDiv.value!)
-  } else {
-    listLoading.value = true
-    observer.observe(emptyDiv.value!)
-  }
-  if (words.value.length === 0) {
-    listLoading.value = false
-    searchFind.value = false
-  }
-}
-watch(searchQuery, search)
-// watch(searchQuery, (searchQuery) => {
-//   if (searchQuery.length === 0) {
-//     observer.unobserve(emptyDiv.value!)
-//   }
-// })
-// -----------------------------------search---------------------------------------
-
-// -----------------------------------search---------------------------------------
-
+watch(searchQuery, (searchQuery) => {
+  useHomeSearchRepo().search(searchQuery)
+})
+watch(observeValue, (observeValue) => {
+  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+})
 </script>
 
 <template>
@@ -235,7 +189,7 @@ watch(searchQuery, search)
                 ref="emptyDiv"
                 class="grid w-screen items-center justify-items-center"
               >
-                <sapn
+                <span
                   v-if="listLoading"
                   class="list-loading"
                 />
@@ -471,13 +425,13 @@ watch(searchQuery, search)
   @apply font-IRANSans pt-16 text-xl
 }
 .home-box{
-  @apply h-full flex flex-wrap justify-center mt-14 mb-16 animate-opacity xsm:gap-4
+  @apply h-full flex flex-wrap justify-center mt-14 mb-16 animate-opacity
 }
 .premium{
   @apply absolute bg-gray-600 w-full h-full rounded-3xl opacity-50 cursor-not-allowed
 }
   .category-box {
-    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer m-1;
+    @apply h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer m-1 xsm:m-2;
   }
 .category-box__svg{
   @apply w-8 h-8

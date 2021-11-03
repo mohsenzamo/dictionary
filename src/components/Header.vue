@@ -30,7 +30,10 @@ function openGuide () {
           @click="pushLink('Login')"
         >
           <p class="header-modal__text">
-            <fa icon="user-tie" />
+            <fa
+              icon="user-tie"
+              class="ml-2"
+            />
             حساب کاربری
           </p>
         </button>
@@ -39,7 +42,10 @@ function openGuide () {
           class="header-modal__button"
         >
           <p class="header-modal__text">
-            <fa icon="wallet" />
+            <fa
+              icon="wallet"
+              class="ml-2"
+            />
             خرید نسخه طلایی
           </p>
         </button>
@@ -49,7 +55,10 @@ function openGuide () {
           @click="pushLink('AboutUs')"
         >
           <p class="header-modal__text">
-            <fa icon="address-card" />
+            <fa
+              icon="address-card"
+              class="ml-2"
+            />
             درباره ما
           </p>
         </button>
@@ -59,7 +68,10 @@ function openGuide () {
           @click="openGuide"
         >
           <p class="header-modal__text">
-            <fa icon="book" />
+            <fa
+              icon="book"
+              class="ml-2"
+            />
             راهنما
           </p>
         </button>
@@ -122,7 +134,7 @@ function openGuide () {
         h-10
 }
 .header-modal__text{
- @apply flex items-center justify-center gap-3
+ @apply flex items-center justify-center
 }
 .guide-number{
  @apply text-yellow-600

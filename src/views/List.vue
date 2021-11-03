@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import db, { Search, Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
@@ -7,8 +7,8 @@ import Loader from '../components/Loader.vue'
 // @ts-ignore
 import backToTop from 'vue-backtotop'
 import { useRouter } from 'vue-router'
-import { useSearchDB } from '../datasource/database/searchDB'
 import searchLoader from '../components/searchLoader.vue'
+import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
 const props = defineProps<{
   title: string
   id: string
@@ -36,70 +36,29 @@ function pushLinkQuiz (id:number) {
     }
   })
 }
-const words = ref<Words[]|null>(null)
-const searchFind = ref(true)
-const searchLoading = ref(false)
+const words = computed(() => useListSearchRepo().words)
+const searchFind = computed(() => useListSearchRepo().searchFind)
+const searchLoading = computed(() => useListSearchRepo().searchLoading)
 const searchQuery = ref('')
-const listLoading = ref(false)
+const listLoading = computed(() => useListSearchRepo().listLoading)
+const observeValue = computed(() => useListSearchRepo().observeValue)
 const options = {
   root: null,
   rootMargin: '0px',
   threshold: 1.0
 }
 const emptyDiv = ref<HTMLDivElement>()
-const findList = ref<Search[]|null>(null)
-const findCat = ref<Search[]|null>(null)
-const page = ref(0)
 const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
-    page.value++
-    console.log(page.value)
-    const ids = findList.value!.map(word => word.WordID)
-    const wordArray = await db.words
-      .where('WordID')
-      .anyOf(ids)
-      .offset(page.value * 10)
-      .limit(10)
-      .toArray()
-    if (wordArray.length < 10) {
-      listLoading.value = false
-      observer.unobserve(emptyDiv.value!)
-    }
-    words.value = words.value!.concat(wordArray)
+    useListSearchRepo().pages()
   }
 }, options)
-async function search () {
-  page.value = 0
-  searchFind.value = true
-  words.value = null
-  searchLoading.value = true
-  listLoading.value = false
-  // findCat.value = await db.search.where('CategoryID').equals(+props.id).toArray()
-  // const cats = findCat.value.map(word => word.CategoryID)
-  findList.value = await db.search
-    .where('Word')
-    .startsWith(useSearchDB().normalizeAr(searchQuery.value))
-    .toArray()
-  const ids = findList.value.map(word => word.WordID)
-  words.value = await db.words
-    .where('WordID')
-    .anyOf(ids)
-    .limit(10)
-    .toArray()
-  searchLoading.value = false
-  if (words.value.length < 10) {
-    listLoading.value = false
-    observer.unobserve(emptyDiv.value!)
-  } else {
-    listLoading.value = true
-    observer.observe(emptyDiv.value!)
-  }
-  if (words.value.length === 0) {
-    listLoading.value = false
-    searchFind.value = false
-  }
-}
-watch(searchQuery, search)
+watch(searchQuery, (searchQuery) => {
+  useListSearchRepo().search(searchQuery, +props.id)
+})
+watch(observeValue, (observeValue) => {
+  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+})
 </script>
 
 <template>
@@ -238,7 +197,7 @@ watch(searchQuery, search)
                 ref="emptyDiv"
                 class="grid w-screen items-center justify-items-center"
               >
-                <sapn
+                <span
                   v-if="listLoading"
                   class="list-loading"
                 />
