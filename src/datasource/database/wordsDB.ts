@@ -8,9 +8,21 @@ export const useWordsDB = defineStore('useWordsDB', {
   },
   actions: {
     async wordsPut (tables:Words[]) {
-      // tables.map(item => item.bookmark=0)
-      for (let i = 0; i < tables.length; i++) {
-        tables[i].bookmark = 0
+      const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
+      if (lastUpdate === '-1') {
+        for (let i = 0; i < tables.length; i++) {
+          tables[i].bookmark = 0
+        }
+      } else {
+        for (let i = 0; i < tables.length; i++) {
+          const id = tables[i].WordID
+          const word = await db.words.where('WordID').equals(id).toArray()
+          if (word[0].bookmark === 1) {
+            tables[i].bookmark = 1
+          } else {
+            tables[i].bookmark = 0
+          }
+        }
       }
       await db.words.bulkPut(tables)
     },
