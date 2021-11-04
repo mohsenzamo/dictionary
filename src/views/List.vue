@@ -256,7 +256,10 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </div>
       <template v-else>
         <div class="grid h-auto bg-gray-200 pt-20 gap-x-8 gap-y-2 justify-items-stretch mb-24">
-          <transition-group name="list">
+          <transition-group
+            name="list"
+            appear
+          >
             <div
               v-for="item in resultW"
               :key="item.WordID"
@@ -619,8 +622,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
 .list-leave-active {
   transition: all 1s ease;
 }
-.list-enter-from,
-.list-leave-to {
+.list-enter-from,.list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
