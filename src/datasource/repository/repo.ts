@@ -10,7 +10,8 @@ export const useCreateRepo = defineStore('useCreateRepo', {
   state () {
     return {
       categroyTable: null as null | Categories[],
-      errorValue: false as boolean
+      errorValue: false as boolean,
+      errorLoading: true as boolean
     }
   },
   actions: {
@@ -22,12 +23,14 @@ export const useCreateRepo = defineStore('useCreateRepo', {
           await useCategoriesDB().categoriesGet().then(r => {
             this.categroyTable = r
             this.errorValue = false
+            this.errorLoading = true
           })
           await useWordsDB().wordsPut(table.words)
           await useSearchDB().createSearchArray(table.words)
           localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
         }).catch(() => {
           this.errorValue = true
+          this.errorLoading = true
         })
       })
     }

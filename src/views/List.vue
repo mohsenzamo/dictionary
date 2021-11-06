@@ -4,8 +4,8 @@ import backHeader from '../components/BackHeader.vue'
 import db, { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
-// @ts-ignore
-import backToTop from 'vue-backtotop'
+// // @ts-ignore
+// import backToTop from 'vue-backtotop'
 import { useRouter } from 'vue-router'
 import searchLoader from '../components/searchLoader.vue'
 import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
@@ -140,7 +140,7 @@ async function bookmarkSelect2 (WordID:number) {
     {{ props.title }}
   </backHeader>
 
-  <backToTop
+  <!-- <backToTop
     visibleoffset="400"
     bottom="50px"
     right="10px"
@@ -154,7 +154,7 @@ async function bookmarkSelect2 (WordID:number) {
         class="text-gray-700"
       />
     </button>
-  </backToTop>
+  </backToTop> -->
   <Loader v-if="loading" />
   <div
     v-else
