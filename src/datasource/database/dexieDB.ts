@@ -32,6 +32,7 @@ export interface Search {
     WordID: number,
     CategoryID: number,
     text:string
+    bookmark: number,
 }
 export class MyAppDatabase extends Dexie {
     categories: Dexie.Table<Categories, number>;
@@ -44,7 +45,7 @@ export class MyAppDatabase extends Dexie {
       this.version(1).stores({
         categories: 'CategoryID,CustomOrder',
         words: 'WordID,CategoryID,wordID,Fa,Ar,bookmark',
-        search: '++id,Word,WordID,CategoryID'
+        search: '++id,Word,WordID,CategoryID,bookmark'
       })
 
       this.categories = this.table('categories')

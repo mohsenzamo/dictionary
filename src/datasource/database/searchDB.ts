@@ -1,3 +1,4 @@
+import { faOtter } from '@fortawesome/free-solid-svg-icons'
 import { defineStore } from 'pinia'
 import db, { Search, Words } from './dexieDB'
 
@@ -29,7 +30,7 @@ export const useSearchDB = defineStore('useSearchDB', {
           .filter(x => x.trim())
           .map(textAr => textAr.replace(/[-()/.=+_!~{}،?؟]/, ''))
           .filter(x => x.trim())
-          .map(wordAr => ({ Word: wordAr, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Ar' }))
+          .map(wordAr => ({ Word: wordAr, WordID: array[i].WordID, CategoryID: array[i].CategoryID, bookmark: 0, text: 'Ar' }))
         allArray = allArray.concat(myAr)
       }
       // -------Fa-------
@@ -40,7 +41,7 @@ export const useSearchDB = defineStore('useSearchDB', {
           .filter(y => y.trim())
           .map(textFa => textFa.replace(/[-()/.=+_!~{}،?؟]/, ''))
           .filter(y => y.trim())
-          .map(wordFa => ({ Word: wordFa, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Fa' }))
+          .map(wordFa => ({ Word: wordFa, WordID: array[i].WordID, CategoryID: array[i].CategoryID, bookmark: 0, text: 'Fa' }))
         allArray = allArray.concat(myFa)
       }
       // ------Ex--------
@@ -52,7 +53,7 @@ export const useSearchDB = defineStore('useSearchDB', {
             .filter(z => z.trim())
             .map(textEx => textEx.replace(/[-()/.=+_!~{}،?؟]/, ''))
             .filter(z => z.trim())
-            .map(wordEx => ({ Word: wordEx, WordID: array[i].WordID, CategoryID: array[i].CategoryID, text: 'Ex' }))
+            .map(wordEx => ({ Word: wordEx, WordID: array[i].WordID, CategoryID: array[i].CategoryID, bookmark: 0, text: 'Ex' }))
           allArray = allArray.concat(myEx)
         }
       }
@@ -67,14 +68,19 @@ export const useSearchDB = defineStore('useSearchDB', {
         this.searchPut(allArray)
       }
     },
+    async createSearchArray2 (id:number) {
+      const getWord = await db.search.where('WordID').equals(id).toArray()
+      for (let i = 0; i < getWord.length; i++) {
+        if (getWord[i].bookmark === 0) {
+          getWord[i].bookmark = 1
+        } else {
+          getWord[i].bookmark = 0
+        }
+      }
+      db.search.bulkPut(getWord)
+    },
     async searchPut (table:Search[]) {
       await db.search.bulkPut(table)
     }
-    // async searchAdd () {
-    //   await db.search.add({ Word: 'mohsen', WordID: 10, text: 'Fa' }, 1).catch(() => {
-    //     // console.log(er, 'errrrrr')
-    //     alert('asas')
-    //   })
-    // }
   }
 })

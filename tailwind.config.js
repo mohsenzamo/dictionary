@@ -13,7 +13,8 @@ const config = {
         neirizi: 'neirizi'
       },
       spacing: {
-        17: '17px'
+        17: '17px',
+        19.5: '30px'
       },
       inset: {
         //  '1/5: '20%'

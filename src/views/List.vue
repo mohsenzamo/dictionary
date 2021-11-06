@@ -4,11 +4,10 @@ import backHeader from '../components/BackHeader.vue'
 import db, { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
-// // @ts-ignore
-// import backToTop from 'vue-backtotop'
 import { useRouter } from 'vue-router'
 import searchLoader from '../components/searchLoader.vue'
 import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
+import { useSearchDB } from '../datasource/database/searchDB'
 const props = defineProps<{
   title: string
   id: string
@@ -96,7 +95,8 @@ async function bookmarkSelect (WordID:number) {
       }
     }
   }
-  db.words.put(getWord[0])
+  await db.words.put(getWord[0])
+  await useSearchDB().createSearchArray2(WordID)
 }
 async function bookmarkSelect2 (WordID:number) {
   const getWord = await db.words.where('WordID').equals(WordID).toArray()
@@ -131,7 +131,8 @@ async function bookmarkSelect2 (WordID:number) {
       }
     }
   }
-  db.words.put(getWord[0])
+  await db.words.put(getWord[0])
+  await useSearchDB().createSearchArray2(WordID)
 }
 </script>
 
@@ -139,22 +140,6 @@ async function bookmarkSelect2 (WordID:number) {
   <backHeader>
     {{ props.title }}
   </backHeader>
-
-  <!-- <backToTop
-    visibleoffset="400"
-    bottom="50px"
-    right="10px"
-  >
-    <button
-      type="button"
-      class="w-8 h-8 rounded-md bg-yellow-500"
-    >
-      <fa
-        icon="arrow-up"
-        class="text-gray-700"
-      />
-    </button>
-  </backToTop> -->
   <Loader v-if="loading" />
   <div
     v-else
@@ -256,95 +241,249 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </div>
       <template v-else>
         <div class="grid h-auto bg-gray-200 pt-20 gap-x-8 gap-y-2 justify-items-stretch mb-24">
-          <transition-group
-            name="list"
-            appear
-          >
-            <div
-              v-for="item in resultW"
-              :key="item.WordID"
-              class="word-box"
+          <div class="input-box">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="جستجو کنید ...."
+              class="search-input"
             >
-              <div class="word-box__main">
-                <div class="font-semibold text-base">
-                  {{ item.Ar }}
-                </div>
-                <div class="font-light text-sm">
-                  {{ item.Fa }}
-                </div>
+            <span
+              class="search-input__submit"
+            >
+              <fa icon="search" />
+            </span>
+          </div>
+          <transition
+            name="page"
+            mode="out-in"
+          >
+            <div>
+              <div
+                v-if="searchQuery.length>0"
+                class="w-screen h-full mt-14 mb-16"
+              >
+                <searchLoader v-if="searchLoading" />
+                <!--------------------------------------- find ---------------------------------------------->
                 <div
-                  v-if="item.Example.length > 0"
-                  class="flex text-xs text-gray-500"
+                  v-if="searchFind"
+                  class="grid h-auto bg-gray-200 gap-x-8 gap-y-2 justify-items-stretch mb-24"
                 >
-                  <p>مثال: </p>
-                  <p>{{ item.Example }}</p>
-                </div>
-              </div>
-              <div class="word-box__abilities">
-                <transition
-                  name="bookmarkButton"
-                  mode="out-in"
-                >
-                  <button
-                    v-if="item.bookmark===0"
-                    type="submit"
-                    class="w-5 h-5"
-                    @click="bookmarkSelect2(item.WordID)"
+                  <transition-group
+                    name="list"
                   >
-                    <svg
-                      id="Layer_1"
-                      version="1.1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink"
-                      x="0px"
-                      y="0px"
-                      viewBox="0 0 512 512"
-                      style="enable-background:new 0 0 512 512;"
-                      xml:space="preserve"
+                    <div
+                      v-for="item in words"
+                      :key="item.WordID"
+                      class="find-box"
                     >
-                      <g>
-                        <g>
-                          <path
-                            d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                          />
-                        </g>
-                      </g>
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                      <g />
-                    </svg>
-                  </button>
-                  <button
-                    v-else
-                    type="submit"
-                    class="w-5 h-5"
-                    @click="bookmarkSelect2(item.WordID)"
+                      <div class="find-word__main">
+                        <div class="font-semibold  text-base">
+                          {{ item.Ar }}
+                        </div>
+                        <div class="font-light  text-sm">
+                          {{ item.Fa }}
+                        </div>
+                        <div
+                          v-if="item.Example.length > 0"
+                          class="flex text-xs text-gray-500"
+                        >
+                          <p>مثال: </p>
+                          <p>{{ item.Example }}</p>
+                        </div>
+                      </div>
+                      <div class="find-word__abilities">
+                        <transition
+                          name="bookmarkButton"
+                          mode="out-in"
+                        >
+                          <button
+                            v-if="item.bookmark===0"
+                            type="submit"
+                            class="w-5 h-5"
+                            @click="bookmarkSelect(item.WordID)"
+                          >
+                            <svg
+                              id="Layer_1"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              x="0px"
+                              y="0px"
+                              viewBox="0 0 512 512"
+                              style="enable-background:new 0 0 512 512;"
+                              xml:space="preserve"
+                            >
+                              <g>
+                                <g>
+                                  <path
+                                    d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                                  />
+                                </g>
+                              </g>
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                              <g />
+                            </svg>
+                          </button>
+                          <button
+                            v-else
+                            type="submit"
+                            class="w-5 h-5"
+                            @click="bookmarkSelect(item.WordID)"
+                          >
+                            <fa
+                              icon="bookmark"
+                              class="text-xl text-green-500"
+                            />
+                          </button>
+                        </transition>
+                        <fa
+                          icon="volume-up"
+                          class="active:text-xl active:text-blue-500"
+                        />
+                      </div>
+                    </div>
+                  </transition-group>
+                  <!-------------------empty--------------------------->
+                  <div
+                    ref="emptyDiv"
+                    class="grid w-screen items-center justify-items-center"
                   >
-                    <fa
-                      icon="bookmark"
-                      class="text-xl text-green-500"
+                    <span
+                      v-if="listLoading"
+                      class="list-loading"
                     />
-                  </button>
-                </transition>
-                <fa
-                  icon="volume-up"
-                  class="active:text-xl active:text-blue-500"
-                />
+                  </div>
+                </div>
+                <!--------------------------------------- find ---------------------------------------------->
+                <!--------------------------------------- not find ---------------------------------------------->
+
+                <div
+                  v-else
+                  class="not-find-box"
+                >
+                  <p class="not-find__text">
+                    نتیجه ای یافت نشد!
+                  </p>
+                  <br>
+                  <fa
+                    icon="frown"
+                    style="color: rgba(245, 158, 11) ; font-size: 32px;"
+                    class="animate-spin"
+                  />
+                </div>
+
+                <!--------------------------------------- not find ---------------------------------------------->
+              </div>
+              <div
+                v-if="searchQuery.length===0"
+                class="grid h-auto bg-gray-200 pt-19.5 gap-x-8 gap-y-2 justify-items-stretch mb-24"
+              >
+                <transition-group
+                  name="list"
+                  appear
+                >
+                  <div
+                    v-for="item in resultW"
+                    :key="item.WordID"
+                    class="word-box"
+                  >
+                    <div class="word-box__main">
+                      <div class="font-semibold text-base">
+                        {{ item.Ar }}
+                      </div>
+                      <div class="font-light text-sm">
+                        {{ item.Fa }}
+                      </div>
+                      <div
+                        v-if="item.Example.length > 0"
+                        class="flex text-xs text-gray-500"
+                      >
+                        <p>مثال: </p>
+                        <p>{{ item.Example }}</p>
+                      </div>
+                    </div>
+                    <div class="word-box__abilities">
+                      <transition
+                        name="bookmarkButton"
+                        mode="out-in"
+                      >
+                        <button
+                          v-if="item.bookmark===0"
+                          type="submit"
+                          class="w-5 h-5"
+                          @click="bookmarkSelect2(item.WordID)"
+                        >
+                          <svg
+                            id="Layer_1"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            x="0px"
+                            y="0px"
+                            viewBox="0 0 512 512"
+                            style="enable-background:new 0 0 512 512;"
+                            xml:space="preserve"
+                          >
+                            <g>
+                              <g>
+                                <path
+                                  d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                                />
+                              </g>
+                            </g>
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                          </svg>
+                        </button>
+                        <button
+                          v-else
+                          type="submit"
+                          class="w-5 h-5"
+                          @click="bookmarkSelect2(item.WordID)"
+                        >
+                          <fa
+                            icon="bookmark"
+                            class="text-xl text-green-500"
+                          />
+                        </button>
+                      </transition>
+                      <fa
+                        icon="volume-up"
+                        class="active:text-xl active:text-blue-500"
+                      />
+                    </div>
+                  </div>
+                </transition-group>
               </div>
             </div>
-          </transition-group>
+          </transition>
         </div>
       </template>
     </div>

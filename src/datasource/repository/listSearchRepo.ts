@@ -16,9 +16,17 @@ export const useListSearchRepo = defineStore('useListSearchRepo', {
   },
   actions: {
     check (prop:number) {
-      for (let i = 0; i < this.findList!.length; i++) {
-        if (this.findList![i].CategoryID === prop) {
-          this.intersection.push(this.findList![i])
+      if (prop === -100) {
+        for (let i = 0; i < this.findList!.length; i++) {
+          if (this.findList![i].bookmark === 1) {
+            this.intersection.push(this.findList![i])
+          }
+        }
+      } else {
+        for (let i = 0; i < this.findList!.length; i++) {
+          if (this.findList![i].CategoryID === prop) {
+            this.intersection.push(this.findList![i])
+          }
         }
       }
     },
