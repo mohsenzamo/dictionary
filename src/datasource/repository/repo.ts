@@ -26,7 +26,6 @@ export const useCreateRepo = defineStore('useCreateRepo', {
             this.errorLoading = true
           })
           await useWordsDB().wordsPut(table.words)
-          await useSearchDB().createSearchArray(table.words)
           localStorage.setItem('lastUpdate', JSON.stringify(table.lastUpdate))
         }).catch(() => {
           this.errorValue = true

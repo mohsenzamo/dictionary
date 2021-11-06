@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import db, { Words } from './dexieDB'
+import { useSearchDB } from './searchDB'
 
 export const useWordsDB = defineStore('useWordsDB', {
   state () {
@@ -25,6 +26,7 @@ export const useWordsDB = defineStore('useWordsDB', {
         }
       }
       await db.words.bulkPut(tables)
+      await useSearchDB().createSearchArray(tables)
     },
     async wordsGet (categoryId: number) {
       if (categoryId === -100) {
