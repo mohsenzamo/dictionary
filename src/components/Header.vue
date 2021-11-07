@@ -37,7 +37,7 @@ function showPromotion () {
     >
       <div class="header-modal__box">
         <button
-          class="header-modal__button "
+          class="header-modal__button"
           @click="pushLink('Login')"
         >
           <p class="header-modal__text">

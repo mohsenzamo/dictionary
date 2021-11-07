@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useCreateRepo } from './datasource/repository/repo'
+import Modal from './components/Modal.vue'
+import update from './mixins/update'
 const errorShow = computed(() => useCreateRepo().errorValue)
 const errorLoading = computed(() => useCreateRepo().errorLoading)
 useCreateRepo().updateWordandCategory()
@@ -9,8 +11,54 @@ function err () {
     useCreateRepo().errorLoading = false
   })
 }
+// const updateShow = ref(true)
+// const worker = new Worker('./src/serviceWorker.ts')
+// worker.addEventListener('message', (event) => {
+//   console.log(event.data)
+// })
+// function post () {
+//   worker.postMessage('skipWaiting')
+// }
+const refreshing = ref(false)
+const registration = ref(null)
+const updateExists = ref(false)
+function updateAvailable (event:any) {
+  registration.value = event.detail
+  updateExists.value = true
+}
+document.addEventListener('swUpdated', updateAvailable, { once: true })
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+  if (refreshing.value) return
+  refreshing.value = true
+  window.location.reload()
+})
+function refreshApp () {
+  updateExists.value = false
+  if (registration.value || registration.value!.waiting) return
+      registration.value!.waiting.postMessage({ type: 'SKIP_WAITING' })
+}
 </script>
 <template>
+  <transition name="modal">
+    <modal
+      v-if="updateExists"
+      @close="updateExists = false"
+    >
+      <div class="grid items-center justify-items-center">
+        <p class="font-IRANSans w-2/3 text-center">
+          بروزرسانی جدید موجود است
+        </p>
+        <button
+          class="bg-yellow-500 rounded-md h-10 font-IRANSans text-sm px-2 mt-3"
+          @click="refreshApp"
+        >
+          <span class="animate-pulse">
+            بروزرسانی کنید
+          </span>
+        </button>
+      </div>
+    </modal>
+  </transition>
   <div
     v-if="errorShow"
     class="bg-red-300 h-screen w-screen grid justify-items-center gap-3"
