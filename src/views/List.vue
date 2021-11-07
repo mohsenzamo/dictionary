@@ -135,13 +135,10 @@ async function bookmarkSelect2 (WordID:number) {
   await useSearchDB().createSearchArray2(WordID)
 }
 const audioSrc = ref('')
-const audioShow = ref(false)
-const audioElement = ref<HTMLAudioElement>()
 const playingId = ref(-1)
 function play (id:number) {
   playingId.value = id
   audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
-  audioElement.value!.play()
 }
 function audioError () {
   alert('salam')
@@ -486,10 +483,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                           />
                         </button>
                       </transition>
-                      <fa
-                        icon="volume-up"
-                        class="active:text-xl active:text-blue-500"
-                      />
+                      <button
+                        v-if="item.SoundVersion===1"
+                        @click="play(item.WordID)"
+                      >
+                        <fa
+                          icon="volume-up"
+                          class="active:text-xl"
+                          :class="{'text-blue-500': playingId === item.WordID}"
+                        />
+                      </button>
                     </div>
                   </div>
                 </transition-group>
@@ -610,10 +613,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                         />
                       </button>
                     </transition>
-                    <fa
-                      icon="volume-up"
-                      class="active:text-xl active:text-blue-500"
-                    />
+                    <button
+                      v-if="item.SoundVersion===1"
+                      @click="play(item.WordID)"
+                    >
+                      <fa
+                        icon="volume-up"
+                        class="active:text-xl"
+                        :class="{'text-blue-500': playingId === item.WordID}"
+                      />
+                    </button>
                   </div>
                 </div>
               </transition-group>
@@ -730,12 +739,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                     />
                   </button>
                 </transition>
-                <fa
-                  icon="volume-up"
-                  class="active:text-xl"
-                  :class="{'text-blue-500': playingId === item.WordID}"
+                <button
+                  v-if="item.SoundVersion===1"
                   @click="play(item.WordID)"
-                />
+                >
+                  <fa
+                    icon="volume-up"
+                    class="active:text-xl"
+                    :class="{'text-blue-500': playingId === item.WordID}"
+                  />
+                </button>
               </div>
             </div>
           </div>
@@ -745,7 +758,6 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
     <audio
       v-if="playingId !== -1"
       :key="playingId"
-      ref="audioElement"
       :src="audioSrc"
       autoplay
       @error="audioError"
@@ -856,4 +868,5 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
 .empty-bookmark-box{
   @apply font-IRANSans grid justify-center w-full h-screen items-center
 }
+
 </style>
