@@ -133,6 +133,10 @@ async function bookmarkSelect2 (WordID:number) {
   }
   db.words.put(getWord[0])
 }
+const audioSrc = ref('')
+function playAudio (WordID:number) {
+  audioSrc.value = `https://nebrasar.ir/sounds/${WordID}.m4a`
+}
 </script>
 
 <template>
@@ -335,10 +339,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                     />
                   </button>
                 </transition>
-                <fa
-                  icon="volume-up"
-                  class="active:text-xl active:text-blue-500"
-                />
+                <button
+                  v-if="item.SoundVersion===1"
+                  type="submit"
+                  @click="playAudio(item.WordID)"
+                >
+                  <fa
+                    icon="volume-up"
+                    class="active:text-xl active:text-blue-500"
+                  />
+                </button>
               </div>
             </div>
           </transition-group>
@@ -456,10 +466,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                         />
                       </button>
                     </transition>
-                    <fa
-                      icon="volume-up"
-                      class="active:text-xl active:text-blue-500"
-                    />
+                    <button
+                      v-if="item.SoundVersion===1"
+                      type="submit"
+                      @click="playAudio(item.WordID)"
+                    >
+                      <fa
+                        icon="volume-up"
+                        class="active:text-xl active:text-blue-500"
+                      />
+                    </button>
                   </div>
                 </div>
               </transition-group>
@@ -576,10 +592,17 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                     />
                   </button>
                 </transition>
-                <fa
-                  icon="volume-up"
-                  class="active:text-xl active:text-blue-500"
-                />
+
+                <button
+                  v-if="item.SoundVersion===1"
+                  type="submit"
+                  @click="playAudio(item.WordID)"
+                >
+                  <fa
+                    icon="volume-up"
+                    class="active:text-xl active:text-blue-500"
+                  />
+                </button>
               </div>
             </div>
           </div>
@@ -613,6 +636,10 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </button>
     </div>
   </div>
+  <audio
+    :src="audioSrc"
+    autoplay
+  />
 </template>
 <style>
 .list-enter-active,
@@ -692,4 +719,5 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
 .empty-bookmark-box{
   @apply font-IRANSans grid justify-center w-full h-screen items-center
 }
+
 </style>
