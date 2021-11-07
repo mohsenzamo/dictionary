@@ -359,10 +359,16 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                             />
                           </button>
                         </transition>
-                        <fa
-                          icon="volume-up"
-                          class="active:text-xl active:text-blue-500"
-                        />
+                        <button
+                          v-if="item.SoundVersion===1"
+                          @click="play(item.WordID)"
+                        >
+                          <fa
+                            icon="volume-up"
+                            class="active:text-xl"
+                            :class="{'text-blue-500': playingId === item.WordID}"
+                          />
+                        </button>
                       </div>
                     </div>
                   </transition-group>
@@ -821,6 +827,30 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
 }
 .word-box__abilities{
   @apply w-24 h-14 float-left grid grid-cols-2 justify-items-center items-center;
+}
+.input-box{
+  @apply h-11 flex fixed top-16 z-10  w-screen justify-center px-2
+}
+.search-input{
+  @apply h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20
+}
+.search-input__submit{
+  @apply z-30 h-full leading-snug font-normal text-center text-gray-500 rounded text-base flex items-center  justify-start w-12 pr-3 py-3 -mr-12
+}
+.find-box{
+  @apply bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg animate-opacity mx-2 pr-4
+}
+.find-word__main{
+  @apply w-40 h-auto float-right rounded-lg grid items-center font-IRANSans
+}
+.find-word__abilities{
+  @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center
+}
+.not-find-box{
+  @apply bg-gray-200 h-screen w-screen text-center animate-opacity
+}
+.not-find__text{
+  @apply font-IRANSans pt-16 text-xl
 }
 .yellow-button__box{
   @apply w-screen

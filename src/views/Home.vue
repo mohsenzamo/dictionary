@@ -84,6 +84,15 @@ async function bookmarkSelect (WordID:number) {
   }
   db.words.put(getWord[0])
 }
+const audioSrc = ref('')
+const playingId = ref(-1)
+function play (id:number) {
+  playingId.value = id
+  audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
+}
+function audioError () {
+  alert('salam')
+}
 </script>
 
 <template>
@@ -217,10 +226,16 @@ async function bookmarkSelect (WordID:number) {
                         />
                       </button>
                     </transition>
-                    <fa
-                      icon="volume-up"
-                      class="active:text-xl active:text-blue-500"
-                    />
+                    <button
+                      v-if="item.SoundVersion===1"
+                      @click="play(item.WordID)"
+                    >
+                      <fa
+                        icon="volume-up"
+                        class="active:text-xl"
+                        :class="{'text-blue-500': playingId === item.WordID}"
+                      />
+                    </button>
                   </div>
                 </div>
               </transition-group>
@@ -348,7 +363,14 @@ async function bookmarkSelect (WordID:number) {
       </transition>
     <!--------------------------------------- searchedWords -------------------------------------------- -->
     </div>
-
+    <audio
+      v-if="playingId !== -1"
+      :key="playingId"
+      :src="audioSrc"
+      autoplay
+      @error="audioError"
+      @ended="playingId = -1"
+    />
     <div
       class="
       yellow-btns-box"
