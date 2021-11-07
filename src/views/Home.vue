@@ -86,12 +86,14 @@ async function bookmarkSelect (WordID:number) {
 }
 const audioSrc = ref('')
 const playingId = ref(-1)
+const modalErrorValue = ref(false)
 function play (id:number) {
   playingId.value = id
   audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
 }
 function audioError () {
-  alert('salam')
+  playingId.value = -1
+  modalErrorValue.value = true
 }
 </script>
 
@@ -114,6 +116,14 @@ function audioError () {
           <p>ارتقا به نسخه طلایی</p>
         </button>
       </div>
+    </modal>
+  </transition>
+  <transition name="modal">
+    <modal
+      v-if="modalErrorValue"
+      @close="modalErrorValue = false"
+    >
+      لطفا اتصال به اینترنت رو چک کنین!
     </modal>
   </transition>
   <Loader v-if="loading" />
