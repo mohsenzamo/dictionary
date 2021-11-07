@@ -134,6 +134,18 @@ async function bookmarkSelect2 (WordID:number) {
   await db.words.put(getWord[0])
   await useSearchDB().createSearchArray2(WordID)
 }
+const audioSrc = ref('')
+const audioShow = ref(false)
+const audioElement = ref<HTMLAudioElement>()
+const playingId = ref(-1)
+function play (id:number) {
+  playingId.value = id
+  audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
+  audioElement.value!.play()
+}
+function audioError () {
+  alert('salam')
+}
 </script>
 
 <template>
@@ -720,7 +732,9 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                 </transition>
                 <fa
                   icon="volume-up"
-                  class="active:text-xl active:text-blue-500"
+                  class="active:text-xl"
+                  :class="{'text-blue-500': playingId === item.WordID}"
+                  @click="play(item.WordID)"
                 />
               </div>
             </div>
@@ -728,6 +742,15 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
         </div>
       </transition>
     </template>
+    <audio
+      v-if="playingId !== -1"
+      :key="playingId"
+      ref="audioElement"
+      :src="audioSrc"
+      autoplay
+      @error="audioError"
+      @ended="playingId = -1"
+    />
     <div
       v-if="resultW && resultW.length < 4"
       class=" yellow-button__box"

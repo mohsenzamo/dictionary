@@ -17,15 +17,15 @@ function openGuide () {
   modalGuideValue.value = true
   modalMenuValue.value = false
 }
-// const installPrompt = ref()
-const showValue = ref(true)
-// window.addEventListener('beforeinstallprompt', e => {
-//   e.preventDefault()
-//   installPrompt.value = e
-//   showValue.value = false
-// })
+const installPrompt = ref()
+const showValue = ref(false)
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault()
+  installPrompt.value = e
+  showValue.value = true
+})
 function showPromotion () {
-  // installPrompt.value.prompt()
+  installPrompt.value.prompt()
 }
 
 </script>
@@ -87,12 +87,12 @@ function showPromotion () {
           </p>
         </button>
         <span
+          v-if="showValue"
           class="header-modal__line"
-          :class="{'hidden':showValue}"
         />
         <button
+          v-if="showValue"
           class="header-modal__button"
-          :class="{'hidden':showValue}"
           @click="showPromotion"
         >
           <p class="header-modal__text">
