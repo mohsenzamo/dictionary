@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router'
 import searchLoader from '../components/searchLoader.vue'
 import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
 import { useSearchDB } from '../datasource/database/searchDB'
+import Modal from '../components/Modal.vue'
 const props = defineProps<{
   title: string
   id: string
@@ -136,12 +137,14 @@ async function bookmarkSelect2 (WordID:number) {
 }
 const audioSrc = ref('')
 const playingId = ref(-1)
+const modalErrorValue = ref(false)
 function play (id:number) {
   playingId.value = id
   audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
 }
 function audioError () {
-  alert('salam')
+  playingId.value = -1
+  modalErrorValue.value = true
 }
 </script>
 
@@ -149,6 +152,22 @@ function audioError () {
   <backHeader>
     {{ props.title }}
   </backHeader>
+  <transition name="modal">
+    <modal
+      v-if="modalErrorValue"
+      @close="modalErrorValue = false"
+    >
+      <div class="grid items-center justify-items-center">
+        <p class="font-IRANSans w-2/3 text-center">
+          لطفا اتصال به اینترنت رو چک کنین!
+        </p>
+        <fa
+          icon="wifi"
+          class="animate-pulse text-xl mt-3"
+        />
+      </div>
+    </modal>
+  </transition>
   <Loader v-if="loading" />
   <div
     v-else

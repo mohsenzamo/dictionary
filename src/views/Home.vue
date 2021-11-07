@@ -123,7 +123,15 @@ function audioError () {
       v-if="modalErrorValue"
       @close="modalErrorValue = false"
     >
-      لطفا اتصال به اینترنت رو چک کنین!
+      <div class="grid items-center justify-items-center">
+        <p class="font-IRANSans w-2/3 text-center">
+          لطفا اتصال به اینترنت رو چک کنین!
+        </p>
+        <fa
+          icon="wifi"
+          class="animate-pulse text-xl mt-3"
+        />
+      </div>
     </modal>
   </transition>
   <Loader v-if="loading" />
