@@ -17,6 +17,17 @@ function openGuide () {
   modalGuideValue.value = true
   modalMenuValue.value = false
 }
+// const installPrompt = ref()
+const showValue = ref(true)
+// window.addEventListener('beforeinstallprompt', e => {
+//   e.preventDefault()
+//   installPrompt.value = e
+//   showValue.value = false
+// })
+function showPromotion () {
+  // installPrompt.value.prompt()
+}
+
 </script>
 <template>
   <transition name="modal">
@@ -73,6 +84,23 @@ function openGuide () {
               class="ml-2"
             />
             راهنما
+          </p>
+        </button>
+        <span
+          class="header-modal__line"
+          :class="{'hidden':showValue}"
+        />
+        <button
+          class="header-modal__button"
+          :class="{'hidden':showValue}"
+          @click="showPromotion"
+        >
+          <p class="header-modal__text">
+            <fa
+              icon="download"
+              class="ml-2"
+            />
+            نصب برنامه
           </p>
         </button>
       </div>
