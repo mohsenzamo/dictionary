@@ -2,9 +2,16 @@
 import { computed, ref, watch } from 'vue'
 import Modal from '../components/Modal.vue'
 import Loader from '../components/Loader.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
 const searchQuery = ref('')
+const pathName = ref(window.location.pathname)
+function modalSearchOpen () {
+  modalSearchValue.value = true
+  searchQuery.value = ''
+}
 </script>
 <template>
   <transition name="modal">
@@ -88,11 +95,14 @@ const searchQuery = ref('')
     <div class="font-IRANSans flex w-screen justify-center mt-4 bg-yellow-500 h-10">
       <button
         class="btn-6 mx-4 w-36 nav-btn"
-        @click="modalSearchValue = true"
+        @click="modalSearchOpen"
       >
         <span class="nav-span flex items-center justify-center"><fa icon="search" /><p class="mx-3">جستجو</p></span>
       </button>
-      <button class="btn-6 mx-4 w-36 nav-btn">
+      <button
+        v-if="pathName !== '/homelarge'"
+        class="btn-6 mx-4 w-36 nav-btn"
+      >
         <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
       </button>
       <button class="btn-6 mx-4 w-36 nav-btn">
@@ -173,22 +183,22 @@ const searchQuery = ref('')
 .btn-6::before{
   left: 50%;
   top: 0;
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
 }
 .btn-6::after{
   left: 50%;
   bottom: 0;
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
 }
 .btn-6 .nav-span::before{
   left: 0;
   top: 50%;
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
 }
 .btn-6 .nav-span::after{
   right: 0;
   top: 50%;
-  transition-duration: 0.4s;
+  transition-duration: 0.3s;
 }
 .btn-6:hover::before, .btn-6:hover::after{
   left: 0;
