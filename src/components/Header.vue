@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../store/index'
 import Modal from '../components/Modal.vue'
+import { usePWAStore } from '../PWA'
+import Typed from 'typed.js'
 const router = useRouter()
 const store = useStore()
 const modalMenuValue = ref(false)
@@ -17,17 +19,24 @@ function openGuide () {
   modalGuideValue.value = true
   modalMenuValue.value = false
 }
-const installPrompt = ref()
-const showValue = ref(false)
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault()
-  installPrompt.value = e
-  showValue.value = true
-})
+const showValue = computed(() => usePWAStore().showValue)
+usePWAStore().beforeInstall()
 function showPromotion () {
-  installPrompt.value.prompt()
+  usePWAStore().showPromotion()
 }
-
+// const x = ref(window.screen.width)
+// watch(x, (x) => {
+//   console.log(x)
+// })
+// function mohsen () {
+//   console.log(x.value)
+// }
+// const dic = ref<HTMLParagraphElement>()
+// const options = {
+//   strings: ['<i>First</i> sentence.', '&amp; a second sentence.'],
+//   typeSpeed: 40
+// }
+// const typed = new Typed(dic.value, options)
 </script>
 <template>
   <transition name="modal">
@@ -137,7 +146,9 @@ function showPromotion () {
       @click="modalMenuValue = true"
     ><fa icon="align-justify" /></span>
     <div class="header-text__box">
-      <p class="header-text__main">
+      <p
+        class="header-text__main"
+      >
         دیکشنری عربی نبراس
       </p>
       <p class="header-text__lahje">

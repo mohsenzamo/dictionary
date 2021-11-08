@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useCreateRepo } from './datasource/repository/repo'
 import Modal from './components/Modal.vue'
-import update from './mixins/update'
+// import update from './mixins/update'
 const errorShow = computed(() => useCreateRepo().errorValue)
 const errorLoading = computed(() => useCreateRepo().errorLoading)
 useCreateRepo().updateWordandCategory()
@@ -33,9 +33,9 @@ navigator.serviceWorker.addEventListener('controllerchange', () => {
   window.location.reload()
 })
 function refreshApp () {
-  updateExists.value = false
-  if (registration.value || registration.value!.waiting) return
-      registration.value!.waiting.postMessage({ type: 'SKIP_WAITING' })
+  // updateExists.value = false
+  // if (registration.value || registration.value!.waiting) return
+  //     registration.value!.waiting.postMessage({ type: 'SKIP_WAITING' })
 }
 </script>
 <template>

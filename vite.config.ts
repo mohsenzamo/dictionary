@@ -5,7 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [vue(), VitePWA({
     strategies: 'injectManifest',
-    filename: '/src/serviceworker.ts',
+    filename: 'workeBox.ts',
+    srcDir: '/src/workeBox.ts',
     includeAssets: [
       '**/*.js'
     ],

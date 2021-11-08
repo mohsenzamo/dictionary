@@ -29,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AboutUs.vue')
   },
   {
+    path: '/homelarge',
+    name: 'HomeLarge',
+    component: () => import('../views/HomeLarge.vue')
+  },
+  {
     path: '/index',
     redirect: '/'
   },
