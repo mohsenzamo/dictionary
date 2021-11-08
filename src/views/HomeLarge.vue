@@ -1,276 +1,284 @@
 <script lang="ts" setup>
-import { computed } from 'vue-demi'
+import { computed, ref, watch } from 'vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import { useCreateRepo } from '../datasource/repository/repo'
+import HeaderLarge from '../components/HeaderLarge.vue'
+import Modal from '../components/Modal.vue'
+import Loader from '../components/Loader.vue'
 useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
 })
 const categoryList = computed(() => useCreateRepo().categroyTable)
-const loading = computed(() => !categoryList.value || categoryList.value.length === 0)
-
+const slideCount = computed(() => categoryList.value?.length / 6)
+const loading = computed(() => !slideCount.value)
+const slide = ref(1)
+const index = ref(-1)
+const modalPremiumValue = ref(false)
+function change (y:number) {
+  if (y === 1) {
+    if (slide.value < slideCount.value) {
+      slide.value++
+    } else {
+      slide.value = 1
+    }
+  } else {
+    if (slide.value > 1) {
+      slide.value--
+    } else {
+      slide.value = slideCount.value
+    }
+  }
+}
 </script>
 <template>
-  <div v-if="loading">
-    loading
-  </div>
-  <div v-else>
-    <header class="w-screen h-28 bg-gray-300 header ">
-      <div class="grid items-center justify-items-center font-IRANSans">
-        <img
-          src="../assets/logo.png"
-          class="w-24 h-24 absolute left-10 -top-3"
-          alt=""
-        >
-        <P class="font-semibold text-2xl typing-demo">
-          دیکشنری عربی نبراس
-        </P><p class="text-lg typing-demo__accent">
-          لحجه <span class="text-yellow-500">عراقی</span> و <span class="text-yellow-500">خلیجی</span>
-        </p>
-        <div class="burst-8  absolute right-10 top-5">
-        
-        </div>
-      </div>
-      <div class="font-IRANSans flex w-screen justify-center mt-4 bg-yellow-500 h-10">
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span flex items-center justify-center"><p class="mx-3">جستجو</p><fa icon="search" /></span>
-        </button>
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span">صفحه نخست</span>
-        </button>
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span">حساب کاربری</span>
-        </button>
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span">خرید نسخه طلایی</span>
-        </button>
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span">راهنما</span>
-        </button>
-        <button class="btn-6 mx-4 w-36 nav-btn">
-          <span class="nav-span">درباره ما</span>
-        </button>
-      </div>
-    </header>
-    <div
-      class="body"
-      style="--n-rows: 3; --n-cols: 6"
+  <HeaderLarge />
+  <transition name="modal">
+    <modal
+      v-if="modalPremiumValue"
+      @close="modalPremiumValue = false"
     >
-      <div class="hex-cell">
-        <div
-          class="w-16 h-16"
-          v-html="categoryList[0].Icon"
-        />
-        <p>{{ categoryList[0].Title }}</p>
-      </div>
-      <div class="hex-cell">
-        <div
-          class="w-16 h-16"
-          v-html="categoryList[1].Icon"
-        />
-        <p>{{ categoryList[1].Title }}</p>
-      </div>
-      <div class="hex-cell">
-        <div
-          v-if="categoryList[2].Icon"
-          class="w-16 h-16"
-          v-html="categoryList[2].Icon"
-        />
-        <p>{{ categoryList[2].Title }}</p>
-      </div>
-      <div
-        class="hex-cell"
-      >
-        <div
-          class="w-16 h-16"
+      <div class="h-64 grid items-center justify-items-center text-center text-2xl font-IRANSans px-16">
+        <p>
+          برای استفاده از این قسمت باید نرم افزار را به نسخه طلایی ارتقا دهید.<br>با دریافت نسخه طلایی نرم افزار، امکان دسترسی به هزاران لغت در دسته بندی های مختلف را خواهید داشت.
+        </p>
+        <button
+          class="
+        bg-yellow-500 w-8/12 h-12 rounded-xl
+      "
         >
-          <svg
-            id="Layer_1"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            x="0px"
-            y="0px"
-            viewBox="0 0 280.028 280.028"
-            style="enable-background:new 0 0 280.028 280.028;"
-            xml:space="preserve"
+          <p>ارتقا به نسخه طلایی</p>
+        </button>
+      </div>
+    </modal>
+  </transition>
+  <Loader v-if="loading" />
+  <div v-else>
+    <button
+      class="absolute right-40 bottom-48 text-5xl z-10"
+      @click="change(0)"
+    >
+      <fa icon="chevron-right" />
+    </button>
+    <div
+      v-for="count in slideCount"
+      :key="count"
+    >
+      <div
+        v-if="slide === count"
+        class="body"
+        style="--n-rows: 3; --n-cols: 6"
+      >
+        <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
+          <div
+            v-if="categoryList[count*6-6].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
           >
-            <g>
-              <path
-                style="fill:#E2574C;"
-                d="M52.506,0h175.017c9.661,0,17.502,7.832,17.502,17.502v245.024c0,10.212-7.71,17.502-17.502,17.502
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
+              />
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-6].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-6].Icon"
+          />
+          <p>{{ categoryList[count*6-6].Title }}</p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
+          <div
+            v-if="categoryList[count*6-5].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
+          >
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
+              />
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-5].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-5].Icon"
+          />
+          <p>{{ categoryList[count*6-5].Title }}</p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-rigthTOleft">
+          <div
+            v-if="categoryList[count*6-4].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
+          >
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
+              />
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-4].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-4].Icon"
+          />
+          <p>{{ categoryList[count*6-4].Title }}</p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-open">
+          <div
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+          >
+            <svg
+              id="Layer_1"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              x="0px"
+              y="0px"
+              viewBox="0 0 280.028 280.028"
+              style="enable-background:new 0 0 280.028 280.028;"
+              xml:space="preserve"
+            >
+              <g>
+                <path
+                  style="fill:#E2574C;"
+                  d="M52.506,0h175.017c9.661,0,17.502,7.832,17.502,17.502v245.024c0,10.212-7.71,17.502-17.502,17.502
 		c-8.191,0-70.269-38.81-78.758-43.754c-8.497-4.944-8.628-5.233-17.502,0c-8.873,5.259-70.409,43.754-78.758,43.754
 		c-9.915,0-17.502-7.027-17.502-17.502V17.502C35.004,7.832,42.845,0,52.506,0z"
-              />
-              <path
-                style="fill:#CB4E44;"
-                d="M227.523,0h-87.509v232.466c2.258-0.018,4.419,1.278,8.751,3.807
+                />
+                <path
+                  style="fill:#CB4E44;"
+                  d="M227.523,0h-87.509v232.466c2.258-0.018,4.419,1.278,8.751,3.807
 		c8.453,4.927,70.086,43.448,78.618,43.728h0.411c9.661-0.14,17.23-7.359,17.23-17.475V17.502C245.025,7.832,237.184,0,227.523,0z"
-              />
-              <path
-                style="fill:#EFC75E;"
-                d="M210.048,105.395l-46.038-3.404l-23.995-49.486l-24.266,49.486l-45.758,3.404l30.628,38.197
+                />
+                <path
+                  style="fill:#EFC75E;"
+                  d="M210.048,105.395l-46.038-3.404l-23.995-49.486l-24.266,49.486l-45.758,3.404l30.628,38.197
 		l-8.751,48.9l48.147-22.507l48.147,22.507l-8.908-48.9C179.253,143.593,210.048,105.395,210.048,105.395z"
-              />
-              <polygon
-                style="fill:#D7B354;"
-                points="188.162,192.501 179.253,143.602 210.048,105.395 164.009,101.991 140.015,52.505
+                />
+                <polygon
+                  style="fill:#D7B354;"
+                  points="188.162,192.501 179.253,143.602 210.048,105.395 164.009,101.991 140.015,52.505
 		140.015,170.003 	"
+                />
+              </g>
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+            </svg>
+          </div>
+          <p class="text-center">
+            نشان شده ها
+          </p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-leftTOright">
+          <div
+            v-if="categoryList[count*6-3].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
+          >
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
               />
-            </g>
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-            <g />
-          </svg>
-          <p>نشان شده ها</p>
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-3].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-3].Icon"
+          />
+          <p>{{ categoryList[count*6-3].Title }}</p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-downTOup">
+          <div
+            v-if="categoryList[count*6-2].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
+          >
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
+              />
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-2].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-2].Icon"
+          />
+          <p>{{ categoryList[count*6-2].Title }}</p>
+        </div>
+        <div class="hex-cell grid items-center justify-items-center animate-downTOup">
+          <div
+            v-if="categoryList[count*6-1].IsFree === 0"
+            class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
+            @click="modalPremiumValue = true"
+          >
+            <p class="h-20 w-20">
+              <fa
+                icon="lock"
+              />
+            </p>
+          </div>
+          <div
+            v-if="categoryList[count*6-1].Icon"
+            class="w-16 h-16 -mb-24 grid items-center justify-items-center"
+            v-html="categoryList[count*6-1].Icon"
+          />
+          <p>{{ categoryList[count*6-1].Title }}</p>
         </div>
       </div>
-      <div class="hex-cell">
-        <div
-
-          class="w-16 h-16"
-          v-html="categoryList[3].Icon"
-        />
-        <p>{{ categoryList[3].Title }}</p>
-      </div>
-      <div class="hex-cell">
-        <div
-          class="w-16 h-16"
-          v-html="categoryList[4].Icon"
-        />
-        <p>{{ categoryList[4].Title }}</p>
-      </div>
-      <div class="hex-cell">
-        <div
-          class="w-16 h-16"
-          v-html="categoryList[5].Icon"
-        />
-        <p>{{ categoryList[5].Title }}</p>
-      </div>
     </div>
-    <div class="talkbubble-left fixed bottom-10 left-10 hover:left-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 ">
-      <p class="">
+    <button
+      class="absolute left-40 bottom-48 text-5xl z-10"
+      @click="change(1)"
+    >
+      <fa icon="chevron-left" />
+    </button>
+    <div class="flex items-center justify-center pb-4">
+      <div
+        v-for="n in slideCount"
+        :key="n"
+        class="border-gray-500 border-2 w-4 h-4 rounded-full mx-4 cursor-pointer"
+        :class="{'bg-gray-500':slide===n}"
+        @click="slide = n"
+      />
+    </div>
+    <!---->
+    <div
+      class="talkbubble-left fixed bottom-10 left-10 hover:left-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-leftTOright cursor-pointer"
+    >
+      <p>
         آزمون مرحله ای
       </p>
     </div>
-    <div class="talkbubble-right fixed bottom-10 right-10 hover:right-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500">
-      <p class="">
+    <div
+      class="talkbubble-right fixed bottom-10 right-10 hover:right-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-rigthTOleft cursor-pointer"
+    >
+      <p>
         تمرین لغات
       </p>
     </div>
   </div>
 </template>
 <style>
-.burst-8 {
-      background: red;
-      width: 65px;
-      height: 60px;
-      text-align: center;
-      transform: rotate(20deg);
-    }
-    .burst-8:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 60px;
-      width: 65px;
-      background: red;
-      transform: rotate(135deg);
-    }
-.typing-demo {
-  animation: typing 2s steps(22), blink .5s step-end infinite alternate;
-  width: 210px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.typing-demo__accent {
-  animation: typing 4s steps(30), blink .5s step-end infinite alternate;
-  width: 210px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-@keyframes typing {
-  from {
-    width: 0
-  }
-}
-
-@keyframes blink {
-  50% {
-    border-color: transparent
-  }
-}
-
-.nav-btn{
-  display: inline-block;
-  position: relative;
-  border: none;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-.nav-btn::before, .nav-btn::after{
-  content:"";
-  width: 0;
-  height: 2px;
-  position: absolute;
-  transition: all 0.1s linear;
-  background: rgb(17,117,139);
-}
-
-.nav-span::before, .nav-span::after{
-  content:"";
-  width:2px;
-  height:0;
-  position: absolute;
-  transition: all 0.1s linear;
-  background: rgb(17,117,139);
-}
-.nav-btn:hover::before, .nav-btn:hover::after{
-  width: 100%;
-}
-.nav-btn:hover .nav-span::before, .nav-btn:hover .nav-span::after{
-  height: 100%;
-}
-.btn-6::before{
-  left: 50%;
-  top: 0;
-  transition-duration: 0.4s;
-}
-.btn-6::after{
-  left: 50%;
-  bottom: 0;
-  transition-duration: 0.4s;
-}
-.btn-6 .nav-span::before{
-  left: 0;
-  top: 50%;
-  transition-duration: 0.4s;
-}
-.btn-6 .nav-span::after{
-  right: 0;
-  top: 50%;
-  transition-duration: 0.4s;
-}
-.btn-6:hover::before, .btn-6:hover::after{
-  left: 0;
-}
-.btn-6:hover .nav-span::before, .btn-6:hover .nav-span::after{
-  top: 0;
+.hex-cell svg{
+width: 100% !important;
+height: 100% !important;
 }
 .hex-cell:nth-of-type(5n + 1) { grid-column-start: 2 }
 .body {
@@ -294,35 +302,18 @@ const loading = computed(() => !categoryList.value || categoryList.value.length 
     --l: calc(100vh/(var(--n-rows) + 3));
   }
 }
-
 .hex-cell {
   overflow: hidden;
   grid-column-end: span 2;
   margin: calc(-1*var(--hl)) 0;
   transform: scale(0.95);
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  display: grid;
-  justify-content: center;
-  align-items: center;
   font-family: IRANsans;
   background-color: rgb(17,117,139);
-
+  cursor: pointer;
 }
 .hex-cell:hover{
     transform: scale(1.007);
-}
-
-img {
-  --hl: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(calc(1 + .2*var(--hl)));
-  filter: brightness(calc(.6*(1 + var(--hl))));
-  transition: .7s;
-}
-img:hover {
-  --hl: 1;
 }
  .talkbubble-left {
       width: 120px;
