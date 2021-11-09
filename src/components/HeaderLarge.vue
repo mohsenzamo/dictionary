@@ -79,16 +79,30 @@ function modalSearchOpen () {
       </div>
     </modal>
   </transition>
-  <header class="w-screen h-28 bg-gray-300 header ">
-    <div class="font-IRANSans bg-logo bg-repeat-x bg-contain">
-      <div class="font-semibold text-2xl bg-gray-300 bg-opacity-80 w-screen grid items-center justify-items-center ">
+  <header class="w-screen h-28 bg-white header ">
+    <img
+      src="../assets/logo.png"
+      alt=""
+      class="w-20 h-20 absolute left-16"
+    >
+    <div class="pointer  absolute right-10 text-center grid justify-center items-center">
+      <p class="ghamoos font-IranNastaliq  text-4xl -mb-2">
+        قاموس ٌ عربی ٌ
+      </p>
+    </div>
+    <div class="font-IRANSans ">
+      <div class="font-semibold text-2xl bg-white bg-opacity-80 w-screen grid items-center justify-items-center ">
         <p class=" typing-demo">
           دیکشنری عربی نبراس
         </p>
       </div>
-      <div class="text-lg bg-gray-300 bg-opacity-80  w-screen grid items-center justify-items-center">
+      <div class="text-lg bg-white bg-opacity-80  w-screen grid items-center justify-items-center">
         <p class="typing-demo__accent">
-          لحجه <span class="text-yellow-500 font-semibold">عراقی</span> و <span class="text-yellow-500 font-semibold">خلیجی</span>
+          لهجه <span
+            class="font-black text-yellow-500"
+          >عراقی</span> و <span
+            class="font-black text-yellow-500"
+          >خلیجی</span>
         </p>
       </div>
     </div>
@@ -205,5 +219,50 @@ function modalSearchOpen () {
 }
 .btn-6:hover .nav-span::before, .btn-6:hover .nav-span::after{
   top: 0;
+}
+.pointer {
+  width: 200px;
+  height: 40px;
+  top: 20px;
+  background: rgb(17,117,139);
+    animation: float 4s infinite;
+
+}
+.pointer:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+.pointer:before {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 20px solid rgb(17,117,139);
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+.ghamoos{
+    transform: rotate(180deg);
+}
+@keyframes float {
+  0%{
+   transform:  translateY(0px) rotate(180deg);
+  }
+  50%{
+   transform:  translateY(5px) rotate(180deg);
+  }
+  100%{
+   transform:  translateY(0px) rotate(180deg);
+  }
+
 }
 </style>

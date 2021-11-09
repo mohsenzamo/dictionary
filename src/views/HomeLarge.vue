@@ -74,7 +74,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-16 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -93,7 +93,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-16 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -112,7 +112,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-15 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -190,7 +190,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-16 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -209,7 +209,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-16 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -228,7 +228,7 @@ function change (y:number) {
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
-            <p class="h-20 w-20">
+            <p class="h-16 w-16 lock-icon">
               <fa
                 icon="lock"
               />
@@ -254,7 +254,7 @@ function change (y:number) {
         v-for="n in slideCount"
         :key="n"
         class="border-gray-500 border-2 w-4 h-4 rounded-full mx-4 cursor-pointer"
-        :class="{'bg-gray-500':slide===n}"
+        :class="{'bg-yellow-500':slide===n}"
         @click="slide = n"
       />
     </div>
@@ -315,9 +315,29 @@ height: 100% !important;
 .hex-cell:hover{
     transform: scale(1.007);
 }
+.lock-icon{
+  display: none;
+}
+.hex-cell:hover .lock-icon{
+display: block;
+animation: shake 0.8s;;
+}
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
  .talkbubble-left {
-      width: 120px;
-      height: 80px;
+      width: 170px;
+      height: 60px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px;
       border-radius: 10px;
@@ -332,8 +352,8 @@ height: 100% !important;
       border-bottom: 13px solid transparent;
     }
  .talkbubble-right {
-      width: 120px;
-      height: 80px;
+      width: 170px;
+      height: 60px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px;
       border-radius: 10px;
