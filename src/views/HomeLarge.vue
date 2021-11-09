@@ -9,7 +9,7 @@ useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
 })
 const categoryList = computed(() => useCreateRepo().categroyTable)
-const slideCount = computed(() => categoryList.value?.length / 6)
+const slideCount = computed(() => categoryList.value!.length / 6)
 const loading = computed(() => !slideCount.value)
 const slide = ref(1)
 const index = ref(-1)
@@ -70,7 +70,7 @@ function change (y:number) {
       >
         <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
           <div
-            v-if="categoryList[count*6-6].IsFree === 0"
+            v-if="categoryList![count*6-6].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -81,15 +81,15 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-6].Icon"
+            v-if="categoryList![count*6-6].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-6].Icon"
+            v-html="categoryList![count*6-6].Icon"
           />
-          <p>{{ categoryList[count*6-6].Title }}</p>
+          <p>{{ categoryList![count*6-6].Title }}</p>
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
           <div
-            v-if="categoryList[count*6-5].IsFree === 0"
+            v-if="categoryList![count*6-5].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -100,15 +100,15 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-5].Icon"
+            v-if="categoryList![count*6-5].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-5].Icon"
+            v-html="categoryList![count*6-5].Icon"
           />
-          <p>{{ categoryList[count*6-5].Title }}</p>
+          <p>{{ categoryList![count*6-5].Title }}</p>
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-rigthTOleft">
           <div
-            v-if="categoryList[count*6-4].IsFree === 0"
+            v-if="categoryList![count*6-4].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -119,11 +119,11 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-4].Icon"
+            v-if="categoryList![count*6-4].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-4].Icon"
+            v-html="categoryList![count*6-4].Icon"
           />
-          <p>{{ categoryList[count*6-4].Title }}</p>
+          <p>{{ categoryList![count*6-4].Title }}</p>
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-open">
           <div
@@ -186,7 +186,7 @@ function change (y:number) {
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-leftTOright">
           <div
-            v-if="categoryList[count*6-3].IsFree === 0"
+            v-if="categoryList![count*6-3].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -197,15 +197,15 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-3].Icon"
+            v-if="categoryList![count*6-3].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-3].Icon"
+            v-html="categoryList![count*6-3].Icon"
           />
-          <p>{{ categoryList[count*6-3].Title }}</p>
+          <p>{{ categoryList![count*6-3].Title }}</p>
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-downTOup">
           <div
-            v-if="categoryList[count*6-2].IsFree === 0"
+            v-if="categoryList![count*6-2].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -216,15 +216,15 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-2].Icon"
+            v-if="categoryList![count*6-2].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-2].Icon"
+            v-html="categoryList![count*6-2].Icon"
           />
-          <p>{{ categoryList[count*6-2].Title }}</p>
+          <p>{{ categoryList![count*6-2].Title }}</p>
         </div>
         <div class="hex-cell grid items-center justify-items-center animate-downTOup">
           <div
-            v-if="categoryList[count*6-1].IsFree === 0"
+            v-if="categoryList![count*6-1].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
@@ -235,11 +235,11 @@ function change (y:number) {
             </p>
           </div>
           <div
-            v-if="categoryList[count*6-1].Icon"
+            v-if="categoryList![count*6-1].Icon"
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
-            v-html="categoryList[count*6-1].Icon"
+            v-html="categoryList![count*6-1].Icon"
           />
-          <p>{{ categoryList[count*6-1].Title }}</p>
+          <p>{{ categoryList![count*6-1].Title }}</p>
         </div>
       </div>
     </div>
