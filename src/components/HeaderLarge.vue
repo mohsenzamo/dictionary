@@ -79,7 +79,7 @@ function modalSearchOpen () {
       </div>
     </modal>
   </transition>
-  <header class="w-screen h-28 bg-gray-300 header ">
+  <header class="w-screen h-28 bg-white header ">
     <img
       src="../assets/logo.png"
       alt=""
@@ -91,14 +91,14 @@ function modalSearchOpen () {
       </p>
     </div>
     <div class="font-IRANSans ">
-      <div class="font-semibold text-2xl bg-gray-300 bg-opacity-80 w-screen grid items-center justify-items-center ">
+      <div class="font-semibold text-2xl bg-white bg-opacity-80 w-screen grid items-center justify-items-center ">
         <p class=" typing-demo">
           دیکشنری عربی نبراس
         </p>
       </div>
-      <div class="text-lg bg-gray-300 bg-opacity-80  w-screen grid items-center justify-items-center">
+      <div class="text-lg bg-white bg-opacity-80  w-screen grid items-center justify-items-center">
         <p class="typing-demo__accent">
-          لحجه <span
+          لهجه <span
             class="font-black text-yellow-500"
           >عراقی</span> و <span
             class="font-black text-yellow-500"
@@ -235,7 +235,7 @@ function modalSearchOpen () {
   bottom: 0;
   width: 0;
   height: 0;
-  border-left: 20px solid rgb(209, 213, 219);
+  border-left: 20px solid white;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
 }
