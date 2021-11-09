@@ -35,7 +35,7 @@ function modalSearchOpen () {
             <fa icon="search" />
           </span>
         </div>
-        <div class="bg-blue-500 h-5/6 w-full grid items-center mt-10 overflow-scroll">
+        <div class="bg-blue-500 h-5/6 w-full grid items-center mt-10 overflow-y-scroll">
           <div v-if="searchQuery.length === 0">
             <p class="text-center text-2xl">
               چیزی تایپ کنید
@@ -79,7 +79,7 @@ function modalSearchOpen () {
       </div>
     </modal>
   </transition>
-  <header class="w-screen h-28 bg-white header ">
+  <header class="w-full h-28 bg-white header ">
     <img
       src="../assets/logo.png"
       alt=""
@@ -91,12 +91,12 @@ function modalSearchOpen () {
       </p>
     </div>
     <div class="font-IRANSans ">
-      <div class="font-semibold text-2xl bg-white bg-opacity-80 w-screen grid items-center justify-items-center ">
+      <div class="font-semibold text-2xl grid items-center justify-items-center ">
         <p class=" typing-demo">
           دیکشنری عربی نبراس
         </p>
       </div>
-      <div class="text-lg bg-white bg-opacity-80  w-screen grid items-center justify-items-center">
+      <div class="text-lg grid items-center justify-items-center">
         <p class="typing-demo__accent">
           لهجه <span
             class="font-black text-yellow-500"
@@ -106,7 +106,7 @@ function modalSearchOpen () {
         </p>
       </div>
     </div>
-    <div class="font-IRANSans flex w-screen justify-center mt-4 bg-yellow-500 h-10">
+    <div class="font-IRANSans flex w-full justify-center mt-4 bg-yellow-500 h-10">
       <button
         class="btn-6 mx-4 w-36 nav-btn"
         @click="modalSearchOpen"
@@ -264,5 +264,8 @@ function modalSearchOpen () {
    transform:  translateY(0px) rotate(180deg);
   }
 
+}
+.header{
+        box-shadow: rgb(245,158,11, 0.4) 0px 5px, rgba(245,158,11, 0.3) 0px 10px, rgba(245,158,11, 0.2) 0px 15px, rgba(245,158,11, 0.1) 0px 20px, rgba(245,158,11, 0.05) 0px 30px;
 }
 </style>

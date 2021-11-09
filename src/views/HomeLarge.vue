@@ -367,8 +367,5 @@ animation: shake 0.8s;;
       border-left: 26px solid rgb(245,158,11);
       border-bottom: 13px solid transparent;
     }
-    .header{
-        box-shadow: rgb(245,158,11, 0.4) 0px 5px, rgba(245,158,11, 0.3) 0px 10px, rgba(245,158,11, 0.2) 0px 15px, rgba(245,158,11, 0.1) 0px 20px, rgba(245,158,11, 0.05) 0px 30px;
-    }
 
 </style>
