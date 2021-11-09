@@ -87,7 +87,7 @@ function modalSearchOpen () {
     >
     <div class="pointer  absolute right-10 text-center grid justify-center items-center">
       <p class="ghamoos font-IranNastaliq  text-4xl -mb-2">
-        قاموس عربي
+        قاموس ٌ عربی ٌ
       </p>
     </div>
     <div class="font-IRANSans ">
