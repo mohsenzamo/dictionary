@@ -127,6 +127,7 @@ function pushLink (link:string) {
         </router-link>
       </button>
       <button
+        v-if="pathName !== '/login'"
         class="btn-6 mx-4 w-36 nav-btn"
         @click="pushLink('Login')"
       >
@@ -136,6 +137,7 @@ function pushLink (link:string) {
         <span class="nav-span flex items-center justify-center"><fa icon="wallet" /><p class="mx-3">نسخه طلایی</p></span>
       </button>
       <button
+        v-if="pathName !== '/about-us'"
         class="btn-6 mx-4 w-36 nav-btn"
         @click="pushLink('AboutUs')"
       >

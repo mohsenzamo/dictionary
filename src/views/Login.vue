@@ -1,12 +1,16 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import backHeader from '../components/BackHeader.vue'
+import HeaderLarge from '../components/HeaderLarge.vue'
+const screenWidth = ref(window.screen.width)
+console.log(screenWidth.value)
 const formValue = ref(false)
 </script>
 <template>
-  <backHeader>
+  <backHeader v-if="screenWidth < 1024">
     صفحه ورود
   </backHeader>
+  <HeaderLarge v-else />
   <div class="login-page">
     <transition
       name="scaleRight"
@@ -148,28 +152,28 @@ input:focus ~ .focus-border{
   @apply h-screen grid items-center justify-center
 }
 .login-form{
-  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl
+  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl xl:w-96 xl:h-4/6
 }
 .login-form__input{
-  @apply block w-full border-b-2 border-solid border-black focus:outline-none border-opacity-60
+  @apply block w-full border-b-2 border-solid border-black focus:outline-none border-opacity-60 xl:h-12
 }
 .login-form__input-label{
-  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans
+  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans xl:top-0
 }
 .sign-up-form{
-  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl
+  @apply bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl xl:w-96 xl:h-3/6
 }
 .sign-up-form__input{
-  @apply block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60
+  @apply block w-full border-b-2 border-solid border-black focus:outline-none  border-opacity-60 xl:h-12
 }
 .sign-up-form__input-label{
-  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans
+  @apply text-yellow-600 absolute pointer-events-none right-1 -top-2 transition-all text-lg opacity-60 font-IRANSans xl:top-0
 }
 .login-btn{
-  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg
+  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg xl:mt-5
 }
 .sign-up-btn{
-  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg
+  @apply bg-yellow-500 w-full h-10 font-IRANSans rounded-lg xl:mt-3
 }
 .go-to-login{
   @apply text-blue-700 cursor-pointer

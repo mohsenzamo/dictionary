@@ -6,6 +6,14 @@ import { useRouter } from 'vue-router'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
+import HeaderLarge from '../components/HeaderLarge.vue'
+const screenWidth = ref(window.screen.width)
+console.log(screenWidth.value)
+const mediaMatcher = matchMedia('(min-width: 400px)')
+const small = ref(mediaMatcher.matches)
+mediaMatcher.addListener(() => {
+  small.value = !small.value
+})
 // -------------------------------------------------------------
 
 // -------------------------------------------------------------
@@ -244,7 +252,7 @@ function checkAnswer (num:number) {
 }
 </script>
 <template>
-  <backHeader>
+  <backHeader v-if="screenWidth < 1024">
     <template #arrow>
       <span
         class="text-xl cursor-pointer"
@@ -262,12 +270,13 @@ function checkAnswer (num:number) {
       >
     </template>
   </backHeader>
+  <HeaderLarge v-else />
   <transition name="modal">
     <modal
       v-if="modalQuizValue"
       @close="modalClose"
     >
-      <div class="grid font-IRANSans text-sm gap-4">
+      <div class="grid font-IRANSans text-sm gap-4 xl:text-lg xl:px-10">
         <div>
           <p class="flex justify-between">
             <span>تعداد کل سوالات</span>
@@ -315,7 +324,7 @@ function checkAnswer (num:number) {
   <Loader v-if="loading" />
   <div
     v-else
-    class="pt-16 w-screen h-auto grid"
+    class="pt-16 w-full h-auto grid xl:pt-5"
   >
     <div
       class="quiz-correction-box"
@@ -323,14 +332,14 @@ function checkAnswer (num:number) {
       <p class="quiz-correction-text__correct">
         <fa
           icon="check-circle"
-          class="ml-3"
+          class="ml-3 xl:ml-5"
         />
         <span>{{ correctAnswer }}</span>
       </p>
       <p class="quiz-correction-text__false">
         <fa
           icon="times-circle"
-          class="ml-3"
+          class="ml-3 xl:ml-5"
         />
         <span>{{ wrongAnswer }}</span>
       </p>
@@ -339,10 +348,10 @@ function checkAnswer (num:number) {
       class="quiz-question-box"
       :class="{'animate-opacity':openAnime}"
     >
-      <p class="self-end font-IRANSans text-sm">
+      <p class="self-end font-IRANSans text-sm xl:text-base">
         معنی عبارت زیر چیست؟
       </p>
-      <p class="self-start font-IRANSans font-bold text-xl">
+      <p class="self-start font-IRANSans font-bold text-xl xl:text-2xl">
         {{ question }}
       </p>
     </div>
@@ -380,21 +389,21 @@ function checkAnswer (num:number) {
 </template>
 <style>
 .quiz-correction-text__false{
-  @apply bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2
+  @apply bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2 xl:w-20
 }
 .quiz-correction-text__correct{
-  @apply bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl
+  @apply bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl xl:w-20
 }
 .quiz-correction-box{
-  @apply w-full h-auto float-right flex pr-5 text-white font-IRANSans mt-2 cursor-default
+  @apply w-full h-auto flex pr-5 text-white font-IRANSans mt-2 cursor-default xl:text-xl xl:justify-center
 }
 .quiz-question-box{
-  @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default
+  @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default xl:w-5/12
 }
 .quiz-option{
-  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center
+  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center xl:w-9/12 xl:text-xl
 }
 .quiz-option-box{
-  @apply h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4
+  @apply h-full w-full grid grid-cols-2 grid-rows-2 gap-3 p-4 xl:items-center xl:justify-items-center xl:px-72
 }
 </style>

@@ -10,11 +10,11 @@ const router = useRouter()
 useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
 })
+const categoryRepo = useCreateRepo()
 const categoryList = computed(() => useCreateRepo().categroyTable)
 const slideCount = computed(() => categoryList.value!.length / 6)
-const loading = computed(() => !slideCount.value)
+const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
 const slide = ref(1)
-const index = ref(-1)
 const modalPremiumValue = ref(false)
 function change (y:number) {
   if (y === 1) {
