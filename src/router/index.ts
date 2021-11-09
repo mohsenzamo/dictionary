@@ -34,6 +34,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/HomeLarge.vue')
   },
   {
+    path: '/listlarge',
+    name: 'LostLarge',
+    component: () => import('../views/ListLarge.vue')
+  },
+  {
     path: '/index',
     redirect: '/'
   },
