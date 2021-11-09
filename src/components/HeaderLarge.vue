@@ -12,6 +12,11 @@ function modalSearchOpen () {
   modalSearchValue.value = true
   searchQuery.value = ''
 }
+function pushLink (link:string) {
+  router.push({
+    name: link
+  })
+}
 </script>
 <template>
   <transition name="modal">
@@ -117,15 +122,23 @@ function modalSearchOpen () {
         v-if="pathName !== '/homelarge'"
         class="btn-6 mx-4 w-36 nav-btn"
       >
-        <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
+        <router-link to="/homelarge">
+          <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
+        </router-link>
       </button>
-      <button class="btn-6 mx-4 w-36 nav-btn">
+      <button
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="pushLink('Login')"
+      >
         <span class="nav-span flex items-center justify-center"><fa icon="user-tie" /><p class="mx-3">حساب کاربری</p></span>
       </button>
       <button class="btn-6 mx-4 w-36 nav-btn">
         <span class="nav-span flex items-center justify-center"><fa icon="wallet" /><p class="mx-3">نسخه طلایی</p></span>
       </button>
-      <button class="btn-6 mx-4 w-36 nav-btn">
+      <button
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="pushLink('AboutUs')"
+      >
         <span class="nav-span flex items-center justify-center"><fa icon="address-card" /><p class="mx-3">درباره ما</p></span>
       </button>
       <button

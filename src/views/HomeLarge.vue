@@ -5,6 +5,8 @@ import { useCreateRepo } from '../datasource/repository/repo'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import Modal from '../components/Modal.vue'
 import Loader from '../components/Loader.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
 })
@@ -28,6 +30,25 @@ function change (y:number) {
       slide.value = slideCount.value
     }
   }
+}
+function pushLinkList (link:string, param:string, id:number, lock:number) {
+  if (lock === 1) {
+    router.push({
+      name: link,
+      params: {
+        title: param,
+        id: id
+      }
+    })
+  }
+}
+function pushLinkQuiz (id:string) {
+  router.push({
+    name: 'Quiz',
+    params: {
+      id: id
+    }
+  })
 }
 </script>
 <template>
@@ -68,7 +89,10 @@ function change (y:number) {
         class="body"
         style="--n-rows: 3; --n-cols: 6"
       >
-        <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-upTOdown"
+          @click="pushLinkList('ListLarge',categoryList![count*6-6].Title,categoryList![count*6-6].CategoryID,categoryList![count*6-6].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-6].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -87,7 +111,10 @@ function change (y:number) {
           />
           <p>{{ categoryList![count*6-6].Title }}</p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-upTOdown">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-upTOdown"
+          @click="pushLinkList('ListLarge',categoryList![count*6-5].Title,categoryList![count*6-5].CategoryID,categoryList![count*6-5].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-5].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -106,7 +133,10 @@ function change (y:number) {
           />
           <p>{{ categoryList![count*6-5].Title }}</p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-rigthTOleft">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-rigthTOleft"
+          @click="pushLinkList('ListLarge',categoryList![count*6-4].Title,categoryList![count*6-4].CategoryID,categoryList![count*6-4].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-4].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -125,7 +155,10 @@ function change (y:number) {
           />
           <p>{{ categoryList![count*6-4].Title }}</p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-open">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-open"
+          @click="pushLinkList('ListLarge','نشان شده ها',-100,1)"
+        >
           <div
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
           >
@@ -184,7 +217,10 @@ function change (y:number) {
             نشان شده ها
           </p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-leftTOright">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-leftTOright"
+          @click="pushLinkList('ListLarge',categoryList![count*6-3].Title,categoryList![count*6-3].CategoryID,categoryList![count*6-3].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-3].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -203,7 +239,10 @@ function change (y:number) {
           />
           <p>{{ categoryList![count*6-3].Title }}</p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-downTOup">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-downTOup"
+          @click="pushLinkList('ListLarge',categoryList![count*6-2].Title,categoryList![count*6-2].CategoryID,categoryList![count*6-2].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-2].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -222,7 +261,10 @@ function change (y:number) {
           />
           <p>{{ categoryList![count*6-2].Title }}</p>
         </div>
-        <div class="hex-cell grid items-center justify-items-center animate-downTOup">
+        <div
+          class="hex-cell grid items-center justify-items-center animate-downTOup"
+          @click="pushLinkList('ListLarge',categoryList![count*6-1].Title,categoryList![count*6-1].CategoryID,categoryList![count*6-1].IsFree)"
+        >
           <div
             v-if="categoryList![count*6-1].IsFree === 0"
             class="absolute w-full h-full bg-black bg-opacity-70 grid items-center justify-items-center text-yellow-500"
@@ -268,6 +310,7 @@ function change (y:number) {
     </div>
     <div
       class="talkbubble-right fixed bottom-10 right-10 hover:right-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-rigthTOleft cursor-pointer"
+      @click="pushLinkQuiz('all')"
     >
       <p>
         تمرین لغات

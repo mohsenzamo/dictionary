@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/HomeLarge.vue')
   },
   {
-    path: '/listlarge/:id',
+    path: '/listlarge/:title/:id',
     name: 'ListLarge',
     props: true,
     component: () => import('../views/ListLarge.vue')
