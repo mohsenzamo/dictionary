@@ -6,18 +6,29 @@ import { useRouter } from 'vue-router'
 import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
 import db, { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
+import { useCategoriesDB } from '../datasource/database/categoriesDB'
+import { useCreateRepo } from '../datasource/repository/repo'
+import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
+import searchLoader from './searchLoader.vue'
+import searchLoaderVue from './searchLoader.vue'
+useCategoriesDB().categoriesGet().then(r => {
+  useCreateRepo().categroyTable = r
+})
+const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
+
+const categoryRepo = useCreateRepo()
 const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
 const searchQuery = ref('')
 const pathName = ref(window.location.pathname)
-const searchFind = computed(() => useListSearchRepo().searchFind)
 const props = defineProps<{
   id: string
 }>()
-const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
 const emptyBookmark = ref(false)
+const searchSub = ref('1')
+
 useWordsDB().wordsGet(+props.id)
   .then(x => {
     resultW.value = x
@@ -33,6 +44,33 @@ function pushLink (link:string) {
     name: link
   })
 }
+
+const words = computed(() => useHomeSearchRepo().words)
+const searchFind = computed(() => useHomeSearchRepo().searchFind)
+const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
+const listLoading = computed(() => useHomeSearchRepo().listLoading)
+const observeValue = computed(() => useHomeSearchRepo().observeValue)
+const options = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 1.0
+}
+const emptyDiv = ref<HTMLDivElement>()
+const observer = new IntersectionObserver(async e => {
+  if (e[0].intersectionRatio === 1) {
+    useHomeSearchRepo().pages()
+  }
+}, options)
+watch(searchQuery, (searchQuery) => {
+  useHomeSearchRepo().search(searchQuery)
+})
+console.log(searchFind.value, '111')
+watch(searchFind, (searchFind) => {
+  console.log(searchFind, '222')
+})
+watch(observeValue, (observeValue) => {
+  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+})
 </script>
 <template>
   <transition name="modal">
@@ -56,7 +94,60 @@ function pushLink (link:string) {
             <fa icon="search" />
           </span>
         </div>
-        <div class="bg-gray-200 h-5/6 w-full grid items-center mt-10 overflow-y-scroll rounded-md search-modal__scroll">
+        <div class="flex justify-center items-center mt-4 gap-x-8">
+          <label class="cursor-pointer search-sub__label">همه
+            <input
+              v-model="searchSub"
+              value="1"
+              class="cursor-pointer"
+              type="radio"
+              name="search-sub"
+              checked
+            >
+            <span class="bg-yellow-500 rounded-full search-sub__span right-7" />
+          </label>
+          <label class="cursor-pointer search-sub__label">نشان شده ها
+            <input
+              v-model="searchSub"
+              value="2"
+              class="cursor-pointer"
+              type="radio"
+              name="search-sub"
+            >
+            <span
+              class="bg-yellow-500 rounded-full search-sub__span"
+              style="right: 88px;"
+            />
+          </label>
+          <label class="cursor-pointer search-sub__label">دسته بندی خاص
+            <input
+              v-model="searchSub"
+              value="3"
+              class="cursor-pointer"
+              type="radio"
+              name="search-sub"
+            >
+            <span
+              class="bg-yellow-500 rounded-full search-sub__span "
+              style="right: 112px;"
+            />
+          </label>
+          <div
+            v-if="searchSub==='3'"
+            class="select"
+          >
+            <select class="bg-gray-300 ring-4 ring-yellow-500 rounded-md outline-none">
+              <option
+                v-for="cats in useCreateRepo().categroyTable"
+                :key="cats.CategoryID"
+                value="cats.CategoryID"
+              >
+                {{ cats.Title }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="bg-gray-200 h-5/6 w-full grid items-center mt-4 overflow-y-scroll rounded-md search-modal__scroll">
           <div v-if="searchQuery.length === 0">
             <p class="text-center text-2xl">
               برای نمایش نتایج حروف مورد نظر را وارد کنید
@@ -66,100 +157,125 @@ function pushLink (link:string) {
             v-else
             class="grid items-center justify-items-center"
           >
-            <div
-              v-for="item in resultW"
-              :key="item.WordID"
-              class=" bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg mb-2"
-            >
-              <div class="word-box__ability-bookmark-lg">
-                <transition
-                  name="bookmarkButton"
-                  mode="out-in"
-                >
-                  <div>
-                    <button
-                      v-if="item.bookmark===0"
-                      class="w-8 h-8"
-                      type="submit"
-                    >
-                      <svg
-                        id="Layer_1"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        x="0px"
-                        y="0px"
-                        viewBox="0 0 512 512"
-                        style="enable-background:new 0 0 512 512;"
-                        xml:space="preserve"
+            <searchLoader v-if="searchLoading" />
+            <template v-if="searchFind">
+              <div
+                v-for="item in words"
+                :key="item.WordID"
+                class=" bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg mb-2"
+              >
+                <div class="word-box__ability-bookmark-lg">
+                  <transition
+                    name="bookmarkButton"
+                    mode="out-in"
+                  >
+                    <div>
+                      <button
+                        v-if="item.bookmark===0"
+                        class="w-8 h-8"
+                        type="submit"
                       >
-                        <g>
+                        <svg
+                          id="Layer_1"
+                          version="1.1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                          x="0px"
+                          y="0px"
+                          viewBox="0 0 512 512"
+                          style="enable-background:new 0 0 512 512;"
+                          xml:space="preserve"
+                        >
                           <g>
-                            <path
-                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                            />
+                            <g>
+                              <path
+                                d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                              />
+                            </g>
                           </g>
-                        </g>
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                        <g />
-                      </svg>
-                    </button>
-                    <button
-                      v-if="item.bookmark===1"
-                      type="submit"
-                      class=""
-                    >
-                      <fa
-                        icon="bookmark"
-                        class="text-4xl text-green-500"
-                      />
-                    </button>
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                          <g />
+                        </svg>
+                      </button>
+                      <button
+                        v-if="item.bookmark===1"
+                        type="submit"
+                        class=""
+                      >
+                        <fa
+                          icon="bookmark"
+                          class="text-4xl text-green-500"
+                        />
+                      </button>
+                    </div>
+                  </transition>
+                </div>
+                <div class="word-box__main-content-lg">
+                  <div class="flex justify-center word-box__main-lg">
+                    <p class="font-bold text-lg">
+                      {{ item.Ar }}
+                    </p> <p class="font-semibold">
+                      &nbsp;:&nbsp;
+                    </p> <P class="font-light text-lg">
+                      {{ item.Fa }}
+                    </P>
                   </div>
-                </transition>
-              </div>
-              <div class="word-box__main-content-lg">
-                <div class="flex justify-center word-box__main-lg">
-                  <p class="font-bold text-lg">
-                    {{ item.Ar }}
-                  </p> <p class="font-semibold">
-                    &nbsp;:&nbsp;
-                  </p> <P class="font-light text-lg">
-                    {{ item.Fa }}
-                  </P>
+                  <div
+                    v-if="item.Example.length > 0"
+                    class="flex text-sm text-gray-700 justify-center word-box__exp-lg"
+                  >
+                    <p>مثال: </p>
+                    <p>{{ item.Example }}</p>
+                  </div>
+                </div>
+                <div class=" grid justify-items-center h-8 rotate-180">
+                  <div
+                    class="word-box__ability-volume-lg"
+                  >
+                    <button
+                      v-if="item.SoundVersion===1"
+                      type="submit"
+                      class=" equalizer-search "
+                    />
+                  </div>
                 </div>
                 <div
-                  v-if="item.Example.length > 0"
-                  class="flex text-sm text-gray-700 justify-center word-box__exp-lg"
+                  ref="emptyDiv"
+                  class="grid w-screen items-center justify-items-center"
                 >
-                  <p>مثال: </p>
-                  <p>{{ item.Example }}</p>
-                </div>
-              </div>
-              <div class=" grid justify-items-center h-8 rotate-180">
-                <div
-                  class="word-box__ability-volume-lg"
-                >
-                  <button
-                    v-if="item.SoundVersion===1"
-                    type="submit"
-                    class=" equalizer-search "
-                    @click="play(item.WordID)"
+                  <span
+                    v-if="listLoading"
+                    class="list-loading"
                   />
                 </div>
               </div>
+            </template>
+            <div
+              v-else
+              class="not-find-box"
+            >
+              <p class="not-find__text">
+                نتیجه ای یافت نشد!
+              </p>
+              <br>
+              <fa
+                icon="frown"
+                style="color: rgba(245, 158, 11) ; font-size: 32px;"
+                class="animate-spin"
+              />
             </div>
           </div>
         </div>
@@ -256,6 +372,48 @@ function pushLink (link:string) {
   </header>
 </template>
 <style>
+.search-sub__span {
+  position: absolute;
+  top: 0;
+
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+.search-sub__label{
+  position: relative;
+}
+.search-sub__label:hover input ~ .search-sub__span {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.search-sub__label input:checked ~ .search-sub__span {
+  @apply bg-yellow-500
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.search-sub__span:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.search-sub__label input:checked ~ .search-sub__span:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.search-sub__label .search-sub__span:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
 .search-modal__scroll:-webkit-scrollbar-track {
 
   box-shadow: inset 0 0 5px grey;
