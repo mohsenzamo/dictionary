@@ -115,50 +115,53 @@ PWAStore.beforeInstall()
       </div>
     </div>
     <div class="font-IRANSans flex w-full justify-center mt-4 bg-yellow-500 h-10">
-      <button
-        class="btn-6 mx-4 w-36 nav-btn"
-        @click="modalSearchOpen"
-      >
-        <span class="nav-span flex items-center justify-center"><fa icon="search" /><p class="mx-3">جستجو</p></span>
-      </button>
-      <button
-        v-if="pathName !== '/'"
-        class="btn-6 mx-4 w-36 nav-btn"
-      >
-        <router-link to="/">
-          <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
-        </router-link>
-      </button>
-      <button
-        v-if="pathName !== '/login'"
-        class="btn-6 mx-4 w-36 nav-btn"
-        @click="pushLink('Login')"
-      >
-        <span class="nav-span flex items-center justify-center"><fa icon="user-tie" /><p class="mx-3">حساب کاربری</p></span>
-      </button>
-      <button class="btn-6 mx-4 w-36 nav-btn">
-        <span class="nav-span flex items-center justify-center"><fa icon="wallet" /><p class="mx-3">نسخه طلایی</p></span>
-      </button>
-      <button
-        v-if="pathName !== '/about-us'"
-        class="btn-6 mx-4 w-36 nav-btn"
-        @click="pushLink('AboutUs')"
-      >
-        <span class="nav-span flex items-center justify-center"><fa icon="address-card" /><p class="mx-3">درباره ما</p></span>
-      </button>
-      <button
-        class="btn-6 mx-4 w-36 nav-btn"
-        @click="modalGuideValue = true"
-      >
-        <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
-      </button>
-      <button
-        v-if="showValue"
-        class="btn-6 mx-4 w-36 nav-btn"
-        @click="PWAStore.showPromotion"
-      >
-        <span class="nav-span flex items-center justify-center"><fa icon="download" /><p class="mx-3">نصب برنامه</p></span>
-      </button>
+      <slot name="menu">
+        <button
+          v-if="pathName !== '/quiz/all'"
+          class="btn-6 mx-4 w-36 nav-btn"
+          @click="modalSearchOpen"
+        >
+          <span class="nav-span flex items-center justify-center"><fa icon="search" /><p class="mx-3">جستجو</p></span>
+        </button>
+        <button
+          v-if="pathName !== '/'"
+          class="btn-6 mx-4 w-36 nav-btn"
+        >
+          <router-link to="/">
+            <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
+          </router-link>
+        </button>
+        <button
+          v-if="pathName !== '/login'"
+          class="btn-6 mx-4 w-36 nav-btn"
+          @click="pushLink('Login')"
+        >
+          <span class="nav-span flex items-center justify-center"><fa icon="user-tie" /><p class="mx-3">حساب کاربری</p></span>
+        </button>
+        <button class="btn-6 mx-4 w-36 nav-btn">
+          <span class="nav-span flex items-center justify-center"><fa icon="wallet" /><p class="mx-3">نسخه طلایی</p></span>
+        </button>
+        <button
+          v-if="pathName !== '/about-us'"
+          class="btn-6 mx-4 w-36 nav-btn"
+          @click="pushLink('AboutUs')"
+        >
+          <span class="nav-span flex items-center justify-center"><fa icon="address-card" /><p class="mx-3">درباره ما</p></span>
+        </button>
+        <button
+          class="btn-6 mx-4 w-36 nav-btn"
+          @click="modalGuideValue = true"
+        >
+          <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
+        </button>
+        <button
+          v-if="showValue"
+          class="btn-6 mx-4 w-36 nav-btn"
+          @click="PWAStore.showPromotion"
+        >
+          <span class="nav-span flex items-center justify-center"><fa icon="download" /><p class="mx-3">نصب برنامه</p></span>
+        </button>
+      </slot>
     </div>
   </header>
 </template>
