@@ -29,17 +29,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AboutUs.vue')
   },
   {
-    path: '/homelarge',
-    name: 'HomeLarge',
-    component: () => import('../views/HomeLarge.vue')
-  },
-  {
-    path: '/listlarge/:title/:id',
-    name: 'ListLarge',
-    props: true,
-    component: () => import('../views/ListLarge.vue')
-  },
-  {
     path: '/index',
     redirect: '/'
   },

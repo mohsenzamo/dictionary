@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 const mediaMatcher = matchMedia('(max-width: 1024px)')

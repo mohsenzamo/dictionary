@@ -9,15 +9,12 @@ import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
 import { useSearchDB } from '../datasource/database/searchDB'
 import Modal from '../components/Modal.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
-const props = defineProps<{
-  id: string
-}>()
-
+import { useStore } from '../store'
 const emptyBookmark = ref(false)
 
-if (+props.id === -100) {
+if (useStore().propId === -100) {
   emptyBookmark.value = true
-  useWordsDB().wordsGet(+props.id)
+  useWordsDB().wordsGet(useStore().propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -25,7 +22,7 @@ if (+props.id === -100) {
     })
 } else {
   emptyBookmark.value = false
-  useWordsDB().wordsGet(+props.id)
+  useWordsDB().wordsGet(useStore().propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -34,7 +31,7 @@ if (+props.id === -100) {
 }
 const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
-useWordsDB().wordsGet(+props.id)
+useWordsDB().wordsGet(useStore().propId)
   .then(x => {
     resultW.value = x
   }).finally(() => {
@@ -135,7 +132,6 @@ function audioError () {
     @error="audioError"
     @ended="playingId = -1"
   />
-  <HeaderLarge />
   <loader v-if="loading" />
   <div v-else>
     <div v-if="emptyBookmark">
@@ -348,7 +344,6 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
         </transition-group>
       </div>
     </div>
-
     <div
       v-else
       class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"

@@ -81,7 +81,7 @@ function pushLinkQuiz (id:string) {
       >
         <div
           class="hex-cell grid items-center justify-items-center animate-upTOdown"
-          @click="pushLinkList('ListLarge',categoryList![count*6-6].Title,categoryList![count*6-6].CategoryID,categoryList![count*6-6].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-6].Title,categoryList![count*6-6].CategoryID,categoryList![count*6-6].IsFree)"
         >
           <div
             v-if="categoryList![count*6-6].IsFree === 0"
@@ -103,7 +103,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-upTOdown"
-          @click="pushLinkList('ListLarge',categoryList![count*6-5].Title,categoryList![count*6-5].CategoryID,categoryList![count*6-5].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-5].Title,categoryList![count*6-5].CategoryID,categoryList![count*6-5].IsFree)"
         >
           <div
             v-if="categoryList![count*6-5].IsFree === 0"
@@ -125,7 +125,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-rigthTOleft"
-          @click="pushLinkList('ListLarge',categoryList![count*6-4].Title,categoryList![count*6-4].CategoryID,categoryList![count*6-4].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-4].Title,categoryList![count*6-4].CategoryID,categoryList![count*6-4].IsFree)"
         >
           <div
             v-if="categoryList![count*6-4].IsFree === 0"
@@ -147,7 +147,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-open"
-          @click="pushLinkList('ListLarge','نشان شده ها',-100,1)"
+          @click="pushLinkList('List','نشان شده ها',-100,1)"
         >
           <div
             class="w-16 h-16 -mb-24 grid items-center justify-items-center"
@@ -209,7 +209,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-leftTOright"
-          @click="pushLinkList('ListLarge',categoryList![count*6-3].Title,categoryList![count*6-3].CategoryID,categoryList![count*6-3].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-3].Title,categoryList![count*6-3].CategoryID,categoryList![count*6-3].IsFree)"
         >
           <div
             v-if="categoryList![count*6-3].IsFree === 0"
@@ -231,7 +231,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-downTOup"
-          @click="pushLinkList('ListLarge',categoryList![count*6-2].Title,categoryList![count*6-2].CategoryID,categoryList![count*6-2].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-2].Title,categoryList![count*6-2].CategoryID,categoryList![count*6-2].IsFree)"
         >
           <div
             v-if="categoryList![count*6-2].IsFree === 0"
@@ -253,7 +253,7 @@ function pushLinkQuiz (id:string) {
         </div>
         <div
           class="hex-cell grid items-center justify-items-center animate-downTOup"
-          @click="pushLinkList('ListLarge',categoryList![count*6-1].Title,categoryList![count*6-1].CategoryID,categoryList![count*6-1].IsFree)"
+          @click="pushLinkList('List',categoryList![count*6-1].Title,categoryList![count*6-1].CategoryID,categoryList![count*6-1].IsFree)"
         >
           <div
             v-if="categoryList![count*6-1].IsFree === 0"

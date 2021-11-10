@@ -11,7 +11,7 @@ import searchLoader from '../components/searchLoader.vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
 import HeaderLarge from '../components/HeaderLarge.vue'
-import HomeLargeVue from './HomeLarge.vue'
+import HomeLarge from './HomeLarge.vue'
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
@@ -415,7 +415,7 @@ function audioError () {
         </button>
       </div>
     </div>
-    <HomeLargeVue v-else />
+    <HomeLarge v-else />
   </div>
 </template>
 <style>
