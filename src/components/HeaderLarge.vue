@@ -3,11 +3,27 @@ import { computed, ref, watch } from 'vue'
 import Modal from '../components/Modal.vue'
 import Loader from '../components/Loader.vue'
 import { useRouter } from 'vue-router'
+import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
+import db, { Words } from '../datasource/database/dexieDB'
+import { useWordsDB } from '../datasource/database/wordsDB'
 const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
 const searchQuery = ref('')
 const pathName = ref(window.location.pathname)
+const searchFind = computed(() => useListSearchRepo().searchFind)
+const props = defineProps<{
+  id: string
+}>()
+const loading = ref(true)
+const resultW = ref<Words[] | null>(null)
+const emptyBookmark = ref(false)
+useWordsDB().wordsGet(+props.id)
+  .then(x => {
+    resultW.value = x
+  }).finally(() => {
+    loading.value = false
+  })
 function modalSearchOpen () {
   modalSearchValue.value = true
   searchQuery.value = ''
@@ -31,7 +47,7 @@ function pushLink (link:string) {
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="جستجو کنید ...."
+            placeholder="جستجو ...."
             class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-96"
           >
           <span
@@ -40,21 +56,110 @@ function pushLink (link:string) {
             <fa icon="search" />
           </span>
         </div>
-        <div class="bg-blue-500 h-5/6 w-full grid items-center mt-10 overflow-y-scroll">
+        <div class="bg-gray-200 h-5/6 w-full grid items-center mt-10 overflow-y-scroll rounded-md search-modal__scroll">
           <div v-if="searchQuery.length === 0">
             <p class="text-center text-2xl">
-              چیزی تایپ کنید
+              برای نمایش نتایج حروف مورد نظر را وارد کنید
             </p>
           </div>
           <div
             v-else
+            class="grid items-center justify-items-center"
           >
             <div
-              v-for="n in 50"
-              :key="n"
-              class="w-full bg-green-400 mb-2"
+              v-for="item in resultW"
+              :key="item.WordID"
+              class=" bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg mb-2"
             >
-              {{ n }}
+              <div class="word-box__ability-bookmark-lg">
+                <transition
+                  name="bookmarkButton"
+                  mode="out-in"
+                >
+                  <div>
+                    <button
+                      v-if="item.bookmark===0"
+                      class="w-8 h-8"
+                      type="submit"
+                    >
+                      <svg
+                        id="Layer_1"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        style="enable-background:new 0 0 512 512;"
+                        xml:space="preserve"
+                      >
+                        <g>
+                          <g>
+                            <path
+                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                            />
+                          </g>
+                        </g>
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                      </svg>
+                    </button>
+                    <button
+                      v-if="item.bookmark===1"
+                      type="submit"
+                      class=""
+                    >
+                      <fa
+                        icon="bookmark"
+                        class="text-4xl text-green-500"
+                      />
+                    </button>
+                  </div>
+                </transition>
+              </div>
+              <div class="word-box__main-content-lg">
+                <div class="flex justify-center word-box__main-lg">
+                  <p class="font-bold text-lg">
+                    {{ item.Ar }}
+                  </p> <p class="font-semibold">
+                    &nbsp;:&nbsp;
+                  </p> <P class="font-light text-lg">
+                    {{ item.Fa }}
+                  </P>
+                </div>
+                <div
+                  v-if="item.Example.length > 0"
+                  class="flex text-sm text-gray-700 justify-center word-box__exp-lg"
+                >
+                  <p>مثال: </p>
+                  <p>{{ item.Example }}</p>
+                </div>
+              </div>
+              <div class=" grid justify-items-center h-8 rotate-180">
+                <div
+                  class="word-box__ability-volume-lg"
+                >
+                  <button
+                    v-if="item.SoundVersion===1"
+                    type="submit"
+                    class=" equalizer-search "
+                    @click="play(item.WordID)"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -151,6 +256,12 @@ function pushLink (link:string) {
   </header>
 </template>
 <style>
+.search-modal__scroll:-webkit-scrollbar-track {
+
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+
+}
 .typing-demo {
   animation: typing 2s steps(22), blink .5s step-end infinite alternate;
   width: 210px;
@@ -281,4 +392,281 @@ function pushLink (link:string) {
 .header{
         box-shadow: rgb(245,158,11, 0.4) 0px 5px, rgba(245,158,11, 0.3) 0px 10px, rgba(245,158,11, 0.2) 0px 15px, rgba(245,158,11, 0.1) 0px 20px, rgba(245,158,11, 0.05) 0px 30px;
 }
+/* equalizer */
+.equalizer-search {
+  position: relative;
+  left: 5px;
+  display: block;
+  width: 6px;
+  background-color: black;
+  height: 10px;
+}
+
+.equalizer-search,
+.equalizer-search::before,
+.equalizer-search::after {
+  animation: equalize 1.25s steps(25, end) 0s infinite;
+
+}
+
+.equalizer-search::before,
+.equalizer-search::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  height: 20px;
+  width: 6px;
+  top: 0;
+  background-color: black;
+}
+
+.equalizer-search::before {
+  animation-name: equalize2;
+}
+
+.equalizer-search::after {
+  left: 10px;
+  animation-name: equalize3;
+}
+/* @keyframes equalize {
+  0% {
+    height: 8px;
+  }
+  4% {
+    height: 4px;
+  }
+  8% {
+    height: 8px;
+  }
+  12% {
+    height: 9px;
+  }
+  16% {
+    height: 10px;
+  }
+  20% {
+    height: 11px;
+  }
+  24% {
+    height:10px;
+  }
+  28% {
+    height: 9px;
+  }
+  32% {
+    height: 9px;
+  }
+  36% {
+    height: 8px;
+  }
+  40% {
+    height: 8.5px;
+  }
+  44% {
+    height: 8.5px;
+  }
+  48% {
+    height: 9px;
+  }
+  52% {
+    height: 10px;
+  }
+  56% {
+    height: 11px;
+  }
+  60% {
+    height: 10px;
+  }
+  64% {
+    height: 10px;
+  }
+  68% {
+    height: 9px;
+  }
+  72% {
+    height: 8px;
+  }
+  76% {
+    height: 9px;
+  }
+  80% {
+    height: 11px;
+  }
+  84% {
+    height: 11px;
+  }
+  88% {
+    height: 12px;
+  }
+  92% {
+    height: 10px;
+  }
+  96% {
+    height: 8px;
+  }
+  100% {
+    height: 4px;
+  }
+}
+@keyframes equalize2 {
+  0% {
+    height:12px;
+  }
+  4% {
+    height: 13px;
+  }
+  8% {
+    height: 11px;
+  }
+  12% {
+    height: 12px;
+  }
+  16% {
+    height: 10px;
+  }
+  20% {
+    height: 10px;
+  }
+  24% {
+    height: 10px;
+  }
+  28% {
+    height: 11px;
+  }
+  32% {
+    height: 11px;
+  }
+  36% {
+    height: 13px;
+  }
+  40% {
+    height: 13px;
+  }
+  44% {
+    height: 13px;
+  }
+  48% {
+    height: 12px;
+  }
+  52% {
+    height: 9px;
+  }
+  56% {
+    height: 7px;
+  }
+  60% {
+    height: 6px;
+  }
+  64% {
+    height: 9px;
+  }
+  68% {
+    height: 10px;
+  }
+  72% {
+    height: 13px;
+  }
+  76% {
+    height: 11px;
+  }
+  80% {
+    height: 12px;
+  }
+  84% {
+    height: 10px;
+  }
+  88% {
+    height: 10px;
+  }
+  92% {
+    height: 9px;
+  }
+  96% {
+    height: 11px;
+  }
+  100% {
+    height: 12px;
+  }
+}
+ @keyframes equalize3 {
+  0% {
+    height: 9px;
+  }
+  4% {
+    height: 7px;
+  }
+  8% {
+    height: 10px;
+  }
+  12% {
+    height: 11px;
+  }
+  16% {
+    height: 13px;
+  }
+  20% {
+    height: 15px;
+  }
+  24% {
+    height: 14px;
+  }
+  28% {
+    height: 13px;
+  }
+  32% {
+    height: 12px;
+  }
+  36% {
+    height: 10px;
+  }
+  40% {
+    height: 7px;
+  }
+  44% {
+    height: 5px;
+  }
+  48% {
+    height: 8px;
+  }
+  52% {
+    height: 10px;
+  }
+  56% {
+    height: 12px;
+  }
+  60% {
+    height: 13px;
+  }
+  64% {
+    height: 13.5px;
+  }
+  68% {
+    height: 13.5px;
+  }
+  72% {
+    height: 13.5px;
+  }
+  76% {
+    height: 11px;
+  }
+  80% {
+    height: 12px;
+  }
+  84% {
+    height: 13.5px;
+  }
+  88% {
+    height: 15px;
+  }
+  92% {
+    height: 14px;
+  }
+  96% {
+    height: 12px;
+  }
+  100% {
+    height: 10px;
+  }
+} */
+
 </style>

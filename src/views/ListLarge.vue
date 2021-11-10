@@ -12,9 +12,28 @@ import HeaderLarge from '../components/HeaderLarge.vue'
 const props = defineProps<{
   id: string
 }>()
+
+const emptyBookmark = ref(false)
+
+if (+props.id === -100) {
+  emptyBookmark.value = true
+  useWordsDB().wordsGet(+props.id)
+    .then(r => {
+      resultW.value = r
+    }).finally(() => {
+      loading.value = false
+    })
+} else {
+  emptyBookmark.value = false
+  useWordsDB().wordsGet(+props.id)
+    .then(r => {
+      resultW.value = r
+    }).finally(() => {
+      loading.value = false
+    })
+}
 const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
-const emptyBookmark = ref(false)
 useWordsDB().wordsGet(+props.id)
   .then(x => {
     resultW.value = x
@@ -22,20 +41,795 @@ useWordsDB().wordsGet(+props.id)
     loading.value = false
   })
 const router = useRouter()
+const words = computed(() => useListSearchRepo().words)
+async function bookmarkSelect (WordID:number) {
+  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  if (getWord[0].bookmark === 0) {
+    getWord[0].bookmark = 1
+    for (let i = 0; i < resultW.value!.length; i++) {
+      if (resultW.value![i].WordID === WordID) {
+        resultW.value![i].bookmark = 1
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 1
+        }
+      }
+    }
+  } else {
+    getWord[0].bookmark = 0
+    for (let i = 0; i < resultW.value!.length; i++) {
+      if (resultW.value![i].WordID === WordID) {
+        resultW.value![i].bookmark = 0
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 0
+        }
+      }
+    }
+  }
+  await db.words.put(getWord[0])
+  await useSearchDB().createSearchArray2(WordID)
+}
+async function bookmarkSelect2 (WordID:number) {
+  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  if (getWord[0].bookmark === 0) {
+    getWord[0].bookmark = 1
+    for (let i = 0; i < resultW.value!.length; i++) {
+      if (resultW.value![i].WordID === WordID) {
+        resultW.value![i].bookmark = 1
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 1
+        }
+      }
+    }
+  } else {
+    getWord[0].bookmark = 0
+    for (let i = 0; i < resultW.value!.length; i++) {
+      if (resultW.value![i].WordID === WordID) {
+        resultW.value![i].bookmark = 0
+        resultW.value!.splice(i, 1)
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 0
+          words.value!.splice(i, 1)
+        }
+      }
+    }
+  }
+  await db.words.put(getWord[0])
+  await useSearchDB().createSearchArray2(WordID)
+}
+
+// (function () {
+//   const animation = document.querySelector('.equalizer')
+
+//   function onAnimation (evt) {
+//     evt.stopPropagation()
+//   }
+
+//   animation.addEventListener('webkitAnimationStart', onAnimation, false)
+//   animation.addEventListener('webkitAnimationIteration', onAnimation, false)
+//   animation.addEventListener('animationStart', onAnimation, false)
+//   animation.addEventListener('animationIteration', onAnimation, false)
+// }())
+
+const audioSrc = ref('')
+const playingId = ref(-1)
+const modalErrorValue = ref(false)
+function play (id:number) {
+  playingId.value = id
+  audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
+}
+function audioError () {
+  playingId.value = -1
+  modalErrorValue.value = true
+}
+
 </script>
 
 <template>
+  <audio
+    v-if="playingId !== -1"
+    :key="playingId"
+    :src="audioSrc"
+    autoplay
+    @error="audioError"
+    @ended="playingId = -1"
+  />
   <HeaderLarge />
   <loader v-if="loading" />
-  <template v-else>
-    <div
-      v-for="item in resultW"
-      :key="item.WordID"
-    >
-      {{ item.Ar }}
+  <div v-else>
+    <div v-if="emptyBookmark">
+      <div
+        v-if="resultW?.length===0"
+        class="empty-bookmark-box-lg w-full h-screen font-IRANSans"
+      >
+        <div class="grid justify-center mt-10">
+          <p class="font-bold text-2xl">
+            نشان شده ای یافت نشد!!
+          </p>
+        </div>
+        <div class="bookmark-box-lg ">
+          <svg
+            id="Layer_1"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 512 512"
+            style="enable-background:new 0 0 512 512;"
+            xml:space="preserve"
+          >
+            <g>
+              <g>
+                <path
+                  d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                />
+              </g>
+            </g>
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+            <g />
+          </svg>
+        </div>
+        <div class="arrow-click-box-lg">
+          <p class="click-text-lg">
+            کلیک کن
+          </p>
+          <svg
+            class="opacity-25"
+            version="1.0"
+            xmlns="http://www.w3.org/2000/svg"
+            width="110px"
+            height="110px"
+            viewBox="0 0 512.000000 512.000000"
+            preserveAspectRatio="xMidYMid meet"
+          >
+
+            <g
+              transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+              fill="#000000"
+              stroke="none"
+            >
+              <path
+                d="M1194 4876 c-344 -125 -633 -358 -854 -689 -376 -562 -444 -1263
+-176 -1812 202 -412 545 -651 1014 -705 58 -7 181 -11 282 -8 l179 3 6 -50
+c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
+-500 134 -38 207 -47 385 -47 146 0 193 4 280 24 381 84 733 318 1008 669 52
+66 55 101 13 143 -22 21 -39 29 -66 29 -33 0 -47 -11 -173 -138 -200 -202
+-374 -311 -622 -392 -176 -57 -230 -65 -455 -65 -181 1 -211 3 -312 27 -423
+100 -757 363 -946 743 -65 130 -120 294 -141 416 l-6 37 72 17 c40 10 130 37
+199 61 708 241 1234 740 1333 1264 20 103 20 246 1 328 -57 239 -257 392 -515
+392 -199 0 -352 -71 -550 -254 -434 -400 -716 -940 -771 -1477 l-12 -117 -45
+-6 c-86 -12 -338 -6 -428 9 -484 84 -818 415 -925 918 -31 145 -31 376 0 537
+98 512 418 985 855 1265 32 20 108 62 168 91 131 65 151 97 100 157 -21 24
+-54 21 -158 -17z m1875 -1326 c141 -71 229 -382 162 -574 -64 -186 -331 -479
+-605 -664 -210 -142 -447 -257 -666 -322 -40 -12 -79 -24 -86 -27 -17 -6 -12
+41 17 187 100 494 511 1129 869 1340 130 77 236 98 309 60z"
+              />
+              <path
+                d="M4770 1410 c-289 -16 -576 -65 -617 -106 -27 -27 -29 -60 -7 -92 27
+-39 55 -43 176 -27 111 15 476 21 535 9 29 -6 30 -7 26 -57 -13 -171 -37 -344
+-58 -422 -48 -173 -25 -276 60 -283 78 -7 132 46 159 153 29 112 56 329 68
+537 11 189 10 208 -5 232 -41 62 -84 69 -337 56z"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div
+        v-else
+        class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+      >
+        <transition-group
+          name="list"
+        >
+          <div
+            v-for="item in resultW"
+            :key="item.WordID"
+            class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
+          >
+            <div class="word-box__ability-bookmark-lg">
+              <transition
+                name="bookmarkButton"
+                mode="out-in"
+              >
+                <div>
+                  <transition
+                    name="bookmarkButton"
+                    mode="out-in"
+                  >
+                    <button
+                      v-if="item.bookmark===0"
+                      class="w-8 h-8"
+                      type="submit"
+                      @click="bookmarkSelect2(item.WordID)"
+                    >
+                      <svg
+                        id="Layer_1"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        style="enable-background:new 0 0 512 512;"
+                        xml:space="preserve"
+                      >
+                        <g>
+                          <g>
+                            <path
+                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                            />
+                          </g>
+                        </g>
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                      </svg>
+                    </button>
+                    <button
+                      v-else
+                      type="submit"
+                      @click="bookmarkSelect2(item.WordID)"
+                    >
+                      <fa
+                        icon="bookmark"
+                        class="text-4xl text-green-500"
+                      />
+                    </button>
+                  </transition>
+                </div>
+              </transition>
+            </div>
+            <div class="word-box__main-content-lg">
+              <div class="flex justify-center word-box__main-lg">
+                <p class="font-bold text-lg">
+                  {{ item.Ar }}
+                </p> <p class="font-semibold">
+                  &nbsp;:&nbsp;
+                </p> <P class="font-light text-lg">
+                  {{ item.Fa }}
+                </P>
+              </div>
+              <div
+                v-if="item.Example.length > 0"
+                class="flex text-sm text-gray-700 justify-center word-box__exp-lg"
+              >
+                <p>مثال: </p>
+                <p>{{ item.Example }}</p>
+              </div>
+            </div>
+            <div class=" grid justify-items-center h-8 rotate-180">
+              <div
+                class="word-box__ability-volume-lg"
+              >
+                <div v-if="item.SoundVersion===1">
+                  <button
+                    v-if="playingId === item.WordID"
+                    type="submit"
+                    class=" equalizer-play"
+                    @click="play(item.WordID)"
+                  />
+                  <button
+                    v-else
+                    type="submit"
+                    class=" equalizer bg-black"
+                    @click="play(item.WordID)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition-group>
+      </div>
     </div>
-  </template>
+
+    <div
+      v-else
+      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+    >
+      <div
+        v-for="item in resultW"
+        :key="item.WordID"
+        class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
+      >
+        <div class="word-box__ability-bookmark-lg">
+          <transition
+            name="bookmarkButton"
+            mode="out-in"
+          >
+            <div>
+              <transition
+                name="bookmarkButton"
+                mode="out-in"
+              >
+                <button
+                  v-if="item.bookmark===0"
+                  class="w-8 h-8"
+                  type="submit"
+                  @click="bookmarkSelect(item.WordID)"
+                >
+                  <svg
+                    id="Layer_1"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 512 512"
+                    style="enable-background:new 0 0 512 512;"
+                    xml:space="preserve"
+                  >
+                    <g>
+                      <g>
+                        <path
+                          d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                        />
+                      </g>
+                    </g>
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                  </svg>
+                </button>
+                <button
+                  v-else
+                  type="submit"
+                  @click="bookmarkSelect(item.WordID)"
+                >
+                  <fa
+                    icon="bookmark"
+                    class="text-4xl text-green-500"
+                  />
+                </button>
+              </transition>
+            </div>
+          </transition>
+        </div>
+        <div class="word-box__main-content-lg">
+          <div class="flex justify-center word-box__main-lg">
+            <p class="font-bold text-lg">
+              {{ item.Ar }}
+            </p> <p class="font-semibold">
+              &nbsp;:&nbsp;
+            </p> <P class="font-light text-lg">
+              {{ item.Fa }}
+            </P>
+          </div>
+          <div
+            v-if="item.Example.length > 0"
+            class="flex text-sm text-gray-700 justify-center word-box__exp-lg"
+          >
+            <p>مثال: </p>
+            <p>{{ item.Example }}</p>
+          </div>
+        </div>
+        <div class=" grid justify-items-center h-8 rotate-180">
+          <div
+            class="word-box__ability-volume-lg"
+          >
+            <div v-if="item.SoundVersion===1">
+              <button
+                v-if="playingId === item.WordID"
+                type="submit"
+                class=" equalizer-play"
+                @click="play(item.WordID)"
+              />
+              <button
+                v-else
+                type="submit"
+                class=" equalizer bg-black"
+                @click="play(item.WordID)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+.list-enter-from,.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.bookmarkButton-enter-active,
+.bookmarkButton-leave-active {
+  transition: all 0.5s ease;
+}
+
+.bookmarkButton-enter-from,
+.bookmarkButton-leave-to {
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.bookmark-box-lg{
+  animation: blink-animation 1.5s steps(5, start) infinite;
+  margin-top: -90px;
+  @apply w-64 h-64 opacity-25 mr-6
+}
+.empty-bookmark-box-lg{
+  @apply font-IRANSans grid justify-center w-full h-screen items-center
+}
+.arrow-click-box-lg{
+  transform: rotate(-60deg);
+  margin-right: 200px;
+  margin-top: -90px;
+}
+.click-text-lg{
+  margin-right: 30px;
+  font-size: 28px;
+  animation: pulse linear 2.5s infinite;
+
+  @apply font-semibold opacity-50
+}
+.word-box__shadow-lg{
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+}
+
+/* equalizer */
+.equalizer {
+  position: relative;
+  left: 5px;
+  display: block;
+  width: 6px;
+  height: 10px;
+}
+
+.equalizer::before,
+.equalizer::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  height: 20px;
+  width: 6px;
+  top: 0;
+  background-color: black;
+}
+.equalizer::after {
+  left: 10px;
+}
+.equalizer-play {
+  position: relative;
+  left: 5px;
+  display: block;
+  background-color: blue;
+  width: 6px;
+  height: 10px;
+}
+
+.equalizer-play,
+.equalizer-play::before,
+.equalizer-play::after {
+  animation: equalize 1.25s steps(25, end) 0s infinite;
+
+}
+
+.equalizer-play::before,
+.equalizer-play::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  height: 20px;
+  width: 6px;
+  top: 0;
+  background-color: blue;
+}
+
+.equalizer-play::before {
+  animation-name: equalize2;
+}
+
+.equalizer-play::after {
+  left: 10px;
+  animation-name: equalize3;
+}
+
+@keyframes equalize {
+  0% {
+    height: 8px;
+  }
+  4% {
+    height: 4px;
+  }
+  8% {
+    height: 8px;
+  }
+  12% {
+    height: 9px;
+  }
+  16% {
+    height: 10px;
+  }
+  20% {
+    height: 11px;
+  }
+  24% {
+    height:10px;
+  }
+  28% {
+    height: 9px;
+  }
+  32% {
+    height: 9px;
+  }
+  36% {
+    height: 8px;
+  }
+  40% {
+    height: 8.5px;
+  }
+  44% {
+    height: 8.5px;
+  }
+  48% {
+    height: 9px;
+  }
+  52% {
+    height: 10px;
+  }
+  56% {
+    height: 11px;
+  }
+  60% {
+    height: 10px;
+  }
+  64% {
+    height: 10px;
+  }
+  68% {
+    height: 9px;
+  }
+  72% {
+    height: 8px;
+  }
+  76% {
+    height: 9px;
+  }
+  80% {
+    height: 11px;
+  }
+  84% {
+    height: 11px;
+  }
+  88% {
+    height: 12px;
+  }
+  92% {
+    height: 10px;
+  }
+  96% {
+    height: 8px;
+  }
+  100% {
+    height: 4px;
+  }
+}
+@keyframes equalize2 {
+  0% {
+    height:12px;
+  }
+  4% {
+    height: 13px;
+  }
+  8% {
+    height: 11px;
+  }
+  12% {
+    height: 12px;
+  }
+  16% {
+    height: 10px;
+  }
+  20% {
+    height: 10px;
+  }
+  24% {
+    height: 10px;
+  }
+  28% {
+    height: 11px;
+  }
+  32% {
+    height: 11px;
+  }
+  36% {
+    height: 13px;
+  }
+  40% {
+    height: 13px;
+  }
+  44% {
+    height: 13px;
+  }
+  48% {
+    height: 12px;
+  }
+  52% {
+    height: 9px;
+  }
+  56% {
+    height: 7px;
+  }
+  60% {
+    height: 6px;
+  }
+  64% {
+    height: 9px;
+  }
+  68% {
+    height: 10px;
+  }
+  72% {
+    height: 13px;
+  }
+  76% {
+    height: 11px;
+  }
+  80% {
+    height: 12px;
+  }
+  84% {
+    height: 10px;
+  }
+  88% {
+    height: 10px;
+  }
+  92% {
+    height: 9px;
+  }
+  96% {
+    height: 11px;
+  }
+  100% {
+    height: 12px;
+  }
+}
+ @keyframes equalize3 {
+  0% {
+    height: 9px;
+  }
+  4% {
+    height: 7px;
+  }
+  8% {
+    height: 10px;
+  }
+  12% {
+    height: 11px;
+  }
+  16% {
+    height: 13px;
+  }
+  20% {
+    height: 15px;
+  }
+  24% {
+    height: 14px;
+  }
+  28% {
+    height: 13px;
+  }
+  32% {
+    height: 12px;
+  }
+  36% {
+    height: 10px;
+  }
+  40% {
+    height: 7px;
+  }
+  44% {
+    height: 5px;
+  }
+  48% {
+    height: 8px;
+  }
+  52% {
+    height: 10px;
+  }
+  56% {
+    height: 12px;
+  }
+  60% {
+    height: 13px;
+  }
+  64% {
+    height: 13.5px;
+  }
+  68% {
+    height: 13.5px;
+  }
+  72% {
+    height: 13.5px;
+  }
+  76% {
+    height: 11px;
+  }
+  80% {
+    height: 12px;
+  }
+  84% {
+    height: 13.5px;
+  }
+  88% {
+    height: 15px;
+  }
+  92% {
+    height: 14px;
+  }
+  96% {
+    height: 12px;
+  }
+  100% {
+    height: 10px;
+  }
+}
+@keyframes blink-animation  {
+        to {
+          visibility: hidden;
+        }
+      }
+      @keyframes pulse {
+  0% { opacity: 50% }
+	50% { opacity: 100% }
+	100% { opacity:50% }
+}
 
 </style>
