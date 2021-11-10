@@ -10,7 +10,13 @@ import { useSearchDB } from '../datasource/database/searchDB'
 import searchLoader from '../components/searchLoader.vue'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
-
+import HeaderLarge from '../components/HeaderLarge.vue'
+import HomeLargeVue from './HomeLarge.vue'
+const mediaMatcher = matchMedia('(max-width: 1024px)')
+const laptopScreen = ref(mediaMatcher.matches)
+mediaMatcher.addListener(() => {
+  laptopScreen.value = !laptopScreen.value
+})
 useCategoriesDB().categoriesGet().then(r => {
   useCreateRepo().categroyTable = r
 })
@@ -98,7 +104,8 @@ function audioError () {
 </script>
 
 <template>
-  <Header />
+  <Header v-if="laptopScreen" />
+  <HeaderLarge v-else />
   <transition name="modal">
     <modal
       v-if="modalPremiumValue"
@@ -136,281 +143,284 @@ function audioError () {
   </transition>
   <Loader v-if="loading" />
   <div v-else>
-    <div class="h-full pt-16">
-      <div class="input-box">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="جستجو کنید ...."
-          class="search-input"
-        >
-        <span
-          class="search-input__submit"
-        >
-          <fa icon="search" />
-        </span>
-      </div>
-      <!-- ------------------------------------- searchedWords ---------------------------------------------->
-      <transition
-        name="page"
-        mode="out-in"
-      >
-        <div>
-          <div
-            v-if="searchQuery.length>0"
-            class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-14 mb-16"
+    <div v-if="laptopScreen">
+      <div class="h-full pt-16">
+        <div class="input-box">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="جستجو کنید ...."
+            class="search-input"
           >
-            <searchLoader v-if="searchLoading" />
-            <!--------------------------------------- find ---------------------------------------------->
-            <template v-if="searchFind">
-              <transition-group
-                name="list"
-              >
-                <div
-                  v-for="item in words"
-                  :key="item.WordID"
-                  class="find-box"
+          <span
+            class="search-input__submit"
+          >
+            <fa icon="search" />
+          </span>
+        </div>
+        <!-- ------------------------------------- searchedWords ---------------------------------------------->
+        <transition
+          name="page"
+          mode="out-in"
+        >
+          <div>
+            <div
+              v-if="searchQuery.length>0"
+              class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-14 mb-16"
+            >
+              <searchLoader v-if="searchLoading" />
+              <!--------------------------------------- find ---------------------------------------------->
+              <template v-if="searchFind">
+                <transition-group
+                  name="list"
                 >
-                  <div class="find-word__main">
-                    <div class="font-semibold  text-base">
-                      {{ item.Ar }}
-                    </div>
-                    <div class="font-light  text-sm">
-                      {{ item.Fa }}
-                    </div>
-                    <div
-                      v-if="item.Example.length > 0"
-                      class="flex text-xs text-gray-500"
-                    >
-                      <p>مثال: </p>
-                      <p>{{ item.Example }}</p>
-                    </div>
-                  </div>
-                  <div class="find-word__abilities">
-                    <transition
-                      name="bookmarkButton"
-                      mode="out-in"
-                    >
-                      <button
-                        v-if="item.bookmark===0"
-                        type="submit"
-                        class="w-5 h-5"
-                        @click="bookmarkSelect(item.WordID)"
+                  <div
+                    v-for="item in words"
+                    :key="item.WordID"
+                    class="find-box"
+                  >
+                    <div class="find-word__main">
+                      <div class="font-semibold  text-base">
+                        {{ item.Ar }}
+                      </div>
+                      <div class="font-light  text-sm">
+                        {{ item.Fa }}
+                      </div>
+                      <div
+                        v-if="item.Example.length > 0"
+                        class="flex text-xs text-gray-500"
                       >
-                        <svg
-                          id="Layer_1"
-                          version="1.1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          xmlns:xlink="http://www.w3.org/1999/xlink"
-                          x="0px"
-                          y="0px"
-                          viewBox="0 0 512 512"
-                          style="enable-background:new 0 0 512 512;"
-                          xml:space="preserve"
+                        <p>مثال: </p>
+                        <p>{{ item.Example }}</p>
+                      </div>
+                    </div>
+                    <div class="find-word__abilities">
+                      <transition
+                        name="bookmarkButton"
+                        mode="out-in"
+                      >
+                        <button
+                          v-if="item.bookmark===0"
+                          type="submit"
+                          class="w-5 h-5"
+                          @click="bookmarkSelect(item.WordID)"
                         >
-                          <g>
+                          <svg
+                            id="Layer_1"
+                            version="1.1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                            x="0px"
+                            y="0px"
+                            viewBox="0 0 512 512"
+                            style="enable-background:new 0 0 512 512;"
+                            xml:space="preserve"
+                          >
                             <g>
-                              <path
-                                d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                              />
+                              <g>
+                                <path
+                                  d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                                />
+                              </g>
                             </g>
-                          </g>
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                        </svg>
-                      </button>
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                            <g />
+                          </svg>
+                        </button>
+                        <button
+                          v-else
+                          type="submit"
+                          class="w-5 h-5"
+                          @click="bookmarkSelect(item.WordID)"
+                        >
+                          <fa
+                            icon="bookmark"
+                            class="text-xl text-green-500"
+                          />
+                        </button>
+                      </transition>
                       <button
-                        v-else
-                        type="submit"
-                        class="w-5 h-5"
-                        @click="bookmarkSelect(item.WordID)"
+                        v-if="item.SoundVersion===1"
+                        @click="play(item.WordID)"
                       >
                         <fa
-                          icon="bookmark"
-                          class="text-xl text-green-500"
+                          icon="volume-up"
+                          class="active:text-xl"
+                          :class="{'text-blue-500': playingId === item.WordID}"
                         />
                       </button>
-                    </transition>
-                    <button
-                      v-if="item.SoundVersion===1"
-                      @click="play(item.WordID)"
-                    >
-                      <fa
-                        icon="volume-up"
-                        class="active:text-xl"
-                        :class="{'text-blue-500': playingId === item.WordID}"
-                      />
-                    </button>
+                    </div>
                   </div>
-                </div>
-              </transition-group>
-              <!-------------------empty--------------------------->
-              <div
-                ref="emptyDiv"
-                class="grid w-screen items-center justify-items-center"
-              >
-                <span
-                  v-if="listLoading"
-                  class="list-loading"
-                />
-              </div>
-            </template>
-            <!--------------------------------------- find ---------------------------------------------->
-            <!--------------------------------------- not find ---------------------------------------------->
-
-            <div
-              v-else
-              class="not-find-box"
-            >
-              <p class="not-find__text">
-                نتیجه ای یافت نشد!
-              </p>
-              <br>
-              <fa
-                icon="frown"
-                style="color: rgba(245, 158, 11) ; font-size: 32px;"
-                class="animate-spin"
-              />
-            </div>
-
-            <!--------------------------------------- not find ---------------------------------------------->
-          </div>
-          <div
-            v-if="searchQuery.length<=0"
-            class="home-box"
-          >
-            <div
-              class="category-box"
-              @click="pushLinkList('List','نشان شده ها',-100,1)"
-            >
-              <div
-                class="category-box__svg"
-              >
-                <svg
-                  id="Layer_1"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  x="0px"
-                  y="0px"
-                  viewBox="0 0 280.028 280.028"
-                  style="enable-background:new 0 0 280.028 280.028;"
-                  xml:space="preserve"
+                </transition-group>
+                <!-------------------empty--------------------------->
+                <div
+                  ref="emptyDiv"
+                  class="grid w-screen items-center justify-items-center"
                 >
-                  <g>
-                    <path
-                      style="fill:#E2574C;"
-                      d="M52.506,0h175.017c9.661,0,17.502,7.832,17.502,17.502v245.024c0,10.212-7.71,17.502-17.502,17.502
-		c-8.191,0-70.269-38.81-78.758-43.754c-8.497-4.944-8.628-5.233-17.502,0c-8.873,5.259-70.409,43.754-78.758,43.754
-		c-9.915,0-17.502-7.027-17.502-17.502V17.502C35.004,7.832,42.845,0,52.506,0z"
-                    />
-                    <path
-                      style="fill:#CB4E44;"
-                      d="M227.523,0h-87.509v232.466c2.258-0.018,4.419,1.278,8.751,3.807
-		c8.453,4.927,70.086,43.448,78.618,43.728h0.411c9.661-0.14,17.23-7.359,17.23-17.475V17.502C245.025,7.832,237.184,0,227.523,0z"
-                    />
-                    <path
-                      style="fill:#EFC75E;"
-                      d="M210.048,105.395l-46.038-3.404l-23.995-49.486l-24.266,49.486l-45.758,3.404l30.628,38.197
-		l-8.751,48.9l48.147-22.507l48.147,22.507l-8.908-48.9C179.253,143.593,210.048,105.395,210.048,105.395z"
-                    />
-                    <polygon
-                      style="fill:#D7B354;"
-                      points="188.162,192.501 179.253,143.602 210.048,105.395 164.009,101.991 140.015,52.505
-		140.015,170.003 	"
-                    />
-                  </g>
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                  <g />
-                </svg>
-              </div>
-              <p>نشان شده ها</p>
-            </div>
-            <div
-              v-for="item in categoryRepo.categroyTable"
-              :key="item.CategoryID"
-              class="category-box"
-              @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
-            >
+                  <span
+                    v-if="listLoading"
+                    class="list-loading"
+                  />
+                </div>
+              </template>
+              <!--------------------------------------- find ---------------------------------------------->
+              <!--------------------------------------- not find ---------------------------------------------->
+
               <div
-                v-if="item.IsFree === 0"
-                class="premium"
-                @click="modalPremiumValue = true"
+                v-else
+                class="not-find-box"
               >
+                <p class="not-find__text">
+                  نتیجه ای یافت نشد!
+                </p>
+                <br>
                 <fa
-                  icon="lock"
-                  class="absolute top-2 right-2 text-yellow-500"
+                  icon="frown"
+                  style="color: rgba(245, 158, 11) ; font-size: 32px;"
+                  class="animate-spin"
                 />
               </div>
-              <!-- eslint-disable-next-line vue/no-v-html -->
+
+              <!--------------------------------------- not find ---------------------------------------------->
+            </div>
+            <div
+              v-if="searchQuery.length<=0"
+              class="home-box"
+            >
               <div
-                v-if="item.Icon"
-                class="category-box__svg"
-                v-html="item.Icon"
-              />
-              <p>{{ item.Title }}</p>
+                class="category-box"
+                @click="pushLinkList('List','نشان شده ها',-100,1)"
+              >
+                <div
+                  class="category-box__svg"
+                >
+                  <svg
+                    id="Layer_1"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    x="0px"
+                    y="0px"
+                    viewBox="0 0 280.028 280.028"
+                    style="enable-background:new 0 0 280.028 280.028;"
+                    xml:space="preserve"
+                  >
+                    <g>
+                      <path
+                        style="fill:#E2574C;"
+                        d="M52.506,0h175.017c9.661,0,17.502,7.832,17.502,17.502v245.024c0,10.212-7.71,17.502-17.502,17.502
+      c-8.191,0-70.269-38.81-78.758-43.754c-8.497-4.944-8.628-5.233-17.502,0c-8.873,5.259-70.409,43.754-78.758,43.754
+      c-9.915,0-17.502-7.027-17.502-17.502V17.502C35.004,7.832,42.845,0,52.506,0z"
+                      />
+                      <path
+                        style="fill:#CB4E44;"
+                        d="M227.523,0h-87.509v232.466c2.258-0.018,4.419,1.278,8.751,3.807
+      c8.453,4.927,70.086,43.448,78.618,43.728h0.411c9.661-0.14,17.23-7.359,17.23-17.475V17.502C245.025,7.832,237.184,0,227.523,0z"
+                      />
+                      <path
+                        style="fill:#EFC75E;"
+                        d="M210.048,105.395l-46.038-3.404l-23.995-49.486l-24.266,49.486l-45.758,3.404l30.628,38.197
+      l-8.751,48.9l48.147-22.507l48.147,22.507l-8.908-48.9C179.253,143.593,210.048,105.395,210.048,105.395z"
+                      />
+                      <polygon
+                        style="fill:#D7B354;"
+                        points="188.162,192.501 179.253,143.602 210.048,105.395 164.009,101.991 140.015,52.505
+      140.015,170.003 	"
+                      />
+                    </g>
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                    <g />
+                  </svg>
+                </div>
+                <p>نشان شده ها</p>
+              </div>
+              <div
+                v-for="item in categoryRepo.categroyTable"
+                :key="item.CategoryID"
+                class="category-box"
+                @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
+              >
+                <div
+                  v-if="item.IsFree === 0"
+                  class="premium"
+                  @click="modalPremiumValue = true"
+                >
+                  <fa
+                    icon="lock"
+                    class="absolute top-2 right-2 text-yellow-500"
+                  />
+                </div>
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div
+                  v-if="item.Icon"
+                  class="category-box__svg"
+                  v-html="item.Icon"
+                />
+                <p>{{ item.Title }}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </transition>
-    <!--------------------------------------- searchedWords -------------------------------------------- -->
-    </div>
-    <audio
-      v-if="playingId !== -1"
-      :key="playingId"
-      :src="audioSrc"
-      autoplay
-      @error="audioError"
-      @ended="playingId = -1"
-    />
-    <div
-      class="
-      yellow-btns-box"
-    >
-      <button
+        </transition>
+      <!--------------------------------------- searchedWords -------------------------------------------- -->
+      </div>
+      <audio
+        v-if="playingId !== -1"
+        :key="playingId"
+        :src="audioSrc"
+        autoplay
+        @error="audioError"
+        @ended="playingId = -1"
+      />
+      <div
         class="
-        yellow-btns
-      "
-        @click="pushLinkQuiz('all')"
+        yellow-btns-box"
       >
-        <fa icon="pencil-alt" />
-        <p>تمرین لغات</p>
-      </button>
-      <button
-        class="
-        yellow-btns
-      "
-      >
-        <fa icon="spell-check" />
-        <p>آزمون مرحله ای</p>
-      </button>
+        <button
+          class="
+          yellow-btns
+        "
+          @click="pushLinkQuiz('all')"
+        >
+          <fa icon="pencil-alt" />
+          <p>تمرین لغات</p>
+        </button>
+        <button
+          class="
+          yellow-btns
+        "
+        >
+          <fa icon="spell-check" />
+          <p>آزمون مرحله ای</p>
+        </button>
+      </div>
     </div>
+    <HomeLargeVue v-else />
   </div>
 </template>
 <style>

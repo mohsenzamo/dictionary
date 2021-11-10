@@ -119,10 +119,10 @@ function pushLink (link:string) {
         <span class="nav-span flex items-center justify-center"><fa icon="search" /><p class="mx-3">جستجو</p></span>
       </button>
       <button
-        v-if="pathName !== '/homelarge'"
+        v-if="pathName !== '/'"
         class="btn-6 mx-4 w-36 nav-btn"
       >
-        <router-link to="/homelarge">
+        <router-link to="/">
           <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
         </router-link>
       </button>

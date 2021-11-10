@@ -1,19 +1,10 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { useCategoriesDB } from '../datasource/database/categoriesDB'
+import { computed, ref } from 'vue'
 import { useCreateRepo } from '../datasource/repository/repo'
-import HeaderLarge from '../components/HeaderLarge.vue'
 import Modal from '../components/Modal.vue'
-import Loader from '../components/Loader.vue'
 import { useRouter } from 'vue-router'
-const router = useRouter()
-useCategoriesDB().categoriesGet().then(r => {
-  useCreateRepo().categroyTable = r
-})
-const categoryRepo = useCreateRepo()
 const categoryList = computed(() => useCreateRepo().categroyTable)
 const slideCount = computed(() => categoryList.value!.length / 6)
-const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
 const slide = ref(1)
 const modalPremiumValue = ref(false)
 function change (y:number) {
@@ -31,6 +22,7 @@ function change (y:number) {
     }
   }
 }
+const router = useRouter()
 function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
     router.push({
@@ -52,7 +44,6 @@ function pushLinkQuiz (id:string) {
 }
 </script>
 <template>
-  <HeaderLarge />
   <transition name="modal">
     <modal
       v-if="modalPremiumValue"
@@ -72,8 +63,7 @@ function pushLinkQuiz (id:string) {
       </div>
     </modal>
   </transition>
-  <Loader v-if="loading" />
-  <div v-else>
+  <div>
     <button
       class="absolute right-40 bottom-48 text-5xl z-10"
       @click="change(0)"
@@ -318,97 +308,3 @@ function pushLinkQuiz (id:string) {
     </div>
   </div>
 </template>
-<style>
-.hex-cell svg{
-width: 100% !important;
-height: 100% !important;
-}
-.hex-cell:nth-of-type(5n + 1) { grid-column-start: 2 }
-.body {
-  --l: calc(100vw/var(--n-cols));
-  --hl: calc(.5*var(--l));
-  --ri: calc(.5*1.73205*var(--l));
-  box-sizing: border-box;
-  display: grid;
-  place-content: center;
-  grid-template: repeat(var(--n-rows), var(--l))/repeat(var(--n-cols), var(--ri));
-  grid-gap: var(--hl) 0;
-  overflow: hidden;
-  margin: 0;
-  padding: var(--hl) 0;
-  height: 100vh;
-  filter: drop-shadow(2px 2px 5px rgb(17,117,139));
-
-}
-@media (orientation: landscape) {
-  .body {
-    --l: calc(100vh/(var(--n-rows) + 3));
-  }
-}
-.hex-cell {
-  overflow: hidden;
-  grid-column-end: span 2;
-  margin: calc(-1*var(--hl)) 0;
-  transform: scale(0.95);
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  font-family: IRANsans;
-  background-color: rgb(17,117,139);
-  cursor: pointer;
-}
-.hex-cell:hover{
-    transform: scale(1.007);
-}
-.lock-icon{
-  display: none;
-}
-.hex-cell:hover .lock-icon{
-display: block;
-animation: shake 0.8s;;
-}
-@keyframes shake {
-  0% { transform: translate(1px, 1px) rotate(0deg); }
-  10% { transform: translate(-1px, -2px) rotate(-1deg); }
-  20% { transform: translate(-3px, 0px) rotate(1deg); }
-  30% { transform: translate(3px, 2px) rotate(0deg); }
-  40% { transform: translate(1px, -1px) rotate(1deg); }
-  50% { transform: translate(-1px, 2px) rotate(-1deg); }
-  60% { transform: translate(-3px, 1px) rotate(0deg); }
-  70% { transform: translate(3px, 1px) rotate(-1deg); }
-  80% { transform: translate(-1px, -1px) rotate(1deg); }
-  90% { transform: translate(1px, 2px) rotate(0deg); }
-  100% { transform: translate(1px, -2px) rotate(-1deg); }
-}
- .talkbubble-left {
-      width: 170px;
-      height: 60px;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
-    }
-    .talkbubble-left:before {
-      content: "";
-      position: absolute;
-      right: 100%;
-      top: 26px;
-      border-top: 13px solid transparent;
-      border-right: 26px solid rgb(245,158,11);
-      border-bottom: 13px solid transparent;
-    }
- .talkbubble-right {
-      width: 170px;
-      height: 60px;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      border-radius: 10px;
-    }
-    .talkbubble-right:before{
-      content: "";
-      position: absolute;
-      left: 100%;
-      top: 26px;
-      border-top: 13px solid transparent;
-      border-left: 26px solid rgb(245,158,11);
-      border-bottom: 13px solid transparent;
-    }
-
-</style>
