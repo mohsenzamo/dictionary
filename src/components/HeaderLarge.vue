@@ -7,75 +7,149 @@ import db, { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import { useCategoriesDB } from '../datasource/database/categoriesDB'
 import { useCreateRepo } from '../datasource/repository/repo'
-import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
-import searchLoader from './searchLoader.vue'
+import { useHomeLargeSearchRepo } from '../datasource/repository/homeLargeSearchRepo'
+import SearchLoader from './searchLoader.vue'
 import { usePWAStore } from '../datasource/repository/PWA'
-useCategoriesDB().categoriesGet().then(r => {
-  useCreateRepo().categroyTable = r
+import { useSearchDB } from '../datasource/database/searchDB'
+const HomeSearchRepo = useHomeLargeSearchRepo()
+const words = computed(() => HomeSearchRepo.words)
+const searchFind = computed(() => HomeSearchRepo.searchFind)
+const searchLoading = computed(() => HomeSearchRepo.searchLoading)
+const searchQuerylg = ref('')
+// const options = {
+//   root: null,
+//   rootMargin: '0px',
+//   threshold: 1.0
+// }
+// const emptyDiv1 = ref<HTMLDivElement>()
+// const observeValue = computed(() => HomeSearchRepo.observeValue)
+// console.log(observeValue.value)
+// watch(observeValue, (observeValue) => {
+//   if (observeValue === true) {
+//     const tem = document.getElementById('emt')
+//     console.log(tem)
+//   }
+// })
+// const observer1 = new IntersectionObserver(async e => {
+//   if (e[0].intersectionRatio === 1) {
+//     // useHomeSearchRepo().pages()
+//     console.log('sss')
+//   }
+// }, options)
+// watch(observeValue, (observeValue) => {
+//   if (observeValue === true) {
+//     const tem = document.getElementById('emt')
+//     console.log(tem)
+//     observer1.observe(tem!)
+//   } else {
+//     const tem = document.getElementById('emt')
+//     console.log(tem)
+//     observer1.unobserve(tem!)
+//   }
+// })
+watch(searchQuerylg, (searchQuerylg) => {
+  HomeSearchRepo.search(searchQuerylg, searchCat.value, searchSub.value)
 })
-const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
-
 const categoryRepo = useCreateRepo()
+useCategoriesDB().categoriesGet().then(r => {
+  categoryRepo.categroyTable = r
+})
 const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
-const searchQuery = ref('')
 const pathName = ref(window.location.pathname)
-const props = defineProps<{
-  id: string
-}>()
-const resultW = ref<Words[] | null>(null)
-const emptyBookmark = ref(false)
 const searchSub = ref('1')
-
-useWordsDB().wordsGet(+props.id)
-  .then(x => {
-    resultW.value = x
-  }).finally(() => {
-    loading.value = false
-  })
 function modalSearchOpen () {
   modalSearchValue.value = true
-  searchQuery.value = ''
+  searchSub.value = '1'
+  searchQuerylg.value = ''
 }
 function pushLink (link:string) {
   router.push({
     name: link
   })
 }
-
-const words = computed(() => useHomeSearchRepo().words)
-const searchFind = computed(() => useHomeSearchRepo().searchFind)
-const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
-console.log(searchLoading.value)
-const listLoading = computed(() => useHomeSearchRepo().listLoading)
-const observeValue = computed(() => useHomeSearchRepo().observeValue)
-const options = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 1.0
-}
-watch(searchLoading, (searchLoading) => {
-  console.log(searchLoading)
-  console.log(searchFind.value)
-})
-const emptyDiv = ref<HTMLDivElement>()
-const observer = new IntersectionObserver(async e => {
-  if (e[0].intersectionRatio === 1) {
-    useHomeSearchRepo().pages()
-  }
-}, options)
-watch(searchQuery, (searchQuery) => {
-  useHomeSearchRepo().search(searchQuery)
-})
-watch(observeValue, (observeValue) => {
-  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
-})
 const PWAStore = usePWAStore()
 const showValue = computed(() => PWAStore.showValue)
 PWAStore.beforeInstall()
+const audioSrc = ref('')
+const playingId = ref(-1)
+const modalErrorValue = ref(false)
+function play (id:number) {
+  playingId.value = id
+  audioSrc.value = `https://nebrasar.ir/sounds/${id}.m4a`
+}
+function audioError () {
+  playingId.value = -1
+  modalErrorValue.value = true
+}
+async function bookmarkSelect (WordID:number) {
+  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  if (getWord[0].bookmark === 0) {
+    getWord[0].bookmark = 1
+    for (let i = 0; i < words.value!.length; i++) {
+      if (words.value![i].WordID === WordID) {
+        words.value![i].bookmark = 1
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 1
+        }
+      }
+    }
+  } else {
+    getWord[0].bookmark = 0
+    for (let i = 0; i < words.value!.length; i++) {
+      if (words.value![i].WordID === WordID) {
+        words.value![i].bookmark = 0
+      }
+    }
+    if (words.value) {
+      for (let i = 0; i < words.value.length; i++) {
+        if (words.value[i].WordID === WordID) {
+          words.value[i].bookmark = 0
+        }
+      }
+    }
+  }
+  await db.words.put(getWord[0])
+  await useSearchDB().createSearchArray2(WordID)
+}
+const searchCat = ref(-10)
+watch(searchCat, () => {
+  searchQuerylg.value = ''
+})
+watch(searchSub, () => {
+  searchQuerylg.value = ''
+})
 </script>
 <template>
+  <audio
+    v-if="playingId !== -1"
+    :key="playingId"
+    :src="audioSrc"
+    autoplay
+    @error="audioError"
+    @ended="playingId = -1"
+  />
+  <transition name="modal">
+    <modal
+      v-if="modalErrorValue"
+      @close="modalErrorValue = false"
+    >
+      <div class="grid items-center justify-items-center">
+        <p class="font-IRANSans w-2/3 text-center">
+          لطفا اتصال به اینترنت رو چک کنین!
+        </p>
+        <fa
+          icon="wifi"
+          class="animate-pulse text-xl mt-3"
+        />
+      </div>
+    </modal>
+  </transition>
   <transition name="modal">
     <modal
       v-if="modalSearchValue"
@@ -86,7 +160,7 @@ PWAStore.beforeInstall()
       >
         <div class="h-11 flex justify-center px-2">
           <input
-            v-model="searchQuery"
+            v-model="searchQuerylg"
             type="text"
             placeholder="جستجو ...."
             class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-96"
@@ -97,12 +171,12 @@ PWAStore.beforeInstall()
             <fa icon="search" />
           </span>
         </div>
-        <div class="flex justify-center items-center mt-4 gap-x-8">
+        <div class="flex justify-center items-center mt-4 gap-x-8 flex-wrap">
           <label class="cursor-pointer search-sub__label">همه
             <input
               v-model="searchSub"
               value="1"
-              class="cursor-pointer"
+              class="cursor-pointer invisible"
               type="radio"
               name="search-sub"
               checked
@@ -113,7 +187,7 @@ PWAStore.beforeInstall()
             <input
               v-model="searchSub"
               value="2"
-              class="cursor-pointer"
+              class="cursor-pointer invisible"
               type="radio"
               name="search-sub"
             >
@@ -126,7 +200,7 @@ PWAStore.beforeInstall()
             <input
               v-model="searchSub"
               value="3"
-              class="cursor-pointer"
+              class="cursor-pointer invisible"
               type="radio"
               name="search-sub"
             >
@@ -137,21 +211,28 @@ PWAStore.beforeInstall()
           </label>
           <div
             v-if="searchSub==='3'"
-            class="select"
+            class="select mt-3"
           >
-            <select class="bg-gray-300 ring-4 ring-yellow-500 rounded-md outline-none">
+            <select
+              v-model="searchCat"
+              class="bg-gray-300 ring-4 ring-yellow-500 rounded-md outline-none"
+            >
               <option
                 v-for="cats in useCreateRepo().categroyTable"
                 :key="cats.CategoryID"
-                value="cats.CategoryID"
+                :value="cats.CategoryID"
+                :disabled="cats.IsFree === 0"
               >
                 {{ cats.Title }}
               </option>
             </select>
           </div>
         </div>
-        <div class="bg-gray-200 h-5/6 w-full grid items-center mt-4 overflow-y-scroll rounded-md search-modal__scroll">
-          <div v-if="searchQuery.length === 0">
+        <div
+          class="bg-gray-200 h-5/6 w-full grid items-center mt-4 overflow-y-scroll rounded-md search-modal__scroll"
+          :class="{'h-4/5': searchSub==='3'}"
+        >
+          <div v-if="searchQuerylg.length === 0">
             <p class="text-center text-2xl">
               برای نمایش نتایج حروف مورد نظر را وارد کنید
             </p>
@@ -160,23 +241,27 @@ PWAStore.beforeInstall()
             v-else
             class="grid items-center justify-items-center"
           >
-            <searchLoader v-if="searchLoading" />
-            <template v-if="searchFind">
+            <SearchLoader v-if="searchLoading" />
+            <div
+              v-if="searchFind"
+              class="grid justify-items-center"
+            >
               <div
                 v-for="item in words"
                 :key="item.WordID"
-                class=" bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg mb-2"
+                class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
               >
                 <div class="word-box__ability-bookmark-lg">
-                  <transition
-                    name="bookmarkButton"
-                    mode="out-in"
-                  >
-                    <div>
+                  <div>
+                    <transition
+                      name="bookmarkButton"
+                      mode="out-in"
+                    >
                       <button
                         v-if="item.bookmark===0"
                         class="w-8 h-8"
                         type="submit"
+                        @click="bookmarkSelect(item.WordID)"
                       >
                         <svg
                           id="Layer_1"
@@ -214,17 +299,17 @@ PWAStore.beforeInstall()
                         </svg>
                       </button>
                       <button
-                        v-if="item.bookmark===1"
+                        v-else
                         type="submit"
-                        class=""
+                        @click="bookmarkSelect(item.WordID)"
                       >
                         <fa
                           icon="bookmark"
                           class="text-4xl text-green-500"
                         />
                       </button>
-                    </div>
-                  </transition>
+                    </transition>
+                  </div>
                 </div>
                 <div class="word-box__main-content-lg">
                   <div class="flex justify-center word-box__main-lg">
@@ -248,29 +333,38 @@ PWAStore.beforeInstall()
                   <div
                     class="word-box__ability-volume-lg"
                   >
-                    <button
-                      v-if="item.SoundVersion===1"
-                      type="submit"
-                      class=" equalizer-search "
-                    />
+                    <div v-if="item.SoundVersion===1">
+                      <button
+                        v-if="playingId === item.WordID"
+                        type="submit"
+                        class=" equalizer-play"
+                        @click="play(item.WordID)"
+                      />
+                      <button
+                        v-else
+                        type="submit"
+                        class=" equalizer bg-black"
+                        @click="play(item.WordID)"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div
-                  ref="emptyDiv"
-                  class="grid w-screen items-center justify-items-center"
-                >
-                  <span
-                    v-if="listLoading"
-                    class="list-loading"
-                  />
-                </div>
               </div>
-            </template>
+              <!-- <div
+                id="emt"
+                ref="emptyDiv1"
+                class="grid w-full items-center justify-items-center my-4"
+              >
+                <span
+                  class="list-loading"
+                />
+              </div> -->
+            </div>
             <div
               v-else
-              class="not-find-box"
+              class="bg-gray-200 h-full w-full text-center animate-opacity"
             >
-              <p class="not-find__text">
+              <p class="font-IRANSans pt-16 text-xl">
                 نتیجه ای یافت نشد!
               </p>
               <br>
@@ -422,7 +516,7 @@ PWAStore.beforeInstall()
 
 /* Style the indicator (dot/circle) */
 .search-sub__label .search-sub__span:after {
- 	top: 9px;
+top: 9px;
 	left: 9px;
 	width: 8px;
 	height: 8px;
@@ -435,411 +529,4 @@ PWAStore.beforeInstall()
   border-radius: 10px;
 
 }
-.typing-demo {
-  animation: typing 2s steps(22), blink .5s step-end infinite alternate;
-  width: 210px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-}
-.typing-demo__accent {
-  animation: typing 4s steps(30), blink .5s step-end infinite alternate;
-  width: 210px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-@keyframes typing {
-  from {
-    width: 0
-  }
-}
-
-@keyframes blink {
-  50% {
-    border-color: transparent
-  }
-}
-
-.nav-btn{
-  display: inline-block;
-  position: relative;
-  border: none;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-.nav-btn::before, .nav-btn::after{
-  content:"";
-  width: 0;
-  height: 2px;
-  position: absolute;
-  transition: all 0.1s linear;
-  background: rgb(17,117,139);
-}
-.nav-span::before, .nav-span::after{
-  content:"";
-  width:2px;
-  height:0;
-  position: absolute;
-  transition: all 0.1s linear;
-  background: rgb(17,117,139);
-}
-.nav-btn:hover::before, .nav-btn:hover::after{
-  width: 100%;
-}
-.nav-btn:hover .nav-span::before, .nav-btn:hover .nav-span::after{
-  height: 100%;
-}
-.btn-6::before{
-  left: 50%;
-  top: 0;
-  transition-duration: 0.3s;
-}
-.btn-6::after{
-  left: 50%;
-  bottom: 0;
-  transition-duration: 0.3s;
-}
-.btn-6 .nav-span::before{
-  left: 0;
-  top: 50%;
-  transition-duration: 0.3s;
-}
-.btn-6 .nav-span::after{
-  right: 0;
-  top: 50%;
-  transition-duration: 0.3s;
-}
-.btn-6:hover::before, .btn-6:hover::after{
-  left: 0;
-}
-.btn-6:hover .nav-span::before, .btn-6:hover .nav-span::after{
-  top: 0;
-}
-.pointer {
-  width: 200px;
-  height: 40px;
-  top: 20px;
-  background: rgb(17,117,139);
-    animation: float 4s infinite;
-
-}
-.pointer:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0;
-  height: 0;
-  border-left: 20px solid white;
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-}
-.pointer:before {
-  content: "";
-  position: absolute;
-  right: -20px;
-  bottom: 0;
-  width: 0;
-  height: 0;
-  border-left: 20px solid rgb(17,117,139);
-  border-top: 20px solid transparent;
-  border-bottom: 20px solid transparent;
-}
-.ghamoos{
-    transform: rotate(180deg);
-}
-@keyframes float {
-  0%{
-   transform:  translateY(0px) rotate(180deg);
-  }
-  50%{
-   transform:  translateY(5px) rotate(180deg);
-  }
-  100%{
-   transform:  translateY(0px) rotate(180deg);
-  }
-
-}
-.header{
-        box-shadow: rgb(245,158,11, 0.4) 0px 5px, rgba(245,158,11, 0.3) 0px 10px, rgba(245,158,11, 0.2) 0px 15px, rgba(245,158,11, 0.1) 0px 20px, rgba(245,158,11, 0.05) 0px 30px;
-}
-/* equalizer */
-.equalizer-search {
-  position: relative;
-  left: 5px;
-  display: block;
-  width: 6px;
-  background-color: black;
-  height: 10px;
-}
-
-.equalizer-search,
-.equalizer-search::before,
-.equalizer-search::after {
-  animation: equalize 1.25s steps(25, end) 0s infinite;
-
-}
-
-.equalizer-search::before,
-.equalizer-search::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  height: 20px;
-  width: 6px;
-  top: 0;
-  background-color: black;
-}
-
-.equalizer-search::before {
-  animation-name: equalize2;
-}
-
-.equalizer-search::after {
-  left: 10px;
-  animation-name: equalize3;
-}
-/* @keyframes equalize {
-  0% {
-    height: 8px;
-  }
-  4% {
-    height: 4px;
-  }
-  8% {
-    height: 8px;
-  }
-  12% {
-    height: 9px;
-  }
-  16% {
-    height: 10px;
-  }
-  20% {
-    height: 11px;
-  }
-  24% {
-    height:10px;
-  }
-  28% {
-    height: 9px;
-  }
-  32% {
-    height: 9px;
-  }
-  36% {
-    height: 8px;
-  }
-  40% {
-    height: 8.5px;
-  }
-  44% {
-    height: 8.5px;
-  }
-  48% {
-    height: 9px;
-  }
-  52% {
-    height: 10px;
-  }
-  56% {
-    height: 11px;
-  }
-  60% {
-    height: 10px;
-  }
-  64% {
-    height: 10px;
-  }
-  68% {
-    height: 9px;
-  }
-  72% {
-    height: 8px;
-  }
-  76% {
-    height: 9px;
-  }
-  80% {
-    height: 11px;
-  }
-  84% {
-    height: 11px;
-  }
-  88% {
-    height: 12px;
-  }
-  92% {
-    height: 10px;
-  }
-  96% {
-    height: 8px;
-  }
-  100% {
-    height: 4px;
-  }
-}
-@keyframes equalize2 {
-  0% {
-    height:12px;
-  }
-  4% {
-    height: 13px;
-  }
-  8% {
-    height: 11px;
-  }
-  12% {
-    height: 12px;
-  }
-  16% {
-    height: 10px;
-  }
-  20% {
-    height: 10px;
-  }
-  24% {
-    height: 10px;
-  }
-  28% {
-    height: 11px;
-  }
-  32% {
-    height: 11px;
-  }
-  36% {
-    height: 13px;
-  }
-  40% {
-    height: 13px;
-  }
-  44% {
-    height: 13px;
-  }
-  48% {
-    height: 12px;
-  }
-  52% {
-    height: 9px;
-  }
-  56% {
-    height: 7px;
-  }
-  60% {
-    height: 6px;
-  }
-  64% {
-    height: 9px;
-  }
-  68% {
-    height: 10px;
-  }
-  72% {
-    height: 13px;
-  }
-  76% {
-    height: 11px;
-  }
-  80% {
-    height: 12px;
-  }
-  84% {
-    height: 10px;
-  }
-  88% {
-    height: 10px;
-  }
-  92% {
-    height: 9px;
-  }
-  96% {
-    height: 11px;
-  }
-  100% {
-    height: 12px;
-  }
-}
- @keyframes equalize3 {
-  0% {
-    height: 9px;
-  }
-  4% {
-    height: 7px;
-  }
-  8% {
-    height: 10px;
-  }
-  12% {
-    height: 11px;
-  }
-  16% {
-    height: 13px;
-  }
-  20% {
-    height: 15px;
-  }
-  24% {
-    height: 14px;
-  }
-  28% {
-    height: 13px;
-  }
-  32% {
-    height: 12px;
-  }
-  36% {
-    height: 10px;
-  }
-  40% {
-    height: 7px;
-  }
-  44% {
-    height: 5px;
-  }
-  48% {
-    height: 8px;
-  }
-  52% {
-    height: 10px;
-  }
-  56% {
-    height: 12px;
-  }
-  60% {
-    height: 13px;
-  }
-  64% {
-    height: 13.5px;
-  }
-  68% {
-    height: 13.5px;
-  }
-  72% {
-    height: 13.5px;
-  }
-  76% {
-    height: 11px;
-  }
-  80% {
-    height: 12px;
-  }
-  84% {
-    height: 13.5px;
-  }
-  88% {
-    height: 15px;
-  }
-  92% {
-    height: 14px;
-  }
-  96% {
-    height: 12px;
-  }
-  100% {
-    height: 10px;
-  }
-} */
-
 </style>
