@@ -33,6 +33,7 @@ export const useHomeSearchRepo = defineStore('useHomeSearchRepo', {
           .anyOf(ids)
           .limit(10)
           .toArray()
+        console.log(this.words)
         this.searchLoading = false
         if (this.words.length < 10) {
           this.listLoading = false

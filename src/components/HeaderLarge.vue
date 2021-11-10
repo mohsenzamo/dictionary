@@ -47,6 +47,7 @@ function pushLink (link:string) {
 const words = computed(() => useHomeSearchRepo().words)
 const searchFind = computed(() => useHomeSearchRepo().searchFind)
 const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
+console.log(searchLoading.value)
 const listLoading = computed(() => useHomeSearchRepo().listLoading)
 const observeValue = computed(() => useHomeSearchRepo().observeValue)
 const options = {
@@ -54,6 +55,10 @@ const options = {
   rootMargin: '0px',
   threshold: 1.0
 }
+watch(searchLoading, (searchLoading) => {
+  console.log(searchLoading)
+  console.log(searchFind.value)
+})
 const emptyDiv = ref<HTMLDivElement>()
 const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
