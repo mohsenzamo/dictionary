@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useCreateRepo } from './datasource/repository/repo'
 import Modal from './components/Modal.vue'
-// import update from './mixins/update'
+import { useServiceWorker } from './registerServiceWorker'
+const serviceWorker = useServiceWorker()
 const errorShow = computed(() => useCreateRepo().errorValue)
 const errorLoading = computed(() => useCreateRepo().errorLoading)
 useCreateRepo().updateWordandCategory()
@@ -11,32 +12,9 @@ function err () {
     useCreateRepo().errorLoading = false
   })
 }
-// const updateShow = ref(true)
-// const worker = new Worker('./src/serviceWorker.ts')
-// worker.addEventListener('message', (event) => {
-//   console.log(event.data)
-// })
-// function post () {
-//   worker.postMessage('skipWaiting')
-// }
-const refreshing = ref(false)
-const registration = ref(null)
-const updateExists = ref(false)
-function updateAvailable (event:any) {
-  registration.value = event.detail
-  updateExists.value = true
-}
-document.addEventListener('swUpdated', updateAvailable, { once: true })
-navigator.serviceWorker.addEventListener('controllerchange', () => {
-  if (refreshing.value) return
-  refreshing.value = true
-  window.location.reload()
-})
-function refreshApp () {
-  // updateExists.value = false
-  // if (registration.value || registration.value!.waiting) return
-  //     registration.value!.waiting.postMessage({ type: 'SKIP_WAITING' })
-}
+const updateExists = computed(() => serviceWorker.updateAvailable)
+serviceWorker.registerServiceWorker()
+
 </script>
 <template>
   <transition name="modal">
@@ -50,7 +28,7 @@ function refreshApp () {
         </p>
         <button
           class="bg-yellow-500 rounded-md h-10 font-IRANSans text-sm px-2 mt-3"
-          @click="refreshApp"
+          @click="serviceWorker.refreshApp()"
         >
           <span class="animate-pulse">
             بروزرسانی کنید
@@ -122,29 +100,5 @@ function refreshApp () {
 .error-leave-to {
   opacity: 0;
   transform: translateY(50%);
-}
-
-.errorLoader {
-  margin-left: 24px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  color: rgb(39, 37, 37);
-  animation: errorLoader 1s linear infinite alternate;
-}
-@keyframes errorLoader {
-  0% {
-    box-shadow: -38px -6px, -14px 6px, 14px -6px;
-  }
-  33% {
-    box-shadow: -38px 6px, -14px -6px, 14px 6px;
-  }
-  66% {
-    box-shadow: -38px -6px, -14px 6px, 14px -6px;
-  }
-  100% {
-    box-shadow: -38px 6px, -14px -6px, 14px 6px;
-  }
 }
 </style>

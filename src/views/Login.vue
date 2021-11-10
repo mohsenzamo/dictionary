@@ -3,7 +3,6 @@ import { ref, computed, watch } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 const screenWidth = ref(window.screen.width)
-console.log(screenWidth.value)
 const formValue = ref(false)
 </script>
 <template>

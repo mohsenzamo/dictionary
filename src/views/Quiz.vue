@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
@@ -9,10 +9,13 @@ import Loader from '../components/Loader.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 const screenWidth = ref(window.screen.width)
 console.log(screenWidth.value)
-const mediaMatcher = matchMedia('(min-width: 400px)')
-const small = ref(mediaMatcher.matches)
+const mediaMatcher = matchMedia('(max-width: 1024px)')
+const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
-  small.value = !small.value
+  laptopScreen.value = !laptopScreen.value
+})
+watch(laptopScreen, (laptopScreen) => {
+  console.log(laptopScreen)
 })
 // -------------------------------------------------------------
 
@@ -252,7 +255,7 @@ function checkAnswer (num:number) {
 }
 </script>
 <template>
-  <backHeader v-if="screenWidth < 1024">
+  <backHeader v-if="laptopScreen">
     <template #arrow>
       <span
         class="text-xl cursor-pointer"
@@ -276,7 +279,7 @@ function checkAnswer (num:number) {
       v-if="modalQuizValue"
       @close="modalClose"
     >
-      <div class="grid font-IRANSans text-sm gap-4 xl:text-lg xl:px-10">
+      <div class="grid font-IRANSans text-sm gap-4 lg:text-lg lg:px-10">
         <div>
           <p class="flex justify-between">
             <span>تعداد کل سوالات</span>
@@ -324,61 +327,61 @@ function checkAnswer (num:number) {
   <Loader v-if="loading" />
   <div
     v-else
-    class="pt-16 w-full h-auto grid xl:pt-5"
+    class="pt-16 w-full h-auto grid lg:pt-5"
   >
     <div
-      class="quiz-correction-box"
+      class="w-full h-auto flex pr-5 text-white font-IRANSans mt-2 cursor-default lg:text-xl lg:justify-center"
     >
-      <p class="quiz-correction-text__correct">
+      <p class="bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl lg:w-20">
         <fa
           icon="check-circle"
-          class="ml-3 xl:ml-5"
+          class="ml-3 lg:ml-5"
         />
         <span>{{ correctAnswer }}</span>
       </p>
-      <p class="quiz-correction-text__false">
+      <p class="bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2 lg:w-20">
         <fa
           icon="times-circle"
-          class="ml-3 xl:ml-5"
+          class="ml-3 lg:ml-5"
         />
         <span>{{ wrongAnswer }}</span>
       </p>
     </div>
     <div
-      class="quiz-question-box"
+      class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default lg:w-5/12"
       :class="{'animate-opacity':openAnime}"
     >
-      <p class="self-end font-IRANSans text-sm xl:text-base">
+      <p class="self-end font-IRANSans text-sm lg:text-base">
         معنی عبارت زیر چیست؟
       </p>
-      <p class="self-start font-IRANSans font-bold text-xl xl:text-2xl">
+      <p class="self-start font-IRANSans font-bold text-xl lg:text-2xl">
         {{ question }}
       </p>
     </div>
-    <div class="quiz-option-box">
+    <div class="h-full w-full grid grid-cols-2 grid-rows-2 gap-3 p-4 lg:items-center lg:justify-items-center lg:px-72">
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer1,'bg-red-500':bgRedAnswer1,'animate-opacity':openAnime}"
         @click="checkAnswer(1)"
       >
         {{ answer1 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer2,'bg-red-500':bgRedAnswer2,'animate-opacity':openAnime}"
         @click="checkAnswer(2)"
       >
         {{ answer2 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer3,'bg-red-500':bgRedAnswer3,'animate-opacity':openAnime}"
         @click="checkAnswer(3)"
       >
         {{ answer3 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer4,'bg-red-500':bgRedAnswer4,'animate-opacity':openAnime}"
         @click="checkAnswer(4)"
       >
@@ -387,23 +390,3 @@ function checkAnswer (num:number) {
     </div>
   </div>
 </template>
-<style>
-.quiz-correction-text__false{
-  @apply bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2 xl:w-20
-}
-.quiz-correction-text__correct{
-  @apply bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl xl:w-20
-}
-.quiz-correction-box{
-  @apply w-full h-auto flex pr-5 text-white font-IRANSans mt-2 cursor-default xl:text-xl xl:justify-center
-}
-.quiz-question-box{
-  @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default xl:w-5/12
-}
-.quiz-option{
-  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center xl:w-9/12 xl:text-xl
-}
-.quiz-option-box{
-  @apply h-full w-full grid grid-cols-2 grid-rows-2 gap-3 p-4 xl:items-center xl:justify-items-center xl:px-72
-}
-</style>

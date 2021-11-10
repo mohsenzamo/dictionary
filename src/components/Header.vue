@@ -24,13 +24,6 @@ usePWAStore().beforeInstall()
 function showPromotion () {
   usePWAStore().showPromotion()
 }
-// const x = ref(window.screen.width)
-// watch(x, (x) => {
-//   console.log(x)
-// })
-// function mohsen () {
-//   console.log(x.value)
-// }
 // const dic = ref<HTMLParagraphElement>()
 // const options = {
 //   strings: ['<i>First</i> sentence.', '&amp; a second sentence.'],
