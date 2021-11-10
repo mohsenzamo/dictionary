@@ -30,12 +30,12 @@ function showPromotion () {
       v-if="modalMenuValue"
       @close="modalMenuValue = false"
     >
-      <div class="header-modal__box">
+      <div class="grid gap-4 font-IRANSans">
         <button
-          class="header-modal__button"
+          class="bg-yellow-500 rounded-md h-10"
           @click="pushLink('Login')"
         >
-          <p class="header-modal__text">
+          <p class="flex items-center justify-center">
             <fa
               icon="user-tie"
               class="ml-2"
@@ -43,11 +43,11 @@ function showPromotion () {
             حساب کاربری
           </p>
         </button>
-        <span class="header-modal__line" />
+        <span class="w-full bg-black h-0.5" />
         <button
-          class="header-modal__button"
+          class="bg-yellow-500 rounded-md h-10"
         >
-          <p class="header-modal__text">
+          <p class="flex items-center justify-center">
             <fa
               icon="wallet"
               class="ml-2"
@@ -55,12 +55,12 @@ function showPromotion () {
             خرید نسخه طلایی
           </p>
         </button>
-        <span class="header-modal__line" />
+        <span class="w-full bg-black h-0.5" />
         <button
-          class="header-modal__button "
+          class="bg-yellow-500 rounded-md h-10"
           @click="pushLink('AboutUs')"
         >
-          <p class="header-modal__text">
+          <p class="flex items-center justify-center">
             <fa
               icon="address-card"
               class="ml-2"
@@ -68,12 +68,12 @@ function showPromotion () {
             درباره ما
           </p>
         </button>
-        <span class="header-modal__line" />
+        <span class="w-full bg-black h-0.5" />
         <button
-          class="header-modal__button"
+          class="bg-yellow-500 rounded-md h-10"
           @click="openGuide"
         >
-          <p class="header-modal__text">
+          <p class="flex items-center justify-center">
             <fa
               icon="book"
               class="ml-2"
@@ -83,14 +83,14 @@ function showPromotion () {
         </button>
         <span
           v-if="showValue"
-          class="header-modal__line"
+          class="w-full bg-black h-0.5"
         />
         <button
           v-if="showValue"
-          class="header-modal__button"
+          class="bg-yellow-500 rounded-md h-10"
           @click="showPromotion"
         >
-          <p class="header-modal__text">
+          <p class="flex items-center justify-center">
             <fa
               icon="download"
               class="ml-2"
@@ -106,16 +106,16 @@ function showPromotion () {
       v-if="modalGuideValue"
       @close="modalGuideValue = false"
     >
-      <div class="guide-box">
-        <p class="guide__text__main">
+      <div class="grid gap-4 font-IRANSans">
+        <p class="text-center font-extrabold text-xl text-yellow-600">
           راهنما
         </p>
-        <span class="guide-line" />
+        <span class="w-full bg-black h-0.5" />
         <div>
-          <p><span class="guide-number">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
-          <p><span class="guide-number">2.</span> دسته‌بندی‌های موجود به صورت مشترک بین لهجه عراقی و خلیجی می‌باشد.</p>
-          <p><span class="guide-number">3.</span> لغات نرم افزار به صورت آنلاین و مداوم بروزرسانی می‌شود.</p>
-          <p><span class="guide-number">4.</span>در صورتی که لغت مد نظر خود را جستجو کرده و پیدا نکردید، از بخش «درخواست ترجمه» می‌توانید آن را به اطّلاع ما برسانید تا نهایتاً پس از چند روز به دیکشنری اضافه شود.</p>
+          <p><span class="text-yellow-600">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
+          <p><span class="text-yellow-600">2.</span> دسته‌بندی‌های موجود به صورت مشترک بین لهجه عراقی و خلیجی می‌باشد.</p>
+          <p><span class="text-yellow-600">3.</span> لغات نرم افزار به صورت آنلاین و مداوم بروزرسانی می‌شود.</p>
+          <p><span class="text-yellow-600">4.</span>در صورتی که لغت مد نظر خود را جستجو کرده و پیدا نکردید، از بخش «درخواست ترجمه» می‌توانید آن را به اطّلاع ما برسانید تا نهایتاً پس از چند روز به دیکشنری اضافه شود.</p>
           <p>کلیه حقوق این نرم افزار متعلق به گروه آموزشی نبراس است و هر گونه کپی برداری از آن بدون ذکر منبع شرعاً و قانوناً ممنوع است.</p>
           <p class="text-center font-bold">
             با تشکر از همراهی شما.
@@ -125,21 +125,21 @@ function showPromotion () {
     </modal>
   </transition>
   <div
-    class="header-box"
+    class="grid grid-cols-4 items-center h-14 justify-items-center header-shadow fixed w-screen bg-white inset-x-0 top-0 z-10"
   >
     <span
       class="text-xl"
       @click="modalMenuValue = true"
     ><fa icon="align-justify" /></span>
-    <div class="header-text__box">
+    <div class="grid items-center justify-items-center col-span-2">
       <p
-        class="header-text__main"
+        class="text-base font-black font-IRANSans"
       >
         دیکشنری عربی نبراس
       </p>
-      <p class="header-text__lahje">
-        لهجه <span class="header-text__araghi"> عراقی</span> و
-        <span class="header-text__khaliji">خلیجی</span>
+      <p class="text-sm font-Yekan">
+        لهجه <span class="bg-yellow-300 rounded-lg px-1"> عراقی</span> و
+        <span class="px-1 bg-yellow-300 rounded-lg">خلیجی</span>
       </p>
     </div>
     <img
@@ -149,59 +149,3 @@ function showPromotion () {
     >
   </div>
 </template>
-<style>
-.header-modal__box{
-  @apply grid gap-4 font-IRANSans
-}
-.header-modal__button{
-  @apply bg-yellow-500
-        rounded-md
-        h-10
-}
-.header-modal__text{
- @apply flex items-center justify-center
-}
-.guide-number{
- @apply text-yellow-600
-}
-.header-text__araghi{
- @apply bg-yellow-300 rounded-lg px-1
-}
-.header-text__khaliji{
- @apply px-1 bg-yellow-300 rounded-lg
-}
-.header-text__lahje{
-  @apply text-sm font-Yekan
-}
-.header-modal__line{
-  @apply w-full bg-black h-0.5
-}
-.header-box{
-  @apply grid grid-cols-4
-      items-center
-      h-14
-      justify-items-center
-      header-shadow
-      fixed
-      w-screen
-      bg-white
-      inset-x-0
-      top-0
-      z-10
-}
-.header-text__main{
-  @apply text-base font-black font-IRANSans
-}
-.header-text__box{
-  @apply grid items-center justify-items-center col-span-2
-}
-.guide__text__main{
-  @apply text-center font-extrabold text-xl text-yellow-600
-}
-.guide-box{
-  @apply grid gap-4 font-IRANSans
-}
-.guide-line{
-  @apply w-full bg-black h-0.5
-}
-</style>
