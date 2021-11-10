@@ -11,7 +11,8 @@ import Modal from '../components/Modal.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import { useStore } from '../store'
 const emptyBookmark = ref(false)
-
+const title = computed(() => useStore().propTitle)
+const id = computed(() => useStore().propId)
 if (useStore().propId === -100) {
   emptyBookmark.value = true
   useWordsDB().wordsGet(useStore().propId)
@@ -38,6 +39,14 @@ useWordsDB().wordsGet(useStore().propId)
     loading.value = false
   })
 const router = useRouter()
+function pushLinkQuiz (id:number) {
+  router.push({
+    name: 'Quiz',
+    params: {
+      id: id
+    }
+  })
+}
 const words = computed(() => useListSearchRepo().words)
 async function bookmarkSelect (WordID:number) {
   const getWord = await db.words.where('WordID').equals(WordID).toArray()
@@ -227,7 +236,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </div>
       <div
         v-else
-        class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+        class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg mb-16"
       >
         <transition-group
           name="list"
@@ -346,12 +355,12 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
     </div>
     <div
       v-else
-      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg mb-16"
     >
       <div
         v-for="item in resultW"
         :key="item.WordID"
-        class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
+        class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg"
       >
         <div class="word-box__ability-bookmark-lg">
           <div>
@@ -453,6 +462,26 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
         </div>
       </div>
     </div>
+  </div>
+  <div
+    v-if="resultW && resultW?.length < 4"
+    class="fixed grid items-center justify-items-center bottom-0 w-full"
+  >
+    <button class="bg-yellow-500 flex font-IRANSans text-xl rounded-t-2xl h-12 items-center px-4">
+      برای تمرین بیشتر از 4 لغت الزامیست
+    </button>
+  </div>
+  <div
+    v-else
+    class="fixed grid items-center justify-items-center bottom-0 w-full"
+  >
+    <button
+      class="bg-yellow-500 flex font-IRANSans text-xl rounded-t-2xl h-12 items-center px-4"
+      @click="pushLinkQuiz(id)"
+    >
+      <span class="mx-4">تمرین لغات</span>/
+      <span class="mx-4">{{ title }}</span>
+    </button>
   </div>
 </template>
 <style>
