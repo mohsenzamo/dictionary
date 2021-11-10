@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import Modal from '../components/Modal.vue'
-import Loader from '../components/Loader.vue'
 import { useRouter } from 'vue-router'
+import { usePWAStore } from '../datasource/repository/PWA'
 const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
@@ -17,6 +17,9 @@ function pushLink (link:string) {
     name: link
   })
 }
+const PWAStore = usePWAStore()
+const showValue = computed(() => PWAStore.showValue)
+PWAStore.beforeInstall()
 </script>
 <template>
   <transition name="modal">
@@ -90,7 +93,7 @@ function pushLink (link:string) {
       alt=""
       class="w-20 h-20 absolute left-16"
     >
-    <div class="pointer  absolute right-10 text-center grid justify-center items-center">
+    <div class="pointer  absolute right-20 text-center grid justify-center items-center">
       <p class="ghamoos font-IranNastaliq  text-4xl -mb-2">
         قاموس ٌ عربی ٌ
       </p>
@@ -148,6 +151,13 @@ function pushLink (link:string) {
         @click="modalGuideValue = true"
       >
         <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
+      </button>
+      <button
+        v-if="showValue"
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="PWAStore.showPromotion"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="download" /><p class="mx-3">نصب برنامه</p></span>
       </button>
     </div>
   </header>

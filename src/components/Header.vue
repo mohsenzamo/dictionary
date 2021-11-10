@@ -3,8 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '../store/index'
 import Modal from '../components/Modal.vue'
-import { usePWAStore } from '../PWA'
-import Typed from 'typed.js'
+import { usePWAStore } from '../datasource/repository/PWA'
 const router = useRouter()
 const store = useStore()
 const modalMenuValue = ref(false)
@@ -24,12 +23,6 @@ usePWAStore().beforeInstall()
 function showPromotion () {
   usePWAStore().showPromotion()
 }
-// const dic = ref<HTMLParagraphElement>()
-// const options = {
-//   strings: ['<i>First</i> sentence.', '&amp; a second sentence.'],
-//   typeSpeed: 40
-// }
-// const typed = new Typed(dic.value, options)
 </script>
 <template>
   <transition name="modal">

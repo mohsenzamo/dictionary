@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue(), VitePWA({
     strategies: 'injectManifest',
     filename: 'workBox.ts',
-    srcDir: 'src',
+    srcDir: 'src/datasource/repository',
     includeAssets: [
       '**/*.js'
     ],

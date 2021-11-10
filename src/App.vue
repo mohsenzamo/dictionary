@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useCreateRepo } from './datasource/repository/repo'
 import Modal from './components/Modal.vue'
-import { useServiceWorker } from './registerServiceWorker'
+import { useServiceWorker } from './datasource/repository/registerServiceWorker'
 const serviceWorker = useServiceWorker()
 const errorShow = computed(() => useCreateRepo().errorValue)
 const errorLoading = computed(() => useCreateRepo().errorLoading)
