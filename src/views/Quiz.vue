@@ -7,19 +7,11 @@ import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
-const screenWidth = ref(window.screen.width)
-console.log(screenWidth.value)
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
   laptopScreen.value = !laptopScreen.value
 })
-watch(laptopScreen, (laptopScreen) => {
-  console.log(laptopScreen)
-})
-// -------------------------------------------------------------
-
-// -------------------------------------------------------------
 const modalQuizValue = ref(false)
 const router = useRouter()
 function goBack () {
