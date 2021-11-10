@@ -1,15 +1,21 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
 import { Words } from '../datasource/database/dexieDB'
 import { useWordsDB } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
-// -------------------------------------------------------------
-
-// -------------------------------------------------------------
+import HeaderLarge from '../components/HeaderLarge.vue'
+import { usePWAStore } from '../datasource/repository/PWA'
+const pathName = ref(window.location.pathname)
+const mediaMatcher = matchMedia('(max-width: 1024px)')
+const laptopScreen = ref(mediaMatcher.matches)
+mediaMatcher.addListener(() => {
+  laptopScreen.value = !laptopScreen.value
+})
 const modalQuizValue = ref(false)
+const modalQuizValueLarge = ref(false)
 const router = useRouter()
 function goBack () {
   router.back()
@@ -18,7 +24,7 @@ let intervalId:any = null
 const timer = ref(0)
 const loading = ref(true)
 const settimer = function () {
-  if (modalQuizValue.value === false) {
+  if (modalQuizValue.value === false || modalQuizValueLarge.value === false) {
     timer.value++
   } else {
     clearInterval(intervalId)
@@ -34,9 +40,20 @@ function modalOpen () {
   second.value = (timer.value % 60)
   modalQuizValue.value = true
 }
+const nameRoute = ref('')
+function modalOpenLarge (name:string) {
+  minute.value = (Math.floor(timer.value / 60))
+  second.value = (timer.value % 60)
+  modalQuizValueLarge.value = true
+  nameRoute.value = name
+}
 function modalClose () {
   intervalId = setInterval(settimer, 1000)
   modalQuizValue.value = false
+}
+function modalCloseLarge () {
+  intervalId = setInterval(settimer, 1000)
+  modalQuizValueLarge.value = false
 }
 const props = defineProps<{
   id: string
@@ -242,9 +259,41 @@ function checkAnswer (num:number) {
     setTimeout(randomQuiz, 2000)
   }
 }
+function pushLink () {
+  router.push({
+    name: nameRoute.value
+  })
+}
+const modalGuideValue = ref(false)
+const PWAStore = usePWAStore()
+const showValue = computed(() => PWAStore.showValue)
+PWAStore.beforeInstall()
 </script>
 <template>
-  <backHeader>
+  <transition name="modal">
+    <modal
+      v-if="modalGuideValue"
+      @close="modalGuideValue = false"
+    >
+      <div class="grid font-IRANSans h-96 px-16">
+        <p class="text-center font-extrabold text-4xl text-yellow-600">
+          راهنما
+        </p>
+        <span class="w-full bg-black h-0.5" />
+        <div class="text-xl">
+          <p><span class="text-yellow-600">1.</span> اشتراک بین لهجه عراقی و خلیجی خیلی زیاد است و تنها در موارد کمی تفاوت وجود دارد. برخی از این تفاوت‌ها را در بخش «اصطلاحات خلیجی» می‌توانید بررسی کنید.</p>
+          <p><span class="text-yellow-600">2.</span> دسته‌بندی‌های موجود به صورت مشترک بین لهجه عراقی و خلیجی می‌باشد.</p>
+          <p><span class="text-yellow-600">3.</span> لغات نرم افزار به صورت آنلاین و مداوم بروزرسانی می‌شود.</p>
+          <p><span class="text-yellow-600">4.</span>در صورتی که لغت مد نظر خود را جستجو کرده و پیدا نکردید، از بخش «درخواست ترجمه» می‌توانید آن را به اطّلاع ما برسانید تا نهایتاً پس از چند روز به دیکشنری اضافه شود.</p>
+          <p>کلیه حقوق این نرم افزار متعلق به گروه آموزشی نبراس است و هر گونه کپی برداری از آن بدون ذکر منبع شرعاً و قانوناً ممنوع است.</p>
+          <p class="text-center font-bold">
+            با تشکر از همراهی شما.
+          </p>
+        </div>
+      </div>
+    </modal>
+  </transition>
+  <backHeader v-if="laptopScreen">
     <template #arrow>
       <span
         class="text-xl cursor-pointer"
@@ -262,12 +311,53 @@ function checkAnswer (num:number) {
       >
     </template>
   </backHeader>
+  <HeaderLarge v-else>
+    <template #menu>
+      <button
+        v-if="pathName !== '/'"
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="modalOpenLarge('Home')"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="home" /><p class="mx-3">صفحه نخست</p></span>
+      </button>
+      <button
+        v-if="pathName !== '/login'"
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="modalOpenLarge('Login')"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="user-tie" /><p class="mx-3">حساب کاربری</p></span>
+      </button>
+      <button class="btn-6 mx-4 w-36 nav-btn">
+        <span class="nav-span flex items-center justify-center"><fa icon="wallet" /><p class="mx-3">نسخه طلایی</p></span>
+      </button>
+      <button
+        v-if="pathName !== '/about-us'"
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="modalOpenLarge('AboutUs')"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="address-card" /><p class="mx-3">درباره ما</p></span>
+      </button>
+      <button
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="modalGuideValue = true"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
+      </button>
+      <button
+        v-if="showValue"
+        class="btn-6 mx-4 w-36 nav-btn"
+        @click="PWAStore.showPromotion"
+      >
+        <span class="nav-span flex items-center justify-center"><fa icon="download" /><p class="mx-3">نصب برنامه</p></span>
+      </button>
+    </template>
+  </HeaderLarge>
   <transition name="modal">
     <modal
-      v-if="modalQuizValue"
-      @close="modalClose"
+      v-if="modalQuizValueLarge"
+      @close="modalCloseLarge"
     >
-      <div class="grid font-IRANSans text-sm gap-4">
+      <div class="grid font-IRANSans text-sm gap-4 lg:text-lg lg:px-10">
         <div>
           <p class="flex justify-between">
             <span>تعداد کل سوالات</span>
@@ -300,11 +390,53 @@ function checkAnswer (num:number) {
           </p>
         </div>
         <button
-          class="
-        bg-yellow-500
-        rounded-md
-        h-8
-      "
+          class="bg-yellow-500 rounded-md h-8"
+          @click="pushLink"
+        >
+          <p>خروج از تمرین لغات</p>
+        </button>
+      </div>
+    </modal>
+  </transition>
+  <transition name="modal">
+    <modal
+      v-if="modalQuizValue"
+      @close="modalClose"
+    >
+      <div class="grid font-IRANSans text-sm gap-4 lg:text-lg lg:px-10">
+        <div>
+          <p class="flex justify-between">
+            <span>تعداد کل سوالات</span>
+            <span>{{ wrongAnswer+correctAnswer }}</span>
+          </p>
+          <p class="flex justify-between text-green-600">
+            <span>تعداد پاسخ درست</span>
+            <span>{{ correctAnswer }}</span>
+          </p>
+          <p class="flex justify-between text-red-600">
+            <span>تعداد پاسخ غلط</span>
+            <span>{{ wrongAnswer }}</span>
+          </p>
+          <p class="flex justify-between">
+            <span>زمان</span>
+            <span>
+              <span v-if="minute > 0">
+                {{ minute }}
+              </span>
+              <span v-if="minute > 0">
+                دقیقه
+              </span>
+              <span v-if="second > 0">
+                {{ second }}
+              </span>
+              <span v-if="second > 0">
+                ثانیه
+              </span>
+            </span>
+          </p>
+        </div>
+        <button
+          class="bg-yellow-500 rounded-md h-8"
           @click="goBack"
         >
           <p>خروج از تمرین لغات</p>
@@ -315,61 +447,61 @@ function checkAnswer (num:number) {
   <Loader v-if="loading" />
   <div
     v-else
-    class="pt-16 w-screen h-auto grid"
+    class="pt-16 w-full h-auto grid lg:pt-5"
   >
     <div
-      class="quiz-correction-box"
+      class="w-full h-auto flex pr-5 text-white font-IRANSans mt-2 cursor-default lg:text-xl lg:justify-center"
     >
-      <p class="quiz-correction-text__correct">
+      <p class="bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl lg:w-20">
         <fa
           icon="check-circle"
-          class="ml-3"
+          class="ml-3 lg:ml-5"
         />
         <span>{{ correctAnswer }}</span>
       </p>
-      <p class="quiz-correction-text__false">
+      <p class="bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2 lg:w-20">
         <fa
           icon="times-circle"
-          class="ml-3"
+          class="ml-3 lg:ml-5"
         />
         <span>{{ wrongAnswer }}</span>
       </p>
     </div>
     <div
-      class="quiz-question-box"
+      class="w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default lg:w-5/12"
       :class="{'animate-opacity':openAnime}"
     >
-      <p class="self-end font-IRANSans text-sm">
+      <p class="self-end font-IRANSans text-sm lg:text-base">
         معنی عبارت زیر چیست؟
       </p>
-      <p class="self-start font-IRANSans font-bold text-xl">
+      <p class="self-start font-IRANSans font-bold text-xl lg:text-2xl">
         {{ question }}
       </p>
     </div>
-    <div class="quiz-option-box">
+    <div class="h-full w-full grid grid-cols-2 grid-rows-2 gap-3 p-4 lg:items-center lg:justify-items-center lg:px-72">
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer1,'bg-red-500':bgRedAnswer1,'animate-opacity':openAnime}"
         @click="checkAnswer(1)"
       >
         {{ answer1 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer2,'bg-red-500':bgRedAnswer2,'animate-opacity':openAnime}"
         @click="checkAnswer(2)"
       >
         {{ answer2 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer3,'bg-red-500':bgRedAnswer3,'animate-opacity':openAnime}"
         @click="checkAnswer(3)"
       >
         {{ answer3 }}
       </p>
       <p
-        class="quiz-option bg-white"
+        class="w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center lg:w-9/12 lg:text-xl bg-white"
         :class="{'bg-green-500':bgGreenAnswer4,'bg-red-500':bgRedAnswer4,'animate-opacity':openAnime}"
         @click="checkAnswer(4)"
       >
@@ -378,23 +510,3 @@ function checkAnswer (num:number) {
     </div>
   </div>
 </template>
-<style>
-.quiz-correction-text__false{
-  @apply bg-red-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl mr-2
-}
-.quiz-correction-text__correct{
-  @apply bg-green-600 rounded-2xl w-14 flex items-center pr-1 shadow-2xl
-}
-.quiz-correction-box{
-  @apply w-full h-auto float-right flex pr-5 text-white font-IRANSans mt-2 cursor-default
-}
-.quiz-question-box{
-  @apply w-11/12 h-44 bg-white grid grid-rows-2 justify-items-center justify-self-center shadow-lg mt-3 gap-y-5 rounded-2xl cursor-default
-}
-.quiz-option{
-  @apply w-full rounded-2xl h-32 grid justify-items-center items-center font-IRANSans text-base shadow-2xl active:scale-x-110 cursor-pointer text-center
-}
-.quiz-option-box{
-  @apply h-full w-screen grid grid-cols-2 grid-rows-2 gap-3 p-4
-}
-</style>
