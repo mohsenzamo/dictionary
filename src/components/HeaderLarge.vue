@@ -19,7 +19,7 @@ const categoryRepo = useCreateRepo()
 const router = useRouter()
 const modalSearchValue = ref(false)
 const modalGuideValue = ref(false)
-const searchQuery = ref('')
+const searchQueryLg = ref('')
 const pathName = ref(window.location.pathname)
 const props = defineProps<{
   id: string
@@ -36,7 +36,7 @@ useWordsDB().wordsGet(+props.id)
   })
 function modalSearchOpen () {
   modalSearchValue.value = true
-  searchQuery.value = ''
+  searchQueryLg.value = ''
 }
 function pushLink (link:string) {
   router.push({
@@ -44,32 +44,28 @@ function pushLink (link:string) {
   })
 }
 
-const words = computed(() => useHomeSearchRepo().words)
-const searchFind = computed(() => useHomeSearchRepo().searchFind)
-const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
-console.log(searchLoading.value)
-const listLoading = computed(() => useHomeSearchRepo().listLoading)
-const observeValue = computed(() => useHomeSearchRepo().observeValue)
-const options = {
+const wordsLg = computed(() => useHomeSearchRepo().words)
+const searchFindLg = computed(() => useHomeSearchRepo().searchFind)
+const searchLoadingLg = computed(() => useHomeSearchRepo().searchLoading)
+console.log(searchLoadingLg.value)
+const listLoadingLg = computed(() => useHomeSearchRepo().listLoading)
+const observeValueLg = computed(() => useHomeSearchRepo().observeValue)
+const optionsLg = {
   root: null,
   rootMargin: '0px',
   threshold: 1.0
 }
-watch(searchLoading, (searchLoading) => {
-  console.log(searchLoading)
-  console.log(searchFind.value)
-})
-const emptyDiv = ref<HTMLDivElement>()
-const observer = new IntersectionObserver(async e => {
+const emptyDivLg = ref<HTMLDivElement>()
+const observerLg = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
     useHomeSearchRepo().pages()
   }
-}, options)
-watch(searchQuery, (searchQuery) => {
-  useHomeSearchRepo().search(searchQuery)
+}, optionsLg)
+watch(searchQueryLg, (searchQueryLg) => {
+  useHomeSearchRepo().search(searchQueryLg)
 })
-watch(observeValue, (observeValue) => {
-  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+watch(observeValueLg, (observeValue) => {
+  observeValueLg.value ? observerLg.observe(emptyDivLg.value!) : observerLg.unobserve(emptyDivLg.value!)
 })
 const PWAStore = usePWAStore()
 const showValue = computed(() => PWAStore.showValue)
@@ -86,7 +82,7 @@ PWAStore.beforeInstall()
       >
         <div class="h-11 flex justify-center px-2">
           <input
-            v-model="searchQuery"
+            v-model="searchQueryLg"
             type="text"
             placeholder="جستجو ...."
             class="h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-96"
@@ -151,7 +147,7 @@ PWAStore.beforeInstall()
           </div>
         </div>
         <div class="bg-gray-200 h-5/6 w-full grid items-center mt-4 overflow-y-scroll rounded-md search-modal__scroll">
-          <div v-if="searchQuery.length === 0">
+          <div v-if="searchQueryLg.length === 0">
             <p class="text-center text-2xl">
               برای نمایش نتایج حروف مورد نظر را وارد کنید
             </p>
@@ -160,71 +156,67 @@ PWAStore.beforeInstall()
             v-else
             class="grid items-center justify-items-center"
           >
-            <searchLoader v-if="searchLoading" />
-            <template v-if="searchFind">
+            <searchLoader v-if="searchLoadingLg" />
+
+            <template v-if="searchFindLg">
               <div
-                v-for="item in words"
+                v-for="item in wordsLg"
                 :key="item.WordID"
                 class=" bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg mb-2"
               >
                 <div class="word-box__ability-bookmark-lg">
-                  <transition
-                    name="bookmarkButton"
-                    mode="out-in"
-                  >
-                    <div>
-                      <button
-                        v-if="item.bookmark===0"
-                        class="w-8 h-8"
-                        type="submit"
+                  <div>
+                    <button
+                      v-if="item.bookmark===0"
+                      class="w-8 h-8"
+                      type="submit"
+                    >
+                      <svg
+                        id="Layer_1"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px"
+                        y="0px"
+                        viewBox="0 0 512 512"
+                        style="enable-background:new 0 0 512 512;"
+                        xml:space="preserve"
                       >
-                        <svg
-                          id="Layer_1"
-                          version="1.1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          xmlns:xlink="http://www.w3.org/1999/xlink"
-                          x="0px"
-                          y="0px"
-                          viewBox="0 0 512 512"
-                          style="enable-background:new 0 0 512 512;"
-                          xml:space="preserve"
-                        >
+                        <g>
                           <g>
-                            <g>
-                              <path
-                                d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                              />
-                            </g>
+                            <path
+                              d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                            />
                           </g>
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                          <g />
-                        </svg>
-                      </button>
-                      <button
-                        v-if="item.bookmark===1"
-                        type="submit"
-                        class=""
-                      >
-                        <fa
-                          icon="bookmark"
-                          class="text-4xl text-green-500"
-                        />
-                      </button>
-                    </div>
-                  </transition>
+                        </g>
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                        <g />
+                      </svg>
+                    </button>
+                    <button
+                      v-if="item.bookmark===1"
+                      type="submit"
+                      class=""
+                    >
+                      <fa
+                        icon="bookmark"
+                        class="text-4xl text-green-500"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div class="word-box__main-content-lg">
                   <div class="flex justify-center word-box__main-lg">
@@ -256,11 +248,11 @@ PWAStore.beforeInstall()
                   </div>
                 </div>
                 <div
-                  ref="emptyDiv"
+                  ref="emptyDivLg"
                   class="grid w-screen items-center justify-items-center"
                 >
                   <span
-                    v-if="listLoading"
+                    v-if="listLoadingLg"
                     class="list-loading"
                   />
                 </div>
@@ -387,6 +379,16 @@ PWAStore.beforeInstall()
   </header>
 </template>
 <style>
+.bookmarkButton-enter-active,
+.bookmarkButton-leave-active {
+  transition: all 0.5s ease;
+}
+
+.bookmarkButton-enter-from,
+.bookmarkButton-leave-to {
+  opacity: 0;
+  transform: translateY(-50%);
+}
 .search-sub__span {
   position: absolute;
   top: 0;

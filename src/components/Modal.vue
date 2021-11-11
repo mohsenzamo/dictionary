@@ -1,4 +1,11 @@
-
+<script lang="ts" setup>import { computed } from 'vue'
+import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
+const wordsLg = computed(() => useHomeSearchRepo().words)
+const searchFindLg = computed(() => useHomeSearchRepo().searchFind)
+const searchLoadingLg = computed(() => useHomeSearchRepo().searchLoading)
+console.log(searchLoadingLg.value)
+const listLoadingLg = computed(() => useHomeSearchRepo().listLoading)
+</script>
 <template>
   <div class="fixed inset-0 flex items-center justify-center z-50">
     <div
