@@ -9,15 +9,13 @@ import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
 import { useSearchDB } from '../datasource/database/searchDB'
 import Modal from '../components/Modal.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
-const props = defineProps<{
-  id: string
-}>()
-
+import { useStore } from '../store'
 const emptyBookmark = ref(false)
-
-if (+props.id === -100) {
+const title = computed(() => useStore().propTitle)
+const id = computed(() => useStore().propId)
+if (useStore().propId === -100) {
   emptyBookmark.value = true
-  useWordsDB().wordsGet(+props.id)
+  useWordsDB().wordsGet(useStore().propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -25,7 +23,7 @@ if (+props.id === -100) {
     })
 } else {
   emptyBookmark.value = false
-  useWordsDB().wordsGet(+props.id)
+  useWordsDB().wordsGet(useStore().propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -34,13 +32,21 @@ if (+props.id === -100) {
 }
 const loading = ref(true)
 const resultW = ref<Words[] | null>(null)
-useWordsDB().wordsGet(+props.id)
+useWordsDB().wordsGet(useStore().propId)
   .then(x => {
     resultW.value = x
   }).finally(() => {
     loading.value = false
   })
 const router = useRouter()
+function pushLinkQuiz (id:number) {
+  router.push({
+    name: 'Quiz',
+    params: {
+      id: id
+    }
+  })
+}
 const words = computed(() => useListSearchRepo().words)
 async function bookmarkSelect (WordID:number) {
   const getWord = await db.words.where('WordID').equals(WordID).toArray()
@@ -112,20 +118,6 @@ async function bookmarkSelect2 (WordID:number) {
   await db.words.put(getWord[0])
   await useSearchDB().createSearchArray2(WordID)
 }
-
-// (function () {
-//   const animation = document.querySelector('.equalizer')
-
-//   function onAnimation (evt) {
-//     evt.stopPropagation()
-//   }
-
-//   animation.addEventListener('webkitAnimationStart', onAnimation, false)
-//   animation.addEventListener('webkitAnimationIteration', onAnimation, false)
-//   animation.addEventListener('animationStart', onAnimation, false)
-//   animation.addEventListener('animationIteration', onAnimation, false)
-// }())
-
 const audioSrc = ref('')
 const playingId = ref(-1)
 const modalErrorValue = ref(false)
@@ -149,7 +141,6 @@ function audioError () {
     @error="audioError"
     @ended="playingId = -1"
   />
-  <HeaderLarge />
   <loader v-if="loading" />
   <div v-else>
     <div v-if="emptyBookmark">
@@ -245,7 +236,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
       </div>
       <div
         v-else
-        class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+        class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg mb-16"
       >
         <transition-group
           name="list"
@@ -362,80 +353,74 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
         </transition-group>
       </div>
     </div>
-
     <div
       v-else
-      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg"
+      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg mb-16"
     >
       <div
         v-for="item in resultW"
         :key="item.WordID"
-        class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
+        class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg"
       >
         <div class="word-box__ability-bookmark-lg">
-          <transition
-            name="bookmarkButton"
-            mode="out-in"
-          >
-            <div>
-              <transition
-                name="bookmarkButton"
-                mode="out-in"
+          <div>
+            <transition
+              name="bookmarkButton"
+              mode="out-in"
+            >
+              <button
+                v-if="item.bookmark===0"
+                class="w-8 h-8"
+                type="submit"
+                @click="bookmarkSelect(item.WordID)"
               >
-                <button
-                  v-if="item.bookmark===0"
-                  class="w-8 h-8"
-                  type="submit"
-                  @click="bookmarkSelect(item.WordID)"
+                <svg
+                  id="Layer_1"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 512 512"
+                  style="enable-background:new 0 0 512 512;"
+                  xml:space="preserve"
                 >
-                  <svg
-                    id="Layer_1"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    x="0px"
-                    y="0px"
-                    viewBox="0 0 512 512"
-                    style="enable-background:new 0 0 512 512;"
-                    xml:space="preserve"
-                  >
+                  <g>
                     <g>
-                      <g>
-                        <path
-                          d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
-                        />
-                      </g>
+                      <path
+                        d="M70.715,0v512L256,326.715L441.285,512V0H70.715z M411.239,439.462L256,284.224L100.761,439.462V30.046h310.477V439.462z"
+                      />
                     </g>
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                    <g />
-                  </svg>
-                </button>
-                <button
-                  v-else
-                  type="submit"
-                  @click="bookmarkSelect(item.WordID)"
-                >
-                  <fa
-                    icon="bookmark"
-                    class="text-4xl text-green-500"
-                  />
-                </button>
-              </transition>
-            </div>
-          </transition>
+                  </g>
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                  <g />
+                </svg>
+              </button>
+              <button
+                v-else
+                type="submit"
+                @click="bookmarkSelect(item.WordID)"
+              >
+                <fa
+                  icon="bookmark"
+                  class="text-4xl text-green-500"
+                />
+              </button>
+            </transition>
+          </div>
         </div>
         <div class="word-box__main-content-lg">
           <div class="flex justify-center word-box__main-lg">
@@ -477,6 +462,26 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
         </div>
       </div>
     </div>
+  </div>
+  <div
+    v-if="resultW && resultW?.length < 4"
+    class="fixed grid items-center justify-items-center bottom-0 w-full"
+  >
+    <button class="bg-yellow-500 flex font-IRANSans text-xl rounded-t-2xl h-12 items-center px-4">
+      برای تمرین بیشتر از 4 لغت الزامیست
+    </button>
+  </div>
+  <div
+    v-else
+    class="fixed grid items-center justify-items-center bottom-0 w-full"
+  >
+    <button
+      class="bg-yellow-500 flex font-IRANSans text-xl rounded-t-2xl h-12 items-center px-4"
+      @click="pushLinkQuiz(id)"
+    >
+      <span class="mx-4">تمرین لغات</span>/
+      <span class="mx-4">{{ title }}</span>
+    </button>
   </div>
 </template>
 <style>
@@ -524,303 +529,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
 }
 
 /* equalizer */
-.equalizer {
-  position: relative;
-  left: 5px;
-  display: block;
-  width: 6px;
-  height: 10px;
-}
 
-.equalizer::before,
-.equalizer::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  height: 20px;
-  width: 6px;
-  top: 0;
-  background-color: black;
-}
-.equalizer::after {
-  left: 10px;
-}
-.equalizer-play {
-  position: relative;
-  left: 5px;
-  display: block;
-  background-color: blue;
-  width: 6px;
-  height: 10px;
-}
-
-.equalizer-play,
-.equalizer-play::before,
-.equalizer-play::after {
-  animation: equalize 1.25s steps(25, end) 0s infinite;
-
-}
-
-.equalizer-play::before,
-.equalizer-play::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  height: 20px;
-  width: 6px;
-  top: 0;
-  background-color: blue;
-}
-
-.equalizer-play::before {
-  animation-name: equalize2;
-}
-
-.equalizer-play::after {
-  left: 10px;
-  animation-name: equalize3;
-}
-
-@keyframes equalize {
-  0% {
-    height: 8px;
-  }
-  4% {
-    height: 4px;
-  }
-  8% {
-    height: 8px;
-  }
-  12% {
-    height: 9px;
-  }
-  16% {
-    height: 10px;
-  }
-  20% {
-    height: 11px;
-  }
-  24% {
-    height:10px;
-  }
-  28% {
-    height: 9px;
-  }
-  32% {
-    height: 9px;
-  }
-  36% {
-    height: 8px;
-  }
-  40% {
-    height: 8.5px;
-  }
-  44% {
-    height: 8.5px;
-  }
-  48% {
-    height: 9px;
-  }
-  52% {
-    height: 10px;
-  }
-  56% {
-    height: 11px;
-  }
-  60% {
-    height: 10px;
-  }
-  64% {
-    height: 10px;
-  }
-  68% {
-    height: 9px;
-  }
-  72% {
-    height: 8px;
-  }
-  76% {
-    height: 9px;
-  }
-  80% {
-    height: 11px;
-  }
-  84% {
-    height: 11px;
-  }
-  88% {
-    height: 12px;
-  }
-  92% {
-    height: 10px;
-  }
-  96% {
-    height: 8px;
-  }
-  100% {
-    height: 4px;
-  }
-}
-@keyframes equalize2 {
-  0% {
-    height:12px;
-  }
-  4% {
-    height: 13px;
-  }
-  8% {
-    height: 11px;
-  }
-  12% {
-    height: 12px;
-  }
-  16% {
-    height: 10px;
-  }
-  20% {
-    height: 10px;
-  }
-  24% {
-    height: 10px;
-  }
-  28% {
-    height: 11px;
-  }
-  32% {
-    height: 11px;
-  }
-  36% {
-    height: 13px;
-  }
-  40% {
-    height: 13px;
-  }
-  44% {
-    height: 13px;
-  }
-  48% {
-    height: 12px;
-  }
-  52% {
-    height: 9px;
-  }
-  56% {
-    height: 7px;
-  }
-  60% {
-    height: 6px;
-  }
-  64% {
-    height: 9px;
-  }
-  68% {
-    height: 10px;
-  }
-  72% {
-    height: 13px;
-  }
-  76% {
-    height: 11px;
-  }
-  80% {
-    height: 12px;
-  }
-  84% {
-    height: 10px;
-  }
-  88% {
-    height: 10px;
-  }
-  92% {
-    height: 9px;
-  }
-  96% {
-    height: 11px;
-  }
-  100% {
-    height: 12px;
-  }
-}
- @keyframes equalize3 {
-  0% {
-    height: 9px;
-  }
-  4% {
-    height: 7px;
-  }
-  8% {
-    height: 10px;
-  }
-  12% {
-    height: 11px;
-  }
-  16% {
-    height: 13px;
-  }
-  20% {
-    height: 15px;
-  }
-  24% {
-    height: 14px;
-  }
-  28% {
-    height: 13px;
-  }
-  32% {
-    height: 12px;
-  }
-  36% {
-    height: 10px;
-  }
-  40% {
-    height: 7px;
-  }
-  44% {
-    height: 5px;
-  }
-  48% {
-    height: 8px;
-  }
-  52% {
-    height: 10px;
-  }
-  56% {
-    height: 12px;
-  }
-  60% {
-    height: 13px;
-  }
-  64% {
-    height: 13.5px;
-  }
-  68% {
-    height: 13.5px;
-  }
-  72% {
-    height: 13.5px;
-  }
-  76% {
-    height: 11px;
-  }
-  80% {
-    height: 12px;
-  }
-  84% {
-    height: 13.5px;
-  }
-  88% {
-    height: 15px;
-  }
-  92% {
-    height: 14px;
-  }
-  96% {
-    height: 12px;
-  }
-  100% {
-    height: 10px;
-  }
-}
 @keyframes blink-animation  {
         to {
           visibility: hidden;

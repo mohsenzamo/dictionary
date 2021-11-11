@@ -2,8 +2,8 @@ import { defineStore } from 'pinia'
 export const useStore = defineStore('main', {
   state () {
     return {
-      modalValueClose: 0,
-      modalValueOpen: 1
+      propId: -10 as number,
+      propTitle: '' as string
     }
   }
 })
