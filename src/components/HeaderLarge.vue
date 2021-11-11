@@ -136,22 +136,6 @@ watch(searchSub, () => {
   />
   <transition name="modal">
     <modal
-      v-if="modalErrorValue"
-      @close="modalErrorValue = false"
-    >
-      <div class="grid items-center justify-items-center">
-        <p class="font-IRANSans w-2/3 text-center">
-          لطفا اتصال به اینترنت رو چک کنین!
-        </p>
-        <fa
-          icon="wifi"
-          class="animate-pulse text-xl mt-3"
-        />
-      </div>
-    </modal>
-  </transition>
-  <transition name="modal">
-    <modal
       v-if="modalSearchValue"
       @close="modalSearchValue = false"
     >
@@ -351,14 +335,14 @@ watch(searchSub, () => {
                 </div>
               </div>
               <!-- <div
-                id="emt"
-                ref="emptyDiv1"
-                class="grid w-full items-center justify-items-center my-4"
-              >
-                <span
-                  class="list-loading"
-                />
-              </div> -->
+                  id="emt"
+                  ref="emptyDiv1"
+                  class="grid w-full items-center justify-items-center my-4"
+                >
+                  <span
+                    class="list-loading"
+                  />
+                </div> -->
             </div>
             <div
               v-else
@@ -377,6 +361,20 @@ watch(searchSub, () => {
           </div>
         </div>
       </div>
+      <modal
+        v-if="modalErrorValue"
+        @close="modalErrorValue = false"
+      >
+        <div class="grid items-center justify-items-center">
+          <p class="font-IRANSans w-2/3 text-center">
+            لطفا اتصال به اینترنت رو چک کنین!
+          </p>
+          <fa
+            icon="wifi"
+            class="animate-pulse text-xl mt-3"
+          />
+        </div>
+      </modal>
     </modal>
   </transition>
   <transition name="modal">

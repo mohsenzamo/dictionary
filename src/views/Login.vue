@@ -24,7 +24,7 @@ const formValue = ref(false)
     >
       <div
         v-if="formValue"
-        class="bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl lg:w-96 lg:h-4/6 lg:mt-28"
+        class="bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl lg:w-96 lg:h-4/6 lg:mt-20"
       >
         <form class="w-full">
           <div class="relative mb-11">

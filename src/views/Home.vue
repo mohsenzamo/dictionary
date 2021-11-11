@@ -13,7 +13,6 @@ import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import HomeLarge from './HomeLarge.vue'
 import footerLarge from '../components/footerLarge.vue'
-import FooterLarge from '../components/footerLarge.vue'
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
@@ -418,7 +417,6 @@ function audioError () {
       </div>
     </div>
     <HomeLarge v-else />
-    <FooterLarge v-if="!laptopScreen" />
   </div>
 </template>
 <style>

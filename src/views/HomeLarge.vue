@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useCreateRepo } from '../datasource/repository/repo'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
+import footerLarge from '../components/footerLarge.vue'
 const categoryList = computed(() => useCreateRepo().categroyTable)
 const slideCount = computed(() => categoryList.value!.length / 6)
 const slide = ref(1)
@@ -282,12 +283,16 @@ function pushLinkQuiz (id:string) {
     >
       <fa icon="chevron-left" />
     </button>
-    <div class="flex items-center justify-center pb-6 -mt-20">
+    <div
+      class="flex items-center justify-center pb-6 -mt-20"
+      :class="{'mt-0' : slideCount===slide}"
+    >
       <div
         v-for="n in slideCount"
         :key="n"
         class="border-gray-500 border-2 w-4 h-4 rounded-full mx-4 cursor-pointer"
         :class="{'bg-yellow-500':slide===n}"
+
         @click="slide = n"
       />
     </div>
@@ -307,4 +312,5 @@ function pushLinkQuiz (id:string) {
       </p>
     </div>
   </div>
+  <footerLarge />
 </template>

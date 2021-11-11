@@ -7,7 +7,7 @@ console.log(searchLoadingLg.value)
 const listLoadingLg = computed(() => useHomeSearchRepo().listLoading)
 </script>
 <template>
-  <div class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="fixed inset-0 flex items-center justify-center z-50 lg:z-40">
     <div
       class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-70"
       @click="$emit('close')"
