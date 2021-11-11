@@ -447,7 +447,7 @@ PWAStore.beforeInstall()
   <Loader v-if="loading" />
   <div
     v-else
-    class="pt-16 w-full h-auto grid lg:pt-5"
+    class="pt-16 w-full h-auto grid lg:pt-5 lg:mt-32"
   >
     <div
       class="w-full h-auto flex pr-5 text-white font-IRANSans mt-2 cursor-default lg:text-xl lg:justify-center"

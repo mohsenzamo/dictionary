@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import backHeader from '../components/BackHeader.vue'
+import footerLarge from '../components/footerLarge.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
@@ -14,14 +15,16 @@ const formValue = ref(false)
     صفحه ورود
   </backHeader>
   <HeaderLarge v-else />
-  <div class="h-screen grid items-center justify-center">
+  <div class="hidden bg-logo w-screen h-screen bg-contain bg-no-repeat bg-opacity-75 bg-top blur-sm opacity-70 lg:w-full lg:block" />
+
+  <div class="h-screen grid items-center justify-center lg:absolute lg:inset-0 ">
     <transition
       name="scaleRight"
       appear
     >
       <div
         v-if="formValue"
-        class="bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl lg:w-96 lg:h-4/6"
+        class="bg-white pt-9 pr-9 pl-9 pb-5 text-center w-80 rounded-2xl shadow-2xl lg:w-96 lg:h-4/6 lg:mt-28"
       >
         <form class="w-full">
           <div class="relative mb-11">
@@ -111,6 +114,10 @@ const formValue = ref(false)
       </div>
     </transition>
   </div>
+  <footerLarge
+    v-if="!laptopScreen"
+    class="absolute bottom-0"
+  />
 </template>
 <style>
 input:focus + label {

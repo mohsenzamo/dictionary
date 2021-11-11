@@ -65,7 +65,7 @@ function pushLinkQuiz (id:string) {
   </transition>
   <div>
     <button
-      class="absolute right-40 bottom-48 text-5xl z-10"
+      class="absolute right-72 bottom-48 text-5xl z-10"
       @click="change(0)"
     >
       <fa icon="chevron-right" />
@@ -73,6 +73,7 @@ function pushLinkQuiz (id:string) {
     <div
       v-for="count in slideCount"
       :key="count"
+      class="mt-20"
     >
       <div
         v-if="slide === count"
@@ -276,12 +277,12 @@ function pushLinkQuiz (id:string) {
       </div>
     </div>
     <button
-      class="absolute left-40 bottom-48 text-5xl z-10"
+      class="absolute left-72 bottom-48 text-5xl z-10"
       @click="change(1)"
     >
       <fa icon="chevron-left" />
     </button>
-    <div class="flex items-center justify-center pb-4">
+    <div class="flex items-center justify-center pb-6 -mt-20">
       <div
         v-for="n in slideCount"
         :key="n"
@@ -290,16 +291,15 @@ function pushLinkQuiz (id:string) {
         @click="slide = n"
       />
     </div>
-    <!---->
     <div
-      class="talkbubble-left fixed bottom-10 left-10 hover:left-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-leftTOright cursor-pointer"
+      class="talkbubble-left fixed bottom-20 left-10 hover:left-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-leftTOright cursor-pointer"
     >
       <p>
         آزمون مرحله ای
       </p>
     </div>
     <div
-      class="talkbubble-right fixed bottom-10 right-10 hover:right-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-rigthTOleft cursor-pointer"
+      class="talkbubble-right fixed bottom-20 right-10 hover:right-20 transition-all grid items-center justify-items-center font-IRANSans w-28 h-28 bg-yellow-500 animate-rigthTOleft cursor-pointer"
       @click="pushLinkQuiz('all')"
     >
       <p>

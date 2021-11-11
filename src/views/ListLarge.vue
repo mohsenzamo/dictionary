@@ -143,7 +143,10 @@ function audioError () {
   />
   <loader v-if="loading" />
   <div v-else>
-    <div v-if="emptyBookmark">
+    <div
+      v-if="emptyBookmark"
+      class="mt-32"
+    >
       <div
         v-if="resultW?.length===0"
         class="empty-bookmark-box-lg w-full h-screen font-IRANSans"
@@ -355,7 +358,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
     </div>
     <div
       v-else
-      class="font-IRANSans bg-gray-200 grid justify-items-center mt-5 list-box-lg mb-16"
+      class="font-IRANSans bg-gray-200 grid justify-items-center mt-32 list-box-lg mb-16"
     >
       <div
         v-for="item in resultW"
