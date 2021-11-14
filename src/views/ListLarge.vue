@@ -133,6 +133,22 @@ function audioError () {
 </script>
 
 <template>
+  <transition name="modal">
+    <modal
+      v-if="modalErrorValue"
+      @close="modalErrorValue = false"
+    >
+      <div class="grid items-center justify-items-center">
+        <p class="font-IRANSans w-2/3 text-center">
+          لطفا اتصال به اینترنت رو چک کنین!
+        </p>
+        <fa
+          icon="wifi"
+          class="animate-pulse text-xl mt-3"
+        />
+      </div>
+    </modal>
+  </transition>
   <audio
     v-if="playingId !== -1"
     :key="playingId"
