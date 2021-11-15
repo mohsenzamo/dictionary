@@ -13,7 +13,7 @@ export const useServiceWorker = defineStore('useServiceWorker', {
         window.location.reload()
       })
       if (process.env.NODE_ENV === 'production') {
-        register('/workBox.js', {
+        register('/serviceWorker.js', {
           updated (registration) {
             document.dispatchEvent(
               new CustomEvent('swUpdated', { detail: registration })
