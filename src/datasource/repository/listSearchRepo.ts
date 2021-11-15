@@ -1,84 +1,84 @@
 import { defineStore } from 'pinia'
-import db, { Search, Words } from '../database/dexieDB'
+import database, { searchType, wordType } from '../database/dexieDB'
 
-export const useListSearchRepo = defineStore('useListSearchRepo', {
+export const useListSearchStore = defineStore('useListSearchStore', {
   state () {
     return {
-      findList: null as null|Search[],
-      intersection: [] as Search[],
+      foundInSearchTable: null as null|searchType[],
+      intersection: [] as searchType[],
       page: 0 as number,
-      searchFind: true as boolean,
-      words: null as null|Words[],
+      isFound: true as boolean,
+      foundInWordsTable: null as null|wordType[],
       searchLoading: false as boolean,
-      listLoading: false as boolean,
-      observeValue: false as boolean
+      observeLoading: false as boolean,
+      isObserve: false as boolean
     }
   },
   actions: {
     check (prop:number) {
       if (prop === -100) {
-        for (let i = 0; i < this.findList!.length; i++) {
-          if (this.findList![i].bookmark === 1) {
-            this.intersection.push(this.findList![i])
+        for (let i = 0; i < this.foundInSearchTable!.length; i++) {
+          if (this.foundInSearchTable![i].bookmark === 1) {
+            this.intersection.push(this.foundInSearchTable![i])
           }
         }
       } else {
-        for (let i = 0; i < this.findList!.length; i++) {
-          if (this.findList![i].CategoryID === prop) {
-            this.intersection.push(this.findList![i])
+        for (let i = 0; i < this.foundInSearchTable!.length; i++) {
+          if (this.foundInSearchTable![i].CategoryID === prop) {
+            this.intersection.push(this.foundInSearchTable![i])
           }
         }
       }
     },
     async  search (searchQuery:any, prop:number) {
       if (searchQuery.length > 0) {
-        this.findList = null
+        this.foundInSearchTable = null
         this.intersection = []
         this.page = 0
-        this.searchFind = true
-        this.words = null
+        this.isFound = true
+        this.foundInWordsTable = null
         this.searchLoading = true
-        this.listLoading = false
-        this.findList = await db.search
+        this.observeLoading = false
+        this.foundInSearchTable = await database.search
           .where('Word')
           .startsWith(searchQuery)
           .toArray()
         this.check(prop)
         const ids = this.intersection.map(word => word.WordID)
-        this.words = await db.words
+        this.foundInWordsTable = await database.words
           .where('WordID')
           .anyOf(ids)
           .limit(10)
           .toArray()
         this.searchLoading = false
-        if (this.words.length < 10) {
-          this.listLoading = false
-          this.observeValue = false
+        if (this.foundInWordsTable.length < 10) {
+          this.observeLoading = false
+          this.isObserve = false
         } else {
-          this.listLoading = true
-          this.observeValue = true
+          this.observeLoading = true
+          this.isObserve = true
         }
-        if (this.words.length === 0) {
-          this.observeValue = false
-          this.listLoading = false
-          this.searchFind = false
+        if (this.foundInWordsTable.length === 0) {
+          this.isObserve = false
+          this.observeLoading = false
+          this.isFound = false
         }
       }
     },
-    async pages () {
+    async plusPage () {
       this.page++
       const ids = this.intersection.map(word => word.WordID)
-      const wordArray = await db.words
+      const wordArray = await database.words
         .where('WordID')
         .anyOf(ids)
         .offset(this.page * 10)
         .limit(10)
         .toArray()
       if (wordArray.length < 10) {
-        this.listLoading = false
-        this.observeValue = false
+        this.observeLoading = false
+        this.isObserve = false
       }
-      this.words = this.words!.concat(wordArray)
+      this.foundInWordsTable = this.foundInWordsTable!.concat(wordArray)
     }
   }
 })

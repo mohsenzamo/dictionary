@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useCreateRepo } from './datasource/repository/repo'
+import { useMergeDataStore } from './datasource/repository/dataMerging'
 import Modal from './components/Modal.vue'
-import { useServiceWorker } from './datasource/repository/registerServiceWorker'
+import { useServiceWorker } from './datasource/repository/updateServiceWorker'
+const MergeDataStore = useMergeDataStore()
 const serviceWorker = useServiceWorker()
-const errorShow = computed(() => useCreateRepo().errorValue)
-const errorLoading = computed(() => useCreateRepo().errorLoading)
-useCreateRepo().updateWordandCategory()
+const errorShow = computed(() => MergeDataStore.errored)
+const errorLoading = computed(() => MergeDataStore.errorLoading)
+MergeDataStore.fillDatabaseTables()
 function err () {
-  useCreateRepo().updateWordandCategory().then(() => {
-    useCreateRepo().errorLoading = false
+  MergeDataStore.fillDatabaseTables().then(() => {
+    MergeDataStore.errorLoading = false
   })
 }
 const updateExists = computed(() => serviceWorker.updateAvailable)

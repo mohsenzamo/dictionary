@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useCreateRepo } from '../datasource/repository/repo'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
 import footerLarge from '../components/footerLarge.vue'
-const categoryList = computed(() => useCreateRepo().categroyTable)
+import { useMergeDataStore } from '../datasource/repository/dataMerging'
+const MergeDataStore = useMergeDataStore()
+const categoryList = computed(() => MergeDataStore.categroyArray)
 const slideCount = computed(() => categoryList.value!.length / 6)
 const slide = ref(1)
 const modalPremiumValue = ref(false)
@@ -87,7 +88,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-6].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-16 w-16 lock-icon">
@@ -109,7 +110,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-5].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-16 w-16 lock-icon">
@@ -131,7 +132,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-4].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-15 w-16 lock-icon">
@@ -215,7 +216,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-3].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-16 w-16 lock-icon">
@@ -237,7 +238,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-2].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-16 w-16 lock-icon">
@@ -259,7 +260,7 @@ function pushLinkQuiz (id:string) {
         >
           <div
             v-if="categoryList![count*6-1].IsFree === 0"
-            class="absolute w-full h-full bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
+            class="absolute w-full h-full cursor-not-allowed bg-black bg-opacity-50 grid items-center justify-items-center text-yellow-500"
             @click="modalPremiumValue = true"
           >
             <p class="h-16 w-16 lock-icon">

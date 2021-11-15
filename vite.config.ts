@@ -5,14 +5,14 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
   plugins: [vue(), VitePWA({
     strategies: 'injectManifest',
-    filename: 'workBox.ts',
+    filename: 'serviceWorker.ts',
     srcDir: 'src/datasource/repository',
     includeAssets: [
       '**/*.js'
     ],
     manifest: {
       background_color: '#c9c7c1',
-      description: 'دیکشنری عربی نبراس',
+      description: 'دیکشنری جامع عربی به فارسی',
       display: 'standalone',
       name: 'دیکشنری عربی نبراس',
       short_name: 'دیکشنری',

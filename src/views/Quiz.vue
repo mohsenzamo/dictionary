@@ -3,11 +3,12 @@ import { computed, ref, watchEffect } from 'vue'
 import backHeader from '../components/BackHeader.vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
-import { Words } from '../datasource/database/dexieDB'
-import { useWordsDB } from '../datasource/database/wordsDB'
+import { wordType } from '../datasource/database/dexieDB'
+import { useWordStore } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import { usePWAStore } from '../datasource/repository/PWA'
+const WordStore = useWordStore()
 const pathName = ref(window.location.pathname)
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
@@ -59,14 +60,14 @@ const props = defineProps<{
   id: string
 }>()
 if (props.id === 'all') {
-  useWordsDB().wordsGetAll().then(r => {
+  WordStore.getAllWords().then(r => {
     resultW.value = r
     randomQuiz()
   }).finally(() => {
     loading.value = false
   })
 } else {
-  useWordsDB().wordsGet(+props.id)
+  WordStore.getWord(+props.id)
     .then(r => {
       resultW.value = r
       randomQuiz()
@@ -74,7 +75,7 @@ if (props.id === 'all') {
       loading.value = false
     })
 }
-const resultW = ref<Words[] | null>(null)
+const resultW = ref<wordType[] | null>(null)
 const question = ref<null|string>(null)
 const answer1 = ref<null|string>(null)
 const answer2 = ref<null|string>(null)
@@ -266,7 +267,7 @@ function pushLink () {
 }
 const modalGuideValue = ref(false)
 const PWAStore = usePWAStore()
-const showValue = computed(() => PWAStore.showValue)
+const showIntallation = computed(() => PWAStore.showIntallation)
 PWAStore.beforeInstall()
 </script>
 <template>
@@ -344,7 +345,7 @@ PWAStore.beforeInstall()
         <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
       </button>
       <button
-        v-if="showValue"
+        v-if="showIntallation"
         class="btn-6 mx-4 w-36 nav-btn"
         @click="PWAStore.showPromotion"
       >

@@ -3,27 +3,26 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import Header from '../components/Header.vue'
 import Modal from '../components/Modal.vue'
-import db, { Search, Words } from '../datasource/database/dexieDB'
+import database from '../datasource/database/dexieDB'
 import Loader from '../components/Loader.vue'
-import { useCreateRepo } from '../datasource/repository/repo'
-import { useSearchDB } from '../datasource/database/searchDB'
+import { useMergeDataStore } from '../datasource/repository/dataMerging'
 import searchLoader from '../components/searchLoader.vue'
-import { useCategoriesDB } from '../datasource/database/categoriesDB'
-import { useHomeSearchRepo } from '../datasource/repository/homeSearchRepo'
+import { useCategoryStore } from '../datasource/database/categoriesDB'
+import { useHomeSearchStore } from '../datasource/repository/homeSearchRepo'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import HomeLarge from './HomeLarge.vue'
-import footerLarge from '../components/footerLarge.vue'
+const MergeDataStore = useMergeDataStore()
+const CategoryStore = useCategoryStore()
+const HomeSearchStore = useHomeSearchStore()
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
   laptopScreen.value = !laptopScreen.value
 })
-useCategoriesDB().categoriesGet().then(r => {
-  useCreateRepo().categroyTable = r
+CategoryStore.getCategory().then(r => {
+  MergeDataStore.categroyArray = r
 })
-const loading = computed(() => !categoryRepo.categroyTable || categoryRepo.categroyTable.length === 0)
-
-const categoryRepo = useCreateRepo()
+const loading = computed(() => !MergeDataStore.categroyArray || MergeDataStore.categroyArray.length === 0)
 const router = useRouter()
 function pushLinkList (link:string, param:string, id:number, lock:number) {
   if (lock === 1) {
@@ -45,51 +44,51 @@ function pushLinkQuiz (id:string) {
   })
 }
 const modalPremiumValue = ref(false)
-const words = computed(() => useHomeSearchRepo().words)
-const searchFind = computed(() => useHomeSearchRepo().searchFind)
-const searchLoading = computed(() => useHomeSearchRepo().searchLoading)
+const foundInWordsTable = computed(() => HomeSearchStore.foundInWordsTable)
+const isFound = computed(() => HomeSearchStore.isFound)
+const searchLoading = computed(() => HomeSearchStore.searchLoading)
 const searchQuery = ref('')
-const listLoading = computed(() => useHomeSearchRepo().listLoading)
+const observeLoading = computed(() => HomeSearchStore.observeLoading)
 const options = {
   root: null,
   rootMargin: '0px',
   threshold: 1.0
 }
 const emptyDiv = ref<HTMLDivElement>()
-const observeValue = computed(() => useHomeSearchRepo().observeValue)
+const isObserve = computed(() => HomeSearchStore.isObserve)
 const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
-    useHomeSearchRepo().pages()
+    HomeSearchStore.plusPage()
   }
 }, options)
 watch(searchQuery, (searchQuery) => {
-  useHomeSearchRepo().search(searchQuery)
+  HomeSearchStore.search(searchQuery)
 })
-watch(observeValue, (observeValue) => {
-  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+watch(isObserve, (isObserve) => {
+  isObserve ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
 })
 async function bookmarkSelect (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
   } else {
     getWord[0].bookmark = 0
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
         }
       }
     }
   }
-  db.words.put(getWord[0])
+  database.words.put(getWord[0])
 }
 const audioSrc = ref('')
 const playingId = ref(-1)
@@ -146,7 +145,7 @@ function audioError () {
   <div v-else>
     <div v-if="laptopScreen">
       <div class="h-full pt-16">
-        <div class="h-11 flex fixed top-16 z-10  w-screen justify-center px-2">
+        <div class="h-11 flex fixed top-16 z-10  w-full justify-center px-2">
           <input
             v-model="searchQuery"
             type="text"
@@ -167,16 +166,16 @@ function audioError () {
           <div>
             <div
               v-if="searchQuery.length>0"
-              class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-screen mt h-full mt-14 mb-16"
+              class="grid grid-rows-9 gap-x-8 gap-y-2 justify-items-stretch w-full mt h-full mt-14 mb-16"
             >
               <searchLoader v-if="searchLoading" />
               <!--------------------------------------- find ---------------------------------------------->
-              <template v-if="searchFind">
+              <template v-if="isFound">
                 <transition-group
                   name="list"
                 >
                   <div
-                    v-for="item in words"
+                    v-for="item in foundInWordsTable"
                     :key="item.WordID"
                     class="bg-gray-100 even:bg-gray-300 row-span-1 rounded-lg animate-opacity mx-2 pr-4"
                   >
@@ -269,10 +268,10 @@ function audioError () {
                 <!-------------------empty--------------------------->
                 <div
                   ref="emptyDiv"
-                  class="grid w-screen items-center justify-items-center"
+                  class="grid w-full items-center justify-items-center"
                 >
                   <span
-                    v-if="listLoading"
+                    v-if="observeLoading"
                     class="list-loading"
                   />
                 </div>
@@ -282,7 +281,7 @@ function audioError () {
 
               <div
                 v-else
-                class="bg-gray-200 h-screen w-screen text-center animate-opacity"
+                class="bg-gray-200 h-screen w-full text-center animate-opacity"
               >
                 <p class="font-IRANSans pt-16 text-xl">
                   نتیجه ای یافت نشد!
@@ -362,7 +361,7 @@ function audioError () {
                 <p>نشان شده ها</p>
               </div>
               <div
-                v-for="item in categoryRepo.categroyTable"
+                v-for="item in MergeDataStore.categroyArray"
                 :key="item.CategoryID"
                 class="h-24 w-24 bg-gray-300 rounded-3xl grid justify-items-center items-center text-sm text-center font-IRANSans py-3 relative  cursor-pointer m-1 xsm:m-2;"
                 @click="pushLinkList('List',item.Title,item.CategoryID,item.IsFree)"
@@ -399,7 +398,7 @@ function audioError () {
         @ended="playingId = -1"
       />
       <div
-        class="w-screen fixed inset-x-0 bottom-0 h-12 grid grid-cols-2 font-IRANSans gap-x-2"
+        class="w-full fixed inset-x-0 bottom-0 h-12 grid grid-cols-2 font-IRANSans gap-x-2"
       >
         <button
           class="bg-yellow-500 flex items-center justify-center rounded-t-2xl gap-x-3"

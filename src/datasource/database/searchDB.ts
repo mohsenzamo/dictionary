@@ -1,8 +1,7 @@
-import { faOtter } from '@fortawesome/free-solid-svg-icons'
 import { defineStore } from 'pinia'
-import db, { Search, Words } from './dexieDB'
+import database, { searchType, wordType } from './dexieDB'
 
-export const useSearchDB = defineStore('useSearchDB', {
+export const useSearchStore = defineStore('useSearchStore', {
   state () {
     return {
     }
@@ -20,8 +19,8 @@ export const useSearchDB = defineStore('useSearchDB', {
       }
       return text
     },
-    async createSearchArray (array:Words[]) {
-      let allArray = [] as Search[]
+    async createSearchArray (array:wordType[]) {
+      let allArray = [] as searchType[]
       // -------Ar-------
       for (let i = 0; i < array.length; i++) {
         const strAr = array[i].Ar
@@ -60,16 +59,16 @@ export const useSearchDB = defineStore('useSearchDB', {
       // ------------------------------change-----------------------
       const lastUpdate = localStorage.getItem('lastUpdate') || '-1'
       if (lastUpdate === '-1') {
-        this.searchPut(allArray)
+        this.putSearch(allArray)
       } else {
         for (let j = 0; j < array.length; j++) {
-          await db.search.where('WordID').equals(array[j].WordID).delete()
+          await database.search.where('WordID').equals(array[j].WordID).delete()
         }
-        this.searchPut(allArray)
+        this.putSearch(allArray)
       }
     },
-    async createSearchArray2 (id:number) {
-      const getWord = await db.search.where('WordID').equals(id).toArray()
+    async changeSearchBookmark (id:number) {
+      const getWord = await database.search.where('WordID').equals(id).toArray()
       for (let i = 0; i < getWord.length; i++) {
         if (getWord[i].bookmark === 0) {
           getWord[i].bookmark = 1
@@ -77,10 +76,10 @@ export const useSearchDB = defineStore('useSearchDB', {
           getWord[i].bookmark = 0
         }
       }
-      db.search.bulkPut(getWord)
+      database.search.bulkPut(getWord)
     },
-    async searchPut (table:Search[]) {
-      await db.search.bulkPut(table)
+    async putSearch (table:searchType[]) {
+      await database.search.bulkPut(table)
     }
   }
 })

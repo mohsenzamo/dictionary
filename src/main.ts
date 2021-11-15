@@ -9,4 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { createPinia } from 'pinia'
 library.add(faChevronLeft, faChevronRight, faHome, faWifi, faDownload, faBook, faTwitter, faCopyright, faPlayCircle, faTelegram, faInstagram, faFrown, faAlignJustify, faArrowUp, faVolumeUp, faBookmark, faArrowRight, faVolumeOff, faSearch, faBookReader, faUsers, faGlobe, faTools, faClock, faCouch, faPalette, faBriefcaseMedical, faUserNurse, faQuestionCircle, faCloudSun, faLock, faArrowRight, faTimes, faSpellCheck, faPencilAlt, faCheckCircle, faTimesCircle, faUserTie, faWallet, faAddressCard, faArrowDown)
 
+// window.addEventListener('auxclick', (event) => {
+//   event.preventDefault()
+//   alert('s')
+// })
 createApp(App).component('fa', FontAwesomeIcon).use(createPinia()).use(router).mount('#app')

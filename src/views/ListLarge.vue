@@ -1,21 +1,23 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import db, { Words } from '../datasource/database/dexieDB'
-import { useWordsDB } from '../datasource/database/wordsDB'
+import { computed, ref } from 'vue'
+import database, { wordType } from '../datasource/database/dexieDB'
+import { useWordStore } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
 import { useRouter } from 'vue-router'
-import searchLoader from '../components/searchLoader.vue'
-import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
-import { useSearchDB } from '../datasource/database/searchDB'
+import { useListSearchStore } from '../datasource/repository/listSearchRepo'
+import { useSearchStore } from '../datasource/database/searchDB'
 import Modal from '../components/Modal.vue'
-import HeaderLarge from '../components/HeaderLarge.vue'
 import { useStore } from '../store'
+const WordStore = useWordStore()
+const Store = useStore()
+const SearchStore = useSearchStore()
+const ListSearchStore = useListSearchStore()
 const emptyBookmark = ref(false)
-const title = computed(() => useStore().propTitle)
-const id = computed(() => useStore().propId)
-if (useStore().propId === -100) {
+const title = computed(() => Store.propTitle)
+const id = computed(() => Store.propId)
+if (Store.propId === -100) {
   emptyBookmark.value = true
-  useWordsDB().wordsGet(useStore().propId)
+  WordStore.getWord(Store.propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -23,7 +25,7 @@ if (useStore().propId === -100) {
     })
 } else {
   emptyBookmark.value = false
-  useWordsDB().wordsGet(useStore().propId)
+  WordStore.getWord(Store.propId)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -31,8 +33,8 @@ if (useStore().propId === -100) {
     })
 }
 const loading = ref(true)
-const resultW = ref<Words[] | null>(null)
-useWordsDB().wordsGet(useStore().propId)
+const resultW = ref<wordType[] | null>(null)
+WordStore.getWord(Store.propId)
   .then(x => {
     resultW.value = x
   }).finally(() => {
@@ -47,9 +49,9 @@ function pushLinkQuiz (id:number) {
     }
   })
 }
-const words = computed(() => useListSearchRepo().words)
+const foundInWordsTable = computed(() => ListSearchStore.foundInWordsTable)
 async function bookmarkSelect (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
     for (let i = 0; i < resultW.value!.length; i++) {
@@ -57,10 +59,10 @@ async function bookmarkSelect (WordID:number) {
         resultW.value![i].bookmark = 1
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
@@ -71,19 +73,19 @@ async function bookmarkSelect (WordID:number) {
         resultW.value![i].bookmark = 0
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
         }
       }
     }
   }
-  await db.words.put(getWord[0])
-  await useSearchDB().createSearchArray2(WordID)
+  await database.words.put(getWord[0])
+  await SearchStore.changeSearchBookmark(WordID)
 }
-async function bookmarkSelect2 (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+async function bookmarkRemove (WordID:number) {
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
     for (let i = 0; i < resultW.value!.length; i++) {
@@ -91,10 +93,10 @@ async function bookmarkSelect2 (WordID:number) {
         resultW.value![i].bookmark = 1
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
@@ -106,17 +108,17 @@ async function bookmarkSelect2 (WordID:number) {
         resultW.value!.splice(i, 1)
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
-          words.value!.splice(i, 1)
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
+          foundInWordsTable.value!.splice(i, 1)
         }
       }
     }
   }
-  await db.words.put(getWord[0])
-  await useSearchDB().createSearchArray2(WordID)
+  await database.words.put(getWord[0])
+  await SearchStore.changeSearchBookmark(WordID)
 }
 const audioSrc = ref('')
 const playingId = ref(-1)
@@ -279,7 +281,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                       v-if="item.bookmark===0"
                       class="w-8 h-8"
                       type="submit"
-                      @click="bookmarkSelect2(item.WordID)"
+                      @click="bookmarkRemove(item.WordID)"
                     >
                       <svg
                         id="Layer_1"
@@ -319,7 +321,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                     <button
                       v-else
                       type="submit"
-                      @click="bookmarkSelect2(item.WordID)"
+                      @click="bookmarkRemove(item.WordID)"
                     >
                       <fa
                         icon="bookmark"

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { Categories, Words } from './dexieDB'
+import { categoryType, wordType } from './dexieDB'
 
 const BASE_URL = process.env.NODE_ENV === 'production' ? 'http://nebrasar.ir/api' : '/api'
 
@@ -9,11 +9,11 @@ export const useFetchApiStore = defineStore('useApiStore', {
     }
   },
   actions: {
-    async requestGet (lastUpdate:string) {
+    async getRequest (lastUpdate:string) {
       type Output = {
         lastUpdate: number
-        words: Words[]
-        categories: Categories[]
+        words: wordType[]
+        categories: categoryType[]
       }
       const res = await fetch(BASE_URL + '/getUpdates.php?variant=normal&lastUpdate=' + lastUpdate)
       const tables: Output = await res.json()

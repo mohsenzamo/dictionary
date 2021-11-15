@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from '../store/index'
 import Modal from '../components/Modal.vue'
 import { usePWAStore } from '../datasource/repository/PWA'
+const PWAStore = usePWAStore()
 const router = useRouter()
-const store = useStore()
 const modalMenuValue = ref(false)
 const modalGuideValue = ref(false)
-const login = ref('Login')
 function pushLink (link:string) {
   router.push({
     name: link
@@ -18,10 +16,10 @@ function openGuide () {
   modalGuideValue.value = true
   modalMenuValue.value = false
 }
-const showValue = computed(() => usePWAStore().showValue)
-usePWAStore().beforeInstall()
+const showIntallation = computed(() => PWAStore.showIntallation)
+PWAStore.beforeInstall()
 function showPromotion () {
-  usePWAStore().showPromotion()
+  PWAStore.showPromotion()
 }
 </script>
 <template>
@@ -82,11 +80,11 @@ function showPromotion () {
           </p>
         </button>
         <span
-          v-if="showValue"
+          v-if="showIntallation"
           class="w-full bg-black h-0.5"
         />
         <button
-          v-if="showValue"
+          v-if="showIntallation"
           class="bg-yellow-500 rounded-md h-10"
           @click="showPromotion"
         >
@@ -125,7 +123,7 @@ function showPromotion () {
     </modal>
   </transition>
   <div
-    class="grid grid-cols-4 items-center h-14 justify-items-center header-shadow fixed w-screen bg-white inset-x-0 top-0 z-10"
+    class="grid grid-cols-4 items-center h-14 justify-items-center header-shadow fixed w-full bg-white inset-x-0 top-0 z-10"
   >
     <span
       class="text-xl"

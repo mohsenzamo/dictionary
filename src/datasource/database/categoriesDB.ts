@@ -1,18 +1,18 @@
 import { defineStore } from 'pinia'
-import db, { Categories } from './dexieDB'
+import database, { categoryType } from './dexieDB'
 
-export const useCategoriesDB = defineStore('useCategoriesDB', {
+export const useCategoryStore = defineStore('useCategoryStore', {
   state () {
     return {
     }
   },
   actions: {
-    async categoriesPut (tables:Categories[]) {
-      await db.categories.bulkPut(tables)
+    async putCategory (catsArray:categoryType[]) {
+      await database.categories.bulkPut(catsArray)
     },
-    async categoriesGet () {
-      const categoriesresult:Categories[] = await db.categories.orderBy('CustomOrder').toArray()
-      return categoriesresult
+    async getCategory () {
+      const catsResult:categoryType[] = await database.categories.orderBy('CustomOrder').toArray()
+      return catsResult
     }
   }
 })

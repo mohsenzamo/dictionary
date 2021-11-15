@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 
-export interface Categories{
+export interface categoryType{
   CategoryID: number,
   Title: string,
   Icon: string,
@@ -13,7 +13,7 @@ export interface Categories{
   ActiveInLebanonDialect:number,
 }
 
-export interface Words {
+export interface wordType {
     WordID: number,
     CategoryID: number,
     Fa:string,
@@ -27,7 +27,7 @@ export interface Words {
     Status: number,
     bookmark: number,
 }
-export interface Search {
+export interface searchType {
     Word: string,
     WordID: number,
     CategoryID: number,
@@ -35,9 +35,9 @@ export interface Search {
     bookmark: number,
 }
 export class MyAppDatabase extends Dexie {
-    categories: Dexie.Table<Categories, number>;
-    words:Dexie.Table<Words, number>;
-    search:Dexie.Table<Search, number>;
+    categories: Dexie.Table<categoryType, number>;
+    words:Dexie.Table<wordType, number>;
+    search:Dexie.Table<searchType, number>;
 
     constructor () {
       super('MyAppDatabase')
@@ -54,6 +54,6 @@ export class MyAppDatabase extends Dexie {
     }
 }
 
-const db = new MyAppDatabase()
+const database = new MyAppDatabase()
 
-export default db
+export default database

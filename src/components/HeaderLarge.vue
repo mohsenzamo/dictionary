@@ -2,57 +2,26 @@
 import { computed, ref, watch } from 'vue'
 import Modal from '../components/Modal.vue'
 import { useRouter } from 'vue-router'
-import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
-import db, { Words } from '../datasource/database/dexieDB'
-import { useWordsDB } from '../datasource/database/wordsDB'
-import { useCategoriesDB } from '../datasource/database/categoriesDB'
-import { useCreateRepo } from '../datasource/repository/repo'
-import { useHomeLargeSearchRepo } from '../datasource/repository/homeLargeSearchRepo'
+import database from '../datasource/database/dexieDB'
+import { useCategoryStore } from '../datasource/database/categoriesDB'
+import { useMergeDataStore } from '../datasource/repository/dataMerging'
+import { useHomeLargeSearchStore } from '../datasource/repository/homeLargeSearchRepo'
 import SearchLoader from './searchLoader.vue'
 import { usePWAStore } from '../datasource/repository/PWA'
-import { useSearchDB } from '../datasource/database/searchDB'
-const HomeSearchRepo = useHomeLargeSearchRepo()
-const words = computed(() => HomeSearchRepo.words)
-const searchFind = computed(() => HomeSearchRepo.searchFind)
-const searchLoading = computed(() => HomeSearchRepo.searchLoading)
+import { useSearchStore } from '../datasource/database/searchDB'
+const SearchStore = useSearchStore()
+const CategoryStore = useCategoryStore()
+const MergeDataStore = useMergeDataStore()
+const HomeLargeSearchStore = useHomeLargeSearchStore()
+const foundInWordsTable = computed(() => HomeLargeSearchStore.foundInWordsTable)
+const isFound = computed(() => HomeLargeSearchStore.isFound)
+const searchLoading = computed(() => HomeLargeSearchStore.searchLoading)
 const searchQuerylg = ref('')
-// const options = {
-//   root: null,
-//   rootMargin: '0px',
-//   threshold: 1.0
-// }
-// const emptyDiv1 = ref<HTMLDivElement>()
-// const observeValue = computed(() => HomeSearchRepo.observeValue)
-// console.log(observeValue.value)
-// watch(observeValue, (observeValue) => {
-//   if (observeValue === true) {
-//     const tem = document.getElementById('emt')
-//     console.log(tem)
-//   }
-// })
-// const observer1 = new IntersectionObserver(async e => {
-//   if (e[0].intersectionRatio === 1) {
-//     // useHomeSearchRepo().pages()
-//     console.log('sss')
-//   }
-// }, options)
-// watch(observeValue, (observeValue) => {
-//   if (observeValue === true) {
-//     const tem = document.getElementById('emt')
-//     console.log(tem)
-//     observer1.observe(tem!)
-//   } else {
-//     const tem = document.getElementById('emt')
-//     console.log(tem)
-//     observer1.unobserve(tem!)
-//   }
-// })
 watch(searchQuerylg, (searchQuerylg) => {
-  HomeSearchRepo.search(searchQuerylg, searchCat.value, searchSub.value)
+  HomeLargeSearchStore.search(searchQuerylg, searchCat.value, searchSub.value)
 })
-const categoryRepo = useCreateRepo()
-useCategoriesDB().categoriesGet().then(r => {
-  categoryRepo.categroyTable = r
+CategoryStore.getCategory().then(r => {
+  MergeDataStore.categroyArray = r
 })
 const router = useRouter()
 const modalSearchValue = ref(false)
@@ -70,7 +39,7 @@ function pushLink (link:string) {
   })
 }
 const PWAStore = usePWAStore()
-const showValue = computed(() => PWAStore.showValue)
+const showIntallation = computed(() => PWAStore.showIntallation)
 PWAStore.beforeInstall()
 const audioSrc = ref('')
 const playingId = ref(-1)
@@ -84,38 +53,38 @@ function audioError () {
   modalErrorValue.value = true
 }
 async function bookmarkSelect (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
-    for (let i = 0; i < words.value!.length; i++) {
-      if (words.value![i].WordID === WordID) {
-        words.value![i].bookmark = 1
+    for (let i = 0; i < foundInWordsTable.value!.length; i++) {
+      if (foundInWordsTable.value![i].WordID === WordID) {
+        foundInWordsTable.value![i].bookmark = 1
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
   } else {
     getWord[0].bookmark = 0
-    for (let i = 0; i < words.value!.length; i++) {
-      if (words.value![i].WordID === WordID) {
-        words.value![i].bookmark = 0
+    for (let i = 0; i < foundInWordsTable.value!.length; i++) {
+      if (foundInWordsTable.value![i].WordID === WordID) {
+        foundInWordsTable.value![i].bookmark = 0
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
         }
       }
     }
   }
-  await db.words.put(getWord[0])
-  await useSearchDB().createSearchArray2(WordID)
+  await database.words.put(getWord[0])
+  await SearchStore.changeSearchBookmark(WordID)
 }
 const searchCat = ref(-10)
 watch(searchCat, () => {
@@ -202,7 +171,7 @@ watch(searchSub, () => {
               class="bg-gray-300 ring-4 ring-yellow-500 rounded-md outline-none"
             >
               <option
-                v-for="cats in useCreateRepo().categroyTable"
+                v-for="cats in MergeDataStore.categroyArray"
                 :key="cats.CategoryID"
                 :value="cats.CategoryID"
                 :disabled="cats.IsFree === 0"
@@ -227,11 +196,11 @@ watch(searchSub, () => {
           >
             <SearchLoader v-if="searchLoading" />
             <div
-              v-if="searchFind"
+              v-if="isFound"
               class="grid justify-items-center"
             >
               <div
-                v-for="item in words"
+                v-for="item in foundInWordsTable"
                 :key="item.WordID"
                 class="bg-gray-100 even:bg-gray-300  rounded-lg font-IRANSans grid grid-cols-3 justify-center text-center items-center p-4 mt-4 w-11/12 word-box__shadow-lg  "
               >
@@ -334,15 +303,6 @@ watch(searchSub, () => {
                   </div>
                 </div>
               </div>
-              <!-- <div
-                  id="emt"
-                  ref="emptyDiv1"
-                  class="grid w-full items-center justify-items-center my-4"
-                >
-                  <span
-                    class="list-loading"
-                  />
-                </div> -->
             </div>
             <div
               v-else
@@ -468,7 +428,7 @@ watch(searchSub, () => {
           <span class="nav-span flex items-center justify-center"><fa icon="book" /><p class="mx-3">راهنما</p></span>
         </button>
         <button
-          v-if="showValue"
+          v-if="showIntallation"
           class="btn-6 mx-4 w-36 nav-btn"
           @click="PWAStore.showPromotion"
         >
@@ -505,24 +465,20 @@ watch(searchSub, () => {
   background-color: #ccc;
 }
 
-/* When the radio button is checked, add a blue background */
 .search-sub__label input:checked ~ .search-sub__span {
   @apply bg-yellow-500
 }
 
-/* Create the indicator (the dot/circle - hidden when not checked) */
 .search-sub__span:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the indicator (dot/circle) when checked */
 .search-sub__label input:checked ~ .search-sub__span:after {
   display: block;
 }
 
-/* Style the indicator (dot/circle) */
 .search-sub__label .search-sub__span:after {
 top: 9px;
 	left: 9px;

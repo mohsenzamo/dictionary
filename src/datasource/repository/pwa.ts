@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 export const usePWAStore = defineStore('usePWAStore', {
   state () {
     return {
-      showValue: false as boolean,
+      showIntallation: false as boolean,
       installPrompt: null as any
     }
   },
@@ -11,7 +11,7 @@ export const usePWAStore = defineStore('usePWAStore', {
       window.addEventListener('beforeinstallprompt', e => {
         e.preventDefault()
         this.installPrompt = e
-        this.showValue = true
+        this.showIntallation = true
       })
     },
     showPromotion () {

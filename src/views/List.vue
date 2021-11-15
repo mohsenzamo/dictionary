@@ -3,15 +3,19 @@ import HeaderLarge from '../components/HeaderLarge.vue'
 import ListLarge from './ListLarge.vue'
 import { computed, ref, watch } from 'vue'
 import backHeader from '../components/BackHeader.vue'
-import db, { Words } from '../datasource/database/dexieDB'
-import { useWordsDB } from '../datasource/database/wordsDB'
+import database, { wordType } from '../datasource/database/dexieDB'
+import { useWordStore } from '../datasource/database/wordsDB'
 import Loader from '../components/Loader.vue'
 import { useRouter } from 'vue-router'
 import searchLoader from '../components/searchLoader.vue'
-import { useListSearchRepo } from '../datasource/repository/listSearchRepo'
-import { useSearchDB } from '../datasource/database/searchDB'
+import { useListSearchStore } from '../datasource/repository/listSearchRepo'
+import { useSearchStore } from '../datasource/database/searchDB'
 import Modal from '../components/Modal.vue'
 import { useStore } from '../store'
+const Store = useStore()
+const WordStore = useWordStore()
+const ListSearchStore = useListSearchStore()
+const SearchStore = useSearchStore()
 const mediaMatcher = matchMedia('(max-width: 1024px)')
 const laptopScreen = ref(mediaMatcher.matches)
 mediaMatcher.addListener(() => {
@@ -21,15 +25,15 @@ const props = defineProps<{
   title: string
   id: string
 }>()
-useStore().propId = +props.id
+Store.propId = +props.id
 // eslint-disable-next-line vue/no-setup-props-destructure
-useStore().propTitle = props.title
+Store.propTitle = props.title
 const loading = ref(true)
-const resultW = ref<Words[] | null>(null)
+const resultW = ref<wordType[] | null>(null)
 const emptyBookmark = ref(false)
 if (+props.id === -100) {
   emptyBookmark.value = true
-  useWordsDB().wordsGet(+props.id)
+  WordStore.getWord(+props.id)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -37,7 +41,7 @@ if (+props.id === -100) {
     })
 } else {
   emptyBookmark.value = false
-  useWordsDB().wordsGet(+props.id)
+  WordStore.getWord(+props.id)
     .then(r => {
       resultW.value = r
     }).finally(() => {
@@ -53,12 +57,12 @@ function pushLinkQuiz (id:number) {
     }
   })
 }
-const words = computed(() => useListSearchRepo().words)
-const searchFind = computed(() => useListSearchRepo().searchFind)
-const searchLoading = computed(() => useListSearchRepo().searchLoading)
+const foundInWordsTable = computed(() => ListSearchStore.foundInWordsTable)
+const isFound = computed(() => ListSearchStore.isFound)
+const searchLoading = computed(() => ListSearchStore.searchLoading)
 const searchQuery = ref('')
-const listLoading = computed(() => useListSearchRepo().listLoading)
-const observeValue = computed(() => useListSearchRepo().observeValue)
+const observeLoading = computed(() => ListSearchStore.observeLoading)
+const isObserve = computed(() => ListSearchStore.isObserve)
 const options = {
   root: null,
   rootMargin: '0px',
@@ -67,17 +71,17 @@ const options = {
 const emptyDiv = ref<HTMLDivElement>()
 const observer = new IntersectionObserver(async e => {
   if (e[0].intersectionRatio === 1) {
-    useListSearchRepo().pages()
+    ListSearchStore.plusPage()
   }
 }, options)
 watch(searchQuery, (searchQuery) => {
-  useListSearchRepo().search(searchQuery, +props.id)
+  ListSearchStore.search(searchQuery, +props.id)
 })
-watch(observeValue, (observeValue) => {
-  observeValue ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
+watch(isObserve, (isObserve) => {
+  isObserve ? observer.observe(emptyDiv.value!) : observer.unobserve(emptyDiv.value!)
 })
 async function bookmarkSelect (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
     for (let i = 0; i < resultW.value!.length; i++) {
@@ -85,10 +89,10 @@ async function bookmarkSelect (WordID:number) {
         resultW.value![i].bookmark = 1
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
@@ -99,19 +103,19 @@ async function bookmarkSelect (WordID:number) {
         resultW.value![i].bookmark = 0
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
         }
       }
     }
   }
-  await db.words.put(getWord[0])
-  await useSearchDB().createSearchArray2(WordID)
+  await database.words.put(getWord[0])
+  await SearchStore.changeSearchBookmark(WordID)
 }
-async function bookmarkSelect2 (WordID:number) {
-  const getWord = await db.words.where('WordID').equals(WordID).toArray()
+async function bookmarkRemove (WordID:number) {
+  const getWord = await database.words.where('WordID').equals(WordID).toArray()
   if (getWord[0].bookmark === 0) {
     getWord[0].bookmark = 1
     for (let i = 0; i < resultW.value!.length; i++) {
@@ -119,10 +123,10 @@ async function bookmarkSelect2 (WordID:number) {
         resultW.value![i].bookmark = 1
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 1
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 1
         }
       }
     }
@@ -134,17 +138,17 @@ async function bookmarkSelect2 (WordID:number) {
         resultW.value!.splice(i, 1)
       }
     }
-    if (words.value) {
-      for (let i = 0; i < words.value.length; i++) {
-        if (words.value[i].WordID === WordID) {
-          words.value[i].bookmark = 0
-          words.value!.splice(i, 1)
+    if (foundInWordsTable.value) {
+      for (let i = 0; i < foundInWordsTable.value.length; i++) {
+        if (foundInWordsTable.value[i].WordID === WordID) {
+          foundInWordsTable.value[i].bookmark = 0
+          foundInWordsTable.value!.splice(i, 1)
         }
       }
     }
   }
-  await db.words.put(getWord[0])
-  await useSearchDB().createSearchArray2(WordID)
+  await database.words.put(getWord[0])
+  await SearchStore.changeSearchBookmark(WordID)
 }
 const audioSrc = ref('')
 const playingId = ref(-1)
@@ -307,14 +311,14 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                   <searchLoader v-if="searchLoading" />
                   <!--------------------------------------- find ---------------------------------------------->
                   <div
-                    v-if="searchFind"
+                    v-if="isFound"
                     class="grid h-auto bg-gray-200 gap-x-8 gap-y-2 justify-items-stretch mb-24"
                   >
                     <transition-group
                       name="list"
                     >
                       <div
-                        v-for="item in words"
+                        v-for="item in foundInWordsTable"
                         :key="item.WordID"
                         class="find-box"
                       >
@@ -410,7 +414,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                       class="grid w-screen items-center justify-items-center"
                     >
                       <span
-                        v-if="listLoading"
+                        v-if="observeLoading"
                         class="list-loading"
                       />
                     </div>
@@ -472,7 +476,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                             v-if="item.bookmark===0"
                             type="submit"
                             class="w-5 h-5"
-                            @click="bookmarkSelect2(item.WordID)"
+                            @click="bookmarkRemove(item.WordID)"
                           >
                             <svg
                               id="Layer_1"
@@ -513,7 +517,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                             v-else
                             type="submit"
                             class="w-5 h-5"
-                            @click="bookmarkSelect2(item.WordID)"
+                            @click="bookmarkRemove(item.WordID)"
                           >
                             <fa
                               icon="bookmark"
@@ -567,14 +571,14 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
               <searchLoader v-if="searchLoading" />
               <!--------------------------------------- find ---------------------------------------------->
               <div
-                v-if="searchFind"
+                v-if="isFound"
                 class="grid h-auto bg-gray-200 pt-20 gap-x-8 gap-y-2 justify-items-stretch mb-24"
               >
                 <transition-group
                   name="list"
                 >
                   <div
-                    v-for="item in words"
+                    v-for="item in foundInWordsTable"
                     :key="item.WordID"
                     class="find-box"
                   >
@@ -670,7 +674,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                   class="grid w-screen items-center justify-items-center"
                 >
                   <span
-                    v-if="listLoading"
+                    v-if="observeLoading"
                     class="list-loading"
                   />
                 </div>
@@ -887,7 +891,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
   @apply font-IRANSans pt-16 text-xl
 }
 .yellow-button__box{
-  @apply w-screen
+  @apply w-full
       fixed
       inset-x-0
       bottom-0
