@@ -716,6 +716,9 @@
     border-left: 26px solid rgb(245, 158, 11);
     border-bottom: 13px solid transparent;
   }
+  .list-move {
+    transition: .3s transform;
+  }
   .list-loading {
     width: 10px;
     height: 10px;

@@ -8,7 +8,8 @@ export default defineConfig({
     filename: 'serviceWorker.ts',
     srcDir: 'src/datasource/repository',
     includeAssets: [
-      '**/*.js'
+      '**/*.js',
+      '**/*.ttf'
     ],
     manifest: {
       background_color: '#c9c7c1',
