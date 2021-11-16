@@ -33,7 +33,7 @@ export const useHomeSearchStore = defineStore('useHomeSearchStore', {
           .limit(10)
           .toArray()
         this.searchLoading = false
-        if (this.foundInWordsTable.length <= 10) {
+        if (this.foundInWordsTable.length < 10) {
           this.observeLoading = false
           this.isObserve = false
         } else {
