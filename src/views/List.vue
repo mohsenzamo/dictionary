@@ -306,7 +306,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
               <div>
                 <div
                   v-if="searchQuery.length>0"
-                  class="w-screen h-full mt-14 mb-16"
+                  class="w-full h-full mt-14 mb-16"
                 >
                   <searchLoader v-if="searchLoading" />
                   <!--------------------------------------- find ---------------------------------------------->
@@ -411,7 +411,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                     <!-------------------empty--------------------------->
                     <div
                       ref="emptyDiv"
-                      class="grid w-screen items-center justify-items-center"
+                      class="grid w-full items-center justify-items-center"
                     >
                       <span
                         v-if="observeLoading"
@@ -566,7 +566,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
           <div>
             <div
               v-if="searchQuery.length>0"
-              class="w-screen h-full mt-14 mb-16"
+              class="w-full h-full mt-14 mb-16"
             >
               <searchLoader v-if="searchLoading" />
               <!--------------------------------------- find ---------------------------------------------->
@@ -671,7 +671,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
                 <!-------------------empty--------------------------->
                 <div
                   ref="emptyDiv"
-                  class="grid w-screen items-center justify-items-center"
+                  class="grid w-full items-center justify-items-center"
                 >
                   <span
                     v-if="observeLoading"
@@ -867,7 +867,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
   @apply w-24 h-14 float-left grid grid-cols-2 justify-items-center items-center;
 }
 .input-box{
-  @apply h-11 flex fixed top-16 z-10  w-screen justify-center px-2
+  @apply h-11 flex fixed top-16 z-10  w-full justify-center px-2
 }
 .search-input{
   @apply h-full rounded-r-full rounded-l-full pr-6 focus:outline-none focus:ring-4 ring-yellow-500 ring-opacity-50 font-IRANSans w-80 z-20
@@ -885,7 +885,7 @@ c11 -84 52 -240 85 -322 81 -202 186 -364 345 -531 229 -240 509 -409 830
   @apply bg-transparent w-28 h-14 float-left rounded-lg grid grid-cols-2 justify-items-center items-center
 }
 .not-find-box{
-  @apply bg-gray-200 h-screen w-screen text-center animate-opacity
+  @apply bg-gray-200 h-screen w-full text-center animate-opacity
 }
 .not-find__text{
   @apply font-IRANSans pt-16 text-xl
