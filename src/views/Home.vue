@@ -8,7 +8,7 @@ import Loader from '../components/Loader.vue'
 import { useMergeDataStore } from '../datasource/repository/dataMerging'
 import searchLoader from '../components/searchLoader.vue'
 import { useCategoryStore } from '../datasource/database/categoriesDB'
-import { useHomeSearchStore } from '../datasource/repository/homeSearchRepo'
+import { useHomeSearchStore } from '../datasource/repository/homeSearch'
 import HeaderLarge from '../components/HeaderLarge.vue'
 import HomeLarge from './HomeLarge.vue'
 const MergeDataStore = useMergeDataStore()
